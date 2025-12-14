@@ -105,11 +105,16 @@ export function Drill({ words }: DrillProps) {
       {lastResult && (
         <div
           className={`
-            w-full p-3 rounded-xl text-center font-semibold
+            w-full p-3 rounded-xl text-center
             ${lastResult.correct ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
           `}
         >
-          {lastResult.correct ? '✓ Correct!' : `✗ It was "${lastResult.word.vietnamese}"`}
+          <p className="font-semibold">
+            {lastResult.correct ? '✓ Correct!' : `✗ It was "${lastResult.word.vietnamese}"`}
+          </p>
+          <p className="text-sm mt-1 opacity-80">
+            {lastResult.word.vietnamese} = {lastResult.word.english}
+          </p>
         </div>
       )}
 
