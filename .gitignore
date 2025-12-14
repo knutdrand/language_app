@@ -33,3 +33,7 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Backend generated files (large binaries)
+backend/models/
+backend/audio/

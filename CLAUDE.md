@@ -23,7 +23,7 @@ cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 python scripts/generate_audio.py    # Generate audio for all words
-uvicorn app.main:app --reload       # Start server at http://localhost:8000
+uvicorn app.main:app --reload --port 8001  # Start server at http://localhost:8001
 ```
 
 ## Technology Stack
