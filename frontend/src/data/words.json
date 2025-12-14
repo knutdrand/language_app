@@ -1,0 +1,302 @@
+[
+  {
+    "id": 1,
+    "vietnamese": "con mèo",
+    "english": "cat",
+    "imageUrl": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400"
+  },
+  {
+    "id": 2,
+    "vietnamese": "con chó",
+    "english": "dog",
+    "imageUrl": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400"
+  },
+  {
+    "id": 3,
+    "vietnamese": "con cá",
+    "english": "fish",
+    "imageUrl": "https://images.unsplash.com/photo-1524704654690-b56c05c78a00?w=400"
+  },
+  {
+    "id": 4,
+    "vietnamese": "con chim",
+    "english": "bird",
+    "imageUrl": "https://images.unsplash.com/photo-1444464666168-49d633b86797?w=400"
+  },
+  {
+    "id": 5,
+    "vietnamese": "con bò",
+    "english": "cow",
+    "imageUrl": "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=400"
+  },
+  {
+    "id": 6,
+    "vietnamese": "con gà",
+    "english": "chicken",
+    "imageUrl": "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400"
+  },
+  {
+    "id": 7,
+    "vietnamese": "cơm",
+    "english": "rice",
+    "imageUrl": "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=400"
+  },
+  {
+    "id": 8,
+    "vietnamese": "phở",
+    "english": "pho soup",
+    "imageUrl": "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=400"
+  },
+  {
+    "id": 9,
+    "vietnamese": "bánh mì",
+    "english": "bread",
+    "imageUrl": "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400"
+  },
+  {
+    "id": 10,
+    "vietnamese": "trái cây",
+    "english": "fruit",
+    "imageUrl": "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=400"
+  },
+  {
+    "id": 11,
+    "vietnamese": "rau",
+    "english": "vegetable",
+    "imageUrl": "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400"
+  },
+  {
+    "id": 12,
+    "vietnamese": "thịt",
+    "english": "meat",
+    "imageUrl": "https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?w=400"
+  },
+  {
+    "id": 13,
+    "vietnamese": "nhà",
+    "english": "house",
+    "imageUrl": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400"
+  },
+  {
+    "id": 14,
+    "vietnamese": "xe hơi",
+    "english": "car",
+    "imageUrl": "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400"
+  },
+  {
+    "id": 15,
+    "vietnamese": "xe đạp",
+    "english": "bicycle",
+    "imageUrl": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=400"
+  },
+  {
+    "id": 16,
+    "vietnamese": "sách",
+    "english": "book",
+    "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400"
+  },
+  {
+    "id": 17,
+    "vietnamese": "bàn",
+    "english": "table",
+    "imageUrl": "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=400"
+  },
+  {
+    "id": 18,
+    "vietnamese": "ghế",
+    "english": "chair",
+    "imageUrl": "https://images.unsplash.com/photo-1503602642458-232111445657?w=400"
+  },
+  {
+    "id": 19,
+    "vietnamese": "cây",
+    "english": "tree",
+    "imageUrl": "https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=400"
+  },
+  {
+    "id": 20,
+    "vietnamese": "hoa",
+    "english": "flower",
+    "imageUrl": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400"
+  },
+  {
+    "id": 21,
+    "vietnamese": "nước",
+    "english": "water",
+    "imageUrl": "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=400"
+  },
+  {
+    "id": 22,
+    "vietnamese": "lửa",
+    "english": "fire",
+    "imageUrl": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400"
+  },
+  {
+    "id": 23,
+    "vietnamese": "mặt trời",
+    "english": "sun",
+    "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400"
+  },
+  {
+    "id": 24,
+    "vietnamese": "mặt trăng",
+    "english": "moon",
+    "imageUrl": "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?w=400"
+  },
+  {
+    "id": 25,
+    "vietnamese": "ngôi sao",
+    "english": "star",
+    "imageUrl": "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400"
+  },
+  {
+    "id": 26,
+    "vietnamese": "núi",
+    "english": "mountain",
+    "imageUrl": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400"
+  },
+  {
+    "id": 27,
+    "vietnamese": "biển",
+    "english": "sea",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400"
+  },
+  {
+    "id": 28,
+    "vietnamese": "sông",
+    "english": "river",
+    "imageUrl": "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?w=400"
+  },
+  {
+    "id": 29,
+    "vietnamese": "người",
+    "english": "person",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400"
+  },
+  {
+    "id": 30,
+    "vietnamese": "trẻ em",
+    "english": "child",
+    "imageUrl": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400"
+  },
+  {
+    "id": 31,
+    "vietnamese": "gia đình",
+    "english": "family",
+    "imageUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400"
+  },
+  {
+    "id": 32,
+    "vietnamese": "bạn bè",
+    "english": "friends",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400"
+  },
+  {
+    "id": 33,
+    "vietnamese": "điện thoại",
+    "english": "phone",
+    "imageUrl": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400"
+  },
+  {
+    "id": 34,
+    "vietnamese": "máy tính",
+    "english": "computer",
+    "imageUrl": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400"
+  },
+  {
+    "id": 35,
+    "vietnamese": "đồng hồ",
+    "english": "clock",
+    "imageUrl": "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?w=400"
+  },
+  {
+    "id": 36,
+    "vietnamese": "chìa khóa",
+    "english": "key",
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
+  },
+  {
+    "id": 37,
+    "vietnamese": "cửa",
+    "english": "door",
+    "imageUrl": "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400"
+  },
+  {
+    "id": 38,
+    "vietnamese": "cửa sổ",
+    "english": "window",
+    "imageUrl": "https://images.unsplash.com/photo-1509644851169-2acc08aa25b5?w=400"
+  },
+  {
+    "id": 39,
+    "vietnamese": "giường",
+    "english": "bed",
+    "imageUrl": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=400"
+  },
+  {
+    "id": 40,
+    "vietnamese": "quần áo",
+    "english": "clothes",
+    "imageUrl": "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=400"
+  },
+  {
+    "id": 41,
+    "vietnamese": "giày",
+    "english": "shoes",
+    "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"
+  },
+  {
+    "id": 42,
+    "vietnamese": "mũ",
+    "english": "hat",
+    "imageUrl": "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=400"
+  },
+  {
+    "id": 43,
+    "vietnamese": "kính",
+    "english": "glasses",
+    "imageUrl": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400"
+  },
+  {
+    "id": 44,
+    "vietnamese": "túi xách",
+    "english": "bag",
+    "imageUrl": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400"
+  },
+  {
+    "id": 45,
+    "vietnamese": "tiền",
+    "english": "money",
+    "imageUrl": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400"
+  },
+  {
+    "id": 46,
+    "vietnamese": "cà phê",
+    "english": "coffee",
+    "imageUrl": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400"
+  },
+  {
+    "id": 47,
+    "vietnamese": "trà",
+    "english": "tea",
+    "imageUrl": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400"
+  },
+  {
+    "id": 48,
+    "vietnamese": "bia",
+    "english": "beer",
+    "imageUrl": "https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400"
+  },
+  {
+    "id": 49,
+    "vietnamese": "trứng",
+    "english": "egg",
+    "imageUrl": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400"
+  },
+  {
+    "id": 50,
+    "vietnamese": "sữa",
+    "english": "milk",
+    "imageUrl": "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400"
+  }
+]
