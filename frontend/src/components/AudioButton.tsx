@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 
 interface AudioButtonProps {
   text: string;
@@ -8,6 +8,7 @@ interface AudioButtonProps {
 
 export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: AudioButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const hasAutoPlayed = useRef(false);
 
   const speak = useCallback(() => {
     if ('speechSynthesis' in window) {
@@ -28,13 +29,16 @@ export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: Audi
     }
   }, [text, language]);
 
-  // Auto-play on mount if requested
-  if (autoPlay) {
-    // Use setTimeout to ensure component is mounted
-    setTimeout(() => {
-      if (!isPlaying) speak();
-    }, 100);
-  }
+  // Auto-play on mount if requested (only once)
+  useEffect(() => {
+    if (autoPlay && !hasAutoPlayed.current) {
+      hasAutoPlayed.current = true;
+      const timer = setTimeout(() => {
+        speak();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [autoPlay, speak]);
 
   return (
     <button
