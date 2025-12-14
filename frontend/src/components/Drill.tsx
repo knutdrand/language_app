@@ -23,6 +23,7 @@ export function Drill({ words }: DrillProps) {
   const [distractors, setDistractors] = useState<Word[]>([]);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [lastResult, setLastResult] = useState<{ correct: boolean; word: Word } | null>(null);
+  const [showHint, setShowHint] = useState(false);
   const [key, setKey] = useState(0); // For forcing re-render of ImageGrid
 
   const loadNextWord = useCallback(() => {
@@ -32,6 +33,7 @@ export function Drill({ words }: DrillProps) {
       setDistractors(getRandomDistractors(words, next.id, 3));
       setShowingFeedback(false);
       setLastResult(null);
+      setShowHint(false);
       setKey((k) => k + 1);
     } else {
       setCurrentWord(null);
@@ -116,10 +118,19 @@ export function Drill({ words }: DrillProps) {
         <AudioButton text={currentWord.vietnamese} autoPlay={!showingFeedback} />
       </div>
 
-      {/* Hint: English translation */}
-      <p className="text-gray-400 text-sm">
-        Hint: <span className="font-medium">{currentWord.english}</span>
-      </p>
+      {/* Hint: Vietnamese text (on demand) */}
+      {showHint ? (
+        <p className="text-gray-600 text-lg font-medium">
+          {currentWord.vietnamese}
+        </p>
+      ) : (
+        <button
+          onClick={() => setShowHint(true)}
+          className="text-gray-400 text-sm hover:text-gray-600 transition-colors"
+        >
+          Show text hint
+        </button>
+      )}
 
       {/* Image grid */}
       <ImageGrid
