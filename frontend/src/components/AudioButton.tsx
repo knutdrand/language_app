@@ -8,7 +8,7 @@ interface AudioButtonProps {
 
 export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: AudioButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const hasAutoPlayed = useRef(false);
+  const lastPlayedText = useRef<string | null>(null);
 
   const speak = useCallback(() => {
     if ('speechSynthesis' in window) {
@@ -29,16 +29,16 @@ export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: Audi
     }
   }, [text, language]);
 
-  // Auto-play on mount if requested (only once)
+  // Auto-play when text changes (new word loaded)
   useEffect(() => {
-    if (autoPlay && !hasAutoPlayed.current) {
-      hasAutoPlayed.current = true;
+    if (autoPlay && text !== lastPlayedText.current) {
+      lastPlayedText.current = text;
       const timer = setTimeout(() => {
         speak();
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [autoPlay, speak]);
+  }, [autoPlay, text, speak]);
 
   return (
     <button

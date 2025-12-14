@@ -50,4 +50,28 @@ describe('AudioButton', () => {
 
     vi.useRealTimers();
   });
+
+  it('should auto-play again when text changes (new word loaded)', async () => {
+    vi.useFakeTimers();
+
+    const { rerender } = render(<AudioButton text="xin chào" autoPlay={true} />);
+
+    // Wait for initial autoPlay
+    await vi.advanceTimersByTimeAsync(150);
+    expect(mockSpeak).toHaveBeenCalledTimes(1);
+
+    // Change to a new word - should play again
+    rerender(<AudioButton text="con mèo" autoPlay={true} />);
+    await vi.advanceTimersByTimeAsync(150);
+
+    expect(mockSpeak).toHaveBeenCalledTimes(2);
+
+    // Change to another word - should play again
+    rerender(<AudioButton text="con chó" autoPlay={true} />);
+    await vi.advanceTimersByTimeAsync(150);
+
+    expect(mockSpeak).toHaveBeenCalledTimes(3);
+
+    vi.useRealTimers();
+  });
 });
