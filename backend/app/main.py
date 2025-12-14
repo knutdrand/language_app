@@ -1,0 +1,34 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
+
+from app.routers import audio
+
+app = FastAPI(
+    title="Language App API",
+    description="Backend for Vietnamese vocabulary learning app",
+    version="0.1.0",
+)
+
+# CORS for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount static audio files
+audio_dir = Path(__file__).parent.parent / "audio"
+if audio_dir.exists():
+    app.mount("/audio", StaticFiles(directory=str(audio_dir)), name="audio")
+
+# Include routers
+app.include_router(audio.router, prefix="/api", tags=["audio"])
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}

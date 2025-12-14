@@ -1,4 +1,5 @@
 import { useCallback, useState, useEffect, useRef } from 'react';
+import { getAudioUrl } from '../config';
 
 interface AudioButtonProps {
   text: string;
@@ -6,18 +7,19 @@ interface AudioButtonProps {
   autoPlay?: boolean;
 }
 
-export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: AudioButtonProps) {
+export function AudioButton({ text, language = 'vi', autoPlay = false }: AudioButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const lastPlayedText = useRef<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const speak = useCallback(() => {
+  // Fallback to browser speech synthesis
+  const speakWithBrowser = useCallback(() => {
     if ('speechSynthesis' in window) {
-      // Cancel any ongoing speech
       speechSynthesis.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language;
-      utterance.rate = 0.8; // Slightly slower for learning
+      utterance.lang = language === 'vi' ? 'vi-VN' : language;
+      utterance.rate = 0.8;
 
       utterance.onstart = () => setIsPlaying(true);
       utterance.onend = () => setIsPlaying(false);
@@ -26,8 +28,45 @@ export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: Audi
       speechSynthesis.speak(utterance);
     } else {
       console.warn('Speech synthesis not supported');
+      setIsPlaying(false);
     }
   }, [text, language]);
+
+  // Play audio from backend, fallback to browser TTS
+  const speak = useCallback(async () => {
+    if (isPlaying) return;
+
+    setIsPlaying(true);
+
+    // Stop any current audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    speechSynthesis.cancel();
+
+    try {
+      const audioUrl = getAudioUrl(text, language);
+      const audio = new Audio(audioUrl);
+      audioRef.current = audio;
+
+      audio.onended = () => {
+        setIsPlaying(false);
+        audioRef.current = null;
+      };
+
+      audio.onerror = () => {
+        console.log('Backend audio not available, falling back to browser TTS');
+        speakWithBrowser();
+        audioRef.current = null;
+      };
+
+      await audio.play();
+    } catch (error) {
+      console.log('Failed to play backend audio, falling back to browser TTS');
+      speakWithBrowser();
+    }
+  }, [text, language, isPlaying, speakWithBrowser]);
 
   // Auto-play when text changes (new word loaded)
   useEffect(() => {
@@ -39,6 +78,16 @@ export function AudioButton({ text, language = 'vi-VN', autoPlay = false }: Audi
       return () => clearTimeout(timer);
     }
   }, [autoPlay, text, speak]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      speechSynthesis.cancel();
+    };
+  }, []);
 
   return (
     <button

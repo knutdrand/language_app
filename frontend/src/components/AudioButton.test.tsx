@@ -1,11 +1,12 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { AudioButton } from './AudioButton';
-import { mockSpeak, mockCancel } from '../test/setup';
+import { mockSpeak, mockCancel, mockAudioPlay } from '../test/setup';
 
 beforeEach(() => {
   mockSpeak.mockClear();
   mockCancel.mockClear();
+  mockAudioPlay.mockClear();
 });
 
 describe('AudioButton', () => {
@@ -14,64 +15,75 @@ describe('AudioButton', () => {
     expect(screen.getByText('Play Word')).toBeInTheDocument();
   });
 
-  it('should only call speak once when autoPlay is true, even after re-renders', async () => {
-    vi.useFakeTimers();
-
-    const { rerender } = render(<AudioButton text="xin chào" autoPlay={true} />);
-
-    // Wait for initial autoPlay timeout
-    await vi.advanceTimersByTimeAsync(150);
-
-    const initialCallCount = mockSpeak.mock.calls.length;
-    expect(initialCallCount).toBe(1);
-
-    // Re-render the component (simulating parent state change)
-    rerender(<AudioButton text="xin chào" autoPlay={true} />);
-    await vi.advanceTimersByTimeAsync(150);
-
-    // Re-render again
-    rerender(<AudioButton text="xin chào" autoPlay={true} />);
-    await vi.advanceTimersByTimeAsync(150);
-
-    // Should still only have been called once total
-    expect(mockSpeak).toHaveBeenCalledTimes(1);
-
-    vi.useRealTimers();
-  });
-
   it('should not auto-play when autoPlay is false', async () => {
-    vi.useFakeTimers();
-
     render(<AudioButton text="xin chào" autoPlay={false} />);
 
-    await vi.advanceTimersByTimeAsync(200);
+    // Wait a bit for any potential autoPlay to trigger
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
 
     expect(mockSpeak).not.toHaveBeenCalled();
-
-    vi.useRealTimers();
+    expect(mockAudioPlay).not.toHaveBeenCalled();
   });
 
-  it('should auto-play again when text changes (new word loaded)', async () => {
-    vi.useFakeTimers();
+  it('should auto-play when autoPlay is true', async () => {
+    render(<AudioButton text="xin chào" autoPlay={true} />);
 
+    // Wait for autoPlay timeout and fallback
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
+
+    // Should have tried Audio first
+    expect(mockAudioPlay).toHaveBeenCalled();
+
+    // Should have fallen back to speechSynthesis
+    expect(mockSpeak).toHaveBeenCalled();
+  });
+
+  it('should auto-play again when text changes', async () => {
     const { rerender } = render(<AudioButton text="xin chào" autoPlay={true} />);
 
     // Wait for initial autoPlay
-    await vi.advanceTimersByTimeAsync(150);
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
+
     expect(mockSpeak).toHaveBeenCalledTimes(1);
+    mockSpeak.mockClear();
+    mockAudioPlay.mockClear();
 
-    // Change to a new word - should play again
+    // Change to a new word
     rerender(<AudioButton text="con mèo" autoPlay={true} />);
-    await vi.advanceTimersByTimeAsync(150);
 
-    expect(mockSpeak).toHaveBeenCalledTimes(2);
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
 
-    // Change to another word - should play again
-    rerender(<AudioButton text="con chó" autoPlay={true} />);
-    await vi.advanceTimersByTimeAsync(150);
+    // Should have played again for new text
+    expect(mockSpeak).toHaveBeenCalledTimes(1);
+  });
 
-    expect(mockSpeak).toHaveBeenCalledTimes(3);
+  it('should not replay on re-render with same text', async () => {
+    const { rerender } = render(<AudioButton text="xin chào" autoPlay={true} />);
 
-    vi.useRealTimers();
+    // Wait for initial autoPlay
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
+
+    expect(mockSpeak).toHaveBeenCalledTimes(1);
+    mockSpeak.mockClear();
+
+    // Re-render with same text
+    rerender(<AudioButton text="xin chào" autoPlay={true} />);
+
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 200));
+    });
+
+    // Should NOT have played again (same text)
+    expect(mockSpeak).not.toHaveBeenCalled();
   });
 });
