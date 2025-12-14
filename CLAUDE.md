@@ -15,6 +15,8 @@ npm install          # Install dependencies
 npm run dev          # Start dev server at http://localhost:5173
 npm run build        # Production build
 npm run preview      # Preview production build
+npm run test         # Run tests in watch mode
+npm run test:run     # Run tests once
 ```
 
 ## Technology Stack
