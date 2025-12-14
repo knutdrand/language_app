@@ -3,20 +3,37 @@
 Batch generate audio files for all words in the vocabulary.
 
 Usage:
-    python scripts/generate_audio.py
+    python scripts/generate_audio.py [options]
+
+Options:
+    --force         Regenerate all files (don't skip existing)
+    --length-scale  Speech speed (default: 1.2, higher = slower)
+    --random-speakers  Use different random speakers for variety
+    --speaker       Use specific speaker ID (0-64)
 
 This script reads words.json from the frontend and generates
 WAV audio files for each Vietnamese word using Piper TTS.
 """
 
+import argparse
 import json
+import random
 import sys
 from pathlib import Path
 
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app.tts import generate_audio, get_audio_path, slugify, MODELS_DIR, AUDIO_DIR
+from app.tts import (
+    generate_audio,
+    slugify,
+    MODELS_DIR,
+    AUDIO_DIR,
+    SPEAKERS,
+    DEFAULT_LENGTH_SCALE,
+    DEFAULT_NOISE_SCALE,
+    DEFAULT_NOISE_W,
+)
 
 
 def download_model():
@@ -72,10 +89,66 @@ def load_words() -> list[dict]:
         return json.load(f)
 
 
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Generate audio files for Vietnamese vocabulary"
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Regenerate all files (don't skip existing)",
+    )
+    parser.add_argument(
+        "--length-scale",
+        type=float,
+        default=DEFAULT_LENGTH_SCALE,
+        help=f"Speech speed - higher is slower (default: {DEFAULT_LENGTH_SCALE})",
+    )
+    parser.add_argument(
+        "--noise-scale",
+        type=float,
+        default=DEFAULT_NOISE_SCALE,
+        help=f"Voice variation (default: {DEFAULT_NOISE_SCALE})",
+    )
+    parser.add_argument(
+        "--noise-w",
+        type=float,
+        default=DEFAULT_NOISE_W,
+        help=f"Phoneme duration variation (default: {DEFAULT_NOISE_W})",
+    )
+    parser.add_argument(
+        "--random-speakers",
+        action="store_true",
+        help="Use different random speakers for variety",
+    )
+    parser.add_argument(
+        "--speaker",
+        type=int,
+        default=None,
+        help="Use specific speaker ID (0-64)",
+    )
+    return parser.parse_args()
+
+
 def main():
-    print("=" * 50)
+    args = parse_args()
+
+    print("=" * 60)
     print("Batch Audio Generation for Vietnamese Vocabulary")
-    print("=" * 50)
+    print("=" * 60)
+    print(f"Settings:")
+    print(f"  Length scale (speed): {args.length_scale} {'(slower)' if args.length_scale > 1 else '(faster)' if args.length_scale < 1 else ''}")
+    print(f"  Noise scale: {args.noise_scale}")
+    print(f"  Noise W: {args.noise_w}")
+    if args.random_speakers:
+        print(f"  Speakers: Random (from {len(SPEAKERS)} available)")
+    elif args.speaker is not None:
+        print(f"  Speaker: {args.speaker}")
+    else:
+        print(f"  Speaker: Default")
+    print(f"  Force regenerate: {args.force}")
+    print("=" * 60)
 
     # Ensure model is available
     if not download_model():
@@ -105,27 +178,41 @@ def main():
         slug = slugify(vietnamese)
         output_path = output_dir / f"{slug}.wav"
 
-        # Skip if already exists
-        if output_path.exists():
+        # Skip if already exists (unless --force)
+        if output_path.exists() and not args.force:
             print(f"[{i}/{len(words)}] Skip (exists): {vietnamese} -> {slug}.wav")
             skip_count += 1
             continue
 
-        print(f"[{i}/{len(words)}] Generating: {vietnamese} ({english}) -> {slug}.wav")
+        # Determine speaker
+        if args.random_speakers:
+            speaker = random.choice(SPEAKERS)
+        else:
+            speaker = args.speaker
 
-        if generate_audio(vietnamese, output_path):
+        speaker_info = f" [speaker {speaker}]" if speaker is not None else ""
+        print(f"[{i}/{len(words)}] Generating: {vietnamese} ({english}) -> {slug}.wav{speaker_info}")
+
+        if generate_audio(
+            vietnamese,
+            output_path,
+            length_scale=args.length_scale,
+            noise_scale=args.noise_scale,
+            noise_w=args.noise_w,
+            speaker=speaker,
+        ):
             success_count += 1
         else:
             fail_count += 1
             print(f"  FAILED: {vietnamese}")
 
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print(f"Results:")
     print(f"  Generated: {success_count}")
     print(f"  Skipped (existing): {skip_count}")
     print(f"  Failed: {fail_count}")
     print(f"  Total: {len(words)}")
-    print("=" * 50)
+    print("=" * 60)
 
 
 if __name__ == "__main__":
