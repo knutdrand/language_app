@@ -1,0 +1,564 @@
+{
+  "unigrams": [
+    {
+      "text": "anh",
+      "count": 32
+    },
+    {
+      "text": "sách",
+      "count": 29
+    },
+    {
+      "text": "mình",
+      "count": 26
+    },
+    {
+      "text": "người",
+      "count": 22
+    },
+    {
+      "text": "mua",
+      "count": 18
+    },
+    {
+      "text": "cái",
+      "count": 18
+    },
+    {
+      "text": "không",
+      "count": 17
+    },
+    {
+      "text": "ta",
+      "count": 14
+    },
+    {
+      "text": "đi",
+      "count": 13
+    },
+    {
+      "text": "những",
+      "count": 13
+    },
+    {
+      "text": "nó",
+      "count": 13
+    },
+    {
+      "text": "một",
+      "count": 12
+    },
+    {
+      "text": "dạ",
+      "count": 12
+    },
+    {
+      "text": "học",
+      "count": 11
+    },
+    {
+      "text": "nhiều",
+      "count": 11
+    },
+    {
+      "text": "đúng",
+      "count": 11
+    },
+    {
+      "text": "mấy",
+      "count": 10
+    },
+    {
+      "text": "cô",
+      "count": 10
+    },
+    {
+      "text": "em",
+      "count": 10
+    },
+    {
+      "text": "mới",
+      "count": 9
+    },
+    {
+      "text": "bán",
+      "count": 9
+    },
+    {
+      "text": "nói",
+      "count": 9
+    },
+    {
+      "text": "tìm",
+      "count": 8
+    },
+    {
+      "text": "đọc",
+      "count": 8
+    },
+    {
+      "text": "cuốn",
+      "count": 8
+    },
+    {
+      "text": "phải",
+      "count": 8
+    },
+    {
+      "text": "bạn",
+      "count": 7
+    },
+    {
+      "text": "con",
+      "count": 7
+    },
+    {
+      "text": "biết",
+      "count": 7
+    },
+    {
+      "text": "thôi",
+      "count": 7
+    },
+    {
+      "text": "viết",
+      "count": 6
+    },
+    {
+      "text": "rất",
+      "count": 6
+    },
+    {
+      "text": "thầy",
+      "count": 6
+    },
+    {
+      "text": "tiệm",
+      "count": 5
+    },
+    {
+      "text": "giờ",
+      "count": 5
+    },
+    {
+      "text": "tới",
+      "count": 5
+    },
+    {
+      "text": "chị",
+      "count": 5
+    },
+    {
+      "text": "thường",
+      "count": 4
+    },
+    {
+      "text": "đâu",
+      "count": 4
+    },
+    {
+      "text": "năm",
+      "count": 4
+    },
+    {
+      "text": "rẻ",
+      "count": 4
+    },
+    {
+      "text": "luôn",
+      "count": 4
+    },
+    {
+      "text": "chuyện",
+      "count": 4
+    },
+    {
+      "text": "hồi",
+      "count": 4
+    },
+    {
+      "text": "về",
+      "count": 4
+    },
+    {
+      "text": "thức",
+      "count": 4
+    },
+    {
+      "text": "trường",
+      "count": 4
+    },
+    {
+      "text": "giỏi",
+      "count": 4
+    },
+    {
+      "text": "nghe",
+      "count": 4
+    },
+    {
+      "text": "mạng",
+      "count": 4
+    }
+  ],
+  "bigrams": [
+    {
+      "text": "người ta",
+      "count": 11
+    },
+    {
+      "text": "những cái",
+      "count": 7
+    },
+    {
+      "text": "cũng có",
+      "count": 6
+    },
+    {
+      "text": "là anh",
+      "count": 5
+    },
+    {
+      "text": "người thầy",
+      "count": 5
+    },
+    {
+      "text": "đó là",
+      "count": 5
+    },
+    {
+      "text": "mua sách",
+      "count": 4
+    },
+    {
+      "text": "viết ra",
+      "count": 4
+    },
+    {
+      "text": "tìm những",
+      "count": 4
+    },
+    {
+      "text": "ở đây",
+      "count": 4
+    },
+    {
+      "text": "nhưng mà",
+      "count": 4
+    },
+    {
+      "text": "mình đi",
+      "count": 4
+    },
+    {
+      "text": "cái người",
+      "count": 4
+    },
+    {
+      "text": "đúng không",
+      "count": 4
+    },
+    {
+      "text": "ra được",
+      "count": 4
+    },
+    {
+      "text": "bây giờ",
+      "count": 3
+    },
+    {
+      "text": "không có",
+      "count": 3
+    },
+    {
+      "text": "anh đi",
+      "count": 3
+    },
+    {
+      "text": "đi học",
+      "count": 3
+    },
+    {
+      "text": "đã mua",
+      "count": 3
+    },
+    {
+      "text": "mười mấy",
+      "count": 3
+    },
+    {
+      "text": "hoặc là",
+      "count": 3
+    },
+    {
+      "text": "luôn á",
+      "count": 3
+    },
+    {
+      "text": "nghiên cứu",
+      "count": 3
+    },
+    {
+      "text": "là cô",
+      "count": 3
+    },
+    {
+      "text": "rất nhiều",
+      "count": 3
+    },
+    {
+      "text": "đầu tiên",
+      "count": 3
+    },
+    {
+      "text": "rồi anh",
+      "count": 3
+    },
+    {
+      "text": "cho nên",
+      "count": 3
+    },
+    {
+      "text": "thành ra",
+      "count": 3
+    },
+    {
+      "text": "là sách",
+      "count": 3
+    },
+    {
+      "text": "đúng rồi",
+      "count": 3
+    },
+    {
+      "text": "hay không",
+      "count": 3
+    },
+    {
+      "text": "trường học",
+      "count": 3
+    },
+    {
+      "text": "đam mê",
+      "count": 3
+    },
+    {
+      "text": "cuốn sách",
+      "count": 3
+    },
+    {
+      "text": "là không",
+      "count": 3
+    },
+    {
+      "text": "nói là",
+      "count": 3
+    },
+    {
+      "text": "con cũng",
+      "count": 3
+    },
+    {
+      "text": "hi vọng",
+      "count": 3
+    },
+    {
+      "text": "các bạn",
+      "count": 2
+    },
+    {
+      "text": "đường trần",
+      "count": 2
+    },
+    {
+      "text": "sách cũ",
+      "count": 2
+    },
+    {
+      "text": "hãy cùng",
+      "count": 2
+    },
+    {
+      "text": "như thế",
+      "count": 2
+    },
+    {
+      "text": "âm nhạc",
+      "count": 2
+    },
+    {
+      "text": "có thường",
+      "count": 2
+    },
+    {
+      "text": "thường đến",
+      "count": 2
+    },
+    {
+      "text": "đến đây",
+      "count": 2
+    },
+    {
+      "text": "sách không",
+      "count": 2
+    }
+  ],
+  "trigrams": [
+    {
+      "text": "tìm những cái",
+      "count": 3
+    },
+    {
+      "text": "cái người thầy",
+      "count": 3
+    },
+    {
+      "text": "thường đến đây",
+      "count": 2
+    },
+    {
+      "text": "mười mấy năm",
+      "count": 2
+    },
+    {
+      "text": "năm rồi đó",
+      "count": 2
+    },
+    {
+      "text": "mua sách mua",
+      "count": 2
+    },
+    {
+      "text": "những cái chuyện",
+      "count": 2
+    },
+    {
+      "text": "đa phần là",
+      "count": 2
+    },
+    {
+      "text": "phần là anh",
+      "count": 2
+    },
+    {
+      "text": "về ngoại ngữ",
+      "count": 2
+    },
+    {
+      "text": "đây là cô",
+      "count": 2
+    },
+    {
+      "text": "người ta bán",
+      "count": 2
+    },
+    {
+      "text": "rồi anh phải",
+      "count": 2
+    },
+    {
+      "text": "anh phải tìm",
+      "count": 2
+    },
+    {
+      "text": "nhiều nhà sách",
+      "count": 2
+    },
+    {
+      "text": "cho nên là",
+      "count": 2
+    },
+    {
+      "text": "thành ra là",
+      "count": 2
+    },
+    {
+      "text": "ra là sách",
+      "count": 2
+    },
+    {
+      "text": "ta người ta",
+      "count": 2
+    },
+    {
+      "text": "người thầy thứ",
+      "count": 2
+    },
+    {
+      "text": "có cái đam",
+      "count": 2
+    },
+    {
+      "text": "cái đam mê",
+      "count": 2
+    },
+    {
+      "text": "mới bán được",
+      "count": 2
+    },
+    {
+      "text": "viết ra được",
+      "count": 2
+    },
+    {
+      "text": "ra được những",
+      "count": 2
+    },
+    {
+      "text": "những cuốn sách",
+      "count": 2
+    },
+    {
+      "text": "làm ra được",
+      "count": 2
+    },
+    {
+      "text": "cũng có thể",
+      "count": 2
+    },
+    {
+      "text": "không phải là",
+      "count": 2
+    },
+    {
+      "text": "phải là không",
+      "count": 2
+    }
+  ],
+  "fourgrams": [
+    {
+      "text": "đa phần là anh",
+      "count": 2
+    },
+    {
+      "text": "rồi anh phải tìm",
+      "count": 2
+    },
+    {
+      "text": "thành ra là sách",
+      "count": 2
+    },
+    {
+      "text": "cái người thầy thứ",
+      "count": 2
+    },
+    {
+      "text": "có cái đam mê",
+      "count": 2
+    },
+    {
+      "text": "viết ra được những",
+      "count": 2
+    },
+    {
+      "text": "không phải là không",
+      "count": 2
+    }
+  ],
+  "stats": {
+    "unigrams": 50,
+    "bigrams": 50,
+    "trigrams": 30,
+    "fourgrams": 7
+  }
+}

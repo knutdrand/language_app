@@ -1,0 +1,616 @@
+{
+  "unigrams": [
+    {
+      "text": "việt",
+      "count": 46
+    },
+    {
+      "text": "nam",
+      "count": 46
+    },
+    {
+      "text": "mình",
+      "count": 32
+    },
+    {
+      "text": "người",
+      "count": 28
+    },
+    {
+      "text": "rất",
+      "count": 14
+    },
+    {
+      "text": "bạn",
+      "count": 13
+    },
+    {
+      "text": "một",
+      "count": 12
+    },
+    {
+      "text": "đến",
+      "count": 11
+    },
+    {
+      "text": "ăn",
+      "count": 11
+    },
+    {
+      "text": "nhất",
+      "count": 11
+    },
+    {
+      "text": "tự",
+      "count": 10
+    },
+    {
+      "text": "hào",
+      "count": 10
+    },
+    {
+      "text": "lịch",
+      "count": 10
+    },
+    {
+      "text": "những",
+      "count": 10
+    },
+    {
+      "text": "các",
+      "count": 9
+    },
+    {
+      "text": "món",
+      "count": 9
+    },
+    {
+      "text": "nói",
+      "count": 8
+    },
+    {
+      "text": "về",
+      "count": 8
+    },
+    {
+      "text": "du",
+      "count": 8
+    },
+    {
+      "text": "nổi",
+      "count": 7
+    },
+    {
+      "text": "tiếng",
+      "count": 7
+    },
+    {
+      "text": "không",
+      "count": 6
+    },
+    {
+      "text": "vân",
+      "count": 6
+    },
+    {
+      "text": "nhiều",
+      "count": 6
+    },
+    {
+      "text": "chị",
+      "count": 6
+    },
+    {
+      "text": "thể",
+      "count": 6
+    },
+    {
+      "text": "đi",
+      "count": 6
+    },
+    {
+      "text": "thích",
+      "count": 6
+    },
+    {
+      "text": "con",
+      "count": 6
+    },
+    {
+      "text": "điểm",
+      "count": 6
+    },
+    {
+      "text": "anh",
+      "count": 5
+    },
+    {
+      "text": "long",
+      "count": 5
+    },
+    {
+      "text": "thấy",
+      "count": 5
+    },
+    {
+      "text": "đẹp",
+      "count": 5
+    },
+    {
+      "text": "phở",
+      "count": 5
+    },
+    {
+      "text": "khách",
+      "count": 4
+    },
+    {
+      "text": "nước",
+      "count": 4
+    },
+    {
+      "text": "ngoài",
+      "count": 4
+    },
+    {
+      "text": "miền",
+      "count": 4
+    },
+    {
+      "text": "tây",
+      "count": 4
+    },
+    {
+      "text": "qua",
+      "count": 4
+    },
+    {
+      "text": "nội",
+      "count": 4
+    },
+    {
+      "text": "nơi",
+      "count": 4
+    },
+    {
+      "text": "vịnh",
+      "count": 4
+    },
+    {
+      "text": "hạ",
+      "count": 4
+    },
+    {
+      "text": "xin",
+      "count": 4
+    },
+    {
+      "text": "cái",
+      "count": 3
+    },
+    {
+      "text": "đặc",
+      "count": 3
+    },
+    {
+      "text": "nữa",
+      "count": 3
+    },
+    {
+      "text": "ta",
+      "count": 3
+    }
+  ],
+  "bigrams": [
+    {
+      "text": "việt nam",
+      "count": 44
+    },
+    {
+      "text": "người việt",
+      "count": 18
+    },
+    {
+      "text": "là người",
+      "count": 11
+    },
+    {
+      "text": "nam thì",
+      "count": 11
+    },
+    {
+      "text": "ở việt",
+      "count": 11
+    },
+    {
+      "text": "tự hào",
+      "count": 10
+    },
+    {
+      "text": "rất là",
+      "count": 8
+    },
+    {
+      "text": "du lịch",
+      "count": 8
+    },
+    {
+      "text": "nổi tiếng",
+      "count": 7
+    },
+    {
+      "text": "có thể",
+      "count": 6
+    },
+    {
+      "text": "món ăn",
+      "count": 6
+    },
+    {
+      "text": "mình là",
+      "count": 6
+    },
+    {
+      "text": "như là",
+      "count": 5
+    },
+    {
+      "text": "thì mình",
+      "count": 5
+    },
+    {
+      "text": "có một",
+      "count": 5
+    },
+    {
+      "text": "nhất là",
+      "count": 5
+    },
+    {
+      "text": "các bạn",
+      "count": 5
+    },
+    {
+      "text": "là tự",
+      "count": 4
+    },
+    {
+      "text": "nam và",
+      "count": 4
+    },
+    {
+      "text": "thì người",
+      "count": 4
+    },
+    {
+      "text": "đó là",
+      "count": 4
+    },
+    {
+      "text": "con người",
+      "count": 4
+    },
+    {
+      "text": "vịnh hạ",
+      "count": 4
+    },
+    {
+      "text": "hạ long",
+      "count": 4
+    },
+    {
+      "text": "là một",
+      "count": 4
+    },
+    {
+      "text": "nói về",
+      "count": 3
+    },
+    {
+      "text": "vân vân",
+      "count": 3
+    },
+    {
+      "text": "nước ngoài",
+      "count": 3
+    },
+    {
+      "text": "đây thì",
+      "count": 3
+    },
+    {
+      "text": "thể đi",
+      "count": 3
+    },
+    {
+      "text": "hà nội",
+      "count": 3
+    },
+    {
+      "text": "nhưng mà",
+      "count": 3
+    },
+    {
+      "text": "mình thích",
+      "count": 3
+    },
+    {
+      "text": "nam ở",
+      "count": 3
+    },
+    {
+      "text": "nói chung",
+      "count": 3
+    },
+    {
+      "text": "chung là",
+      "count": 3
+    },
+    {
+      "text": "thì chị",
+      "count": 3
+    },
+    {
+      "text": "một trong",
+      "count": 3
+    },
+    {
+      "text": "thế giới",
+      "count": 3
+    },
+    {
+      "text": "tiếng nhất",
+      "count": 3
+    },
+    {
+      "text": "hào mình",
+      "count": 3
+    },
+    {
+      "text": "địa điểm",
+      "count": 3
+    },
+    {
+      "text": "xin chào",
+      "count": 3
+    },
+    {
+      "text": "và bạn",
+      "count": 3
+    },
+    {
+      "text": "thành phố",
+      "count": 3
+    },
+    {
+      "text": "điều gì",
+      "count": 3
+    },
+    {
+      "text": "hào là",
+      "count": 2
+    },
+    {
+      "text": "nói đến",
+      "count": 2
+    },
+    {
+      "text": "thì nói",
+      "count": 2
+    },
+    {
+      "text": "là nhiều",
+      "count": 2
+    }
+  ],
+  "trigrams": [
+    {
+      "text": "người việt nam",
+      "count": 17
+    },
+    {
+      "text": "việt nam thì",
+      "count": 11
+    },
+    {
+      "text": "ở việt nam",
+      "count": 11
+    },
+    {
+      "text": "là người việt",
+      "count": 10
+    },
+    {
+      "text": "mình là người",
+      "count": 5
+    },
+    {
+      "text": "là tự hào",
+      "count": 4
+    },
+    {
+      "text": "việt nam và",
+      "count": 4
+    },
+    {
+      "text": "vịnh hạ long",
+      "count": 4
+    },
+    {
+      "text": "có thể đi",
+      "count": 3
+    },
+    {
+      "text": "việt nam ở",
+      "count": 3
+    },
+    {
+      "text": "nói chung là",
+      "count": 3
+    },
+    {
+      "text": "rất là tự",
+      "count": 3
+    },
+    {
+      "text": "là một trong",
+      "count": 3
+    },
+    {
+      "text": "nổi tiếng nhất",
+      "count": 3
+    },
+    {
+      "text": "tự hào mình",
+      "count": 3
+    },
+    {
+      "text": "hào mình là",
+      "count": 3
+    },
+    {
+      "text": "tự hào là",
+      "count": 2
+    },
+    {
+      "text": "hào là người",
+      "count": 2
+    },
+    {
+      "text": "rất là nhiều",
+      "count": 2
+    },
+    {
+      "text": "khách du lịch",
+      "count": 2
+    },
+    {
+      "text": "đến đây thì",
+      "count": 2
+    },
+    {
+      "text": "thì có thể",
+      "count": 2
+    },
+    {
+      "text": "con người việt",
+      "count": 2
+    },
+    {
+      "text": "nam thì chị",
+      "count": 2
+    },
+    {
+      "text": "tự hào về",
+      "count": 2
+    },
+    {
+      "text": "việt nam mình",
+      "count": 2
+    },
+    {
+      "text": "một trong những",
+      "count": 2
+    },
+    {
+      "text": "điểm du lịch",
+      "count": 2
+    },
+    {
+      "text": "hạ long của",
+      "count": 2
+    },
+    {
+      "text": "tiếng nhất là",
+      "count": 2
+    }
+  ],
+  "fourgrams": [
+    {
+      "text": "là người việt nam",
+      "count": 9
+    },
+    {
+      "text": "người việt nam thì",
+      "count": 4
+    },
+    {
+      "text": "mình là người việt",
+      "count": 4
+    },
+    {
+      "text": "ở việt nam thì",
+      "count": 3
+    },
+    {
+      "text": "rất là tự hào",
+      "count": 3
+    },
+    {
+      "text": "tự hào mình là",
+      "count": 3
+    },
+    {
+      "text": "hào mình là người",
+      "count": 3
+    },
+    {
+      "text": "tự hào là người",
+      "count": 2
+    },
+    {
+      "text": "hào là người việt",
+      "count": 2
+    },
+    {
+      "text": "con người việt nam",
+      "count": 2
+    },
+    {
+      "text": "người việt nam ở",
+      "count": 2
+    },
+    {
+      "text": "việt nam thì chị",
+      "count": 2
+    },
+    {
+      "text": "là một trong những",
+      "count": 2
+    },
+    {
+      "text": "vịnh hạ long của",
+      "count": 2
+    },
+    {
+      "text": "nổi tiếng nhất là",
+      "count": 2
+    },
+    {
+      "text": "xin chào các bạn",
+      "count": 2
+    },
+    {
+      "text": "thành phố hồ chí",
+      "count": 2
+    },
+    {
+      "text": "phố hồ chí minh",
+      "count": 2
+    },
+    {
+      "text": "điều gì ở việt",
+      "count": 2
+    },
+    {
+      "text": "gì ở việt nam",
+      "count": 2
+    }
+  ],
+  "stats": {
+    "unigrams": 50,
+    "bigrams": 50,
+    "trigrams": 30,
+    "fourgrams": 20
+  }
+}

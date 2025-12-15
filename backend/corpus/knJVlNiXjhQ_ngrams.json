@@ -1,0 +1,592 @@
+{
+  "unigrams": [
+    {
+      "text": "cái",
+      "count": 21
+    },
+    {
+      "text": "chị",
+      "count": 14
+    },
+    {
+      "text": "em",
+      "count": 14
+    },
+    {
+      "text": "hàng",
+      "count": 13
+    },
+    {
+      "text": "không",
+      "count": 12
+    },
+    {
+      "text": "nói",
+      "count": 12
+    },
+    {
+      "text": "chung",
+      "count": 12
+    },
+    {
+      "text": "nó",
+      "count": 11
+    },
+    {
+      "text": "chợ",
+      "count": 10
+    },
+    {
+      "text": "bạn",
+      "count": 10
+    },
+    {
+      "text": "mình",
+      "count": 9
+    },
+    {
+      "text": "mấy",
+      "count": 9
+    },
+    {
+      "text": "giá",
+      "count": 8
+    },
+    {
+      "text": "hơn",
+      "count": 8
+    },
+    {
+      "text": "tới",
+      "count": 8
+    },
+    {
+      "text": "đi",
+      "count": 7
+    },
+    {
+      "text": "các",
+      "count": 6
+    },
+    {
+      "text": "nhiều",
+      "count": 6
+    },
+    {
+      "text": "bao",
+      "count": 6
+    },
+    {
+      "text": "bán",
+      "count": 6
+    },
+    {
+      "text": "cả",
+      "count": 5
+    },
+    {
+      "text": "người",
+      "count": 5
+    },
+    {
+      "text": "mặt",
+      "count": 5
+    },
+    {
+      "text": "tây",
+      "count": 5
+    },
+    {
+      "text": "một",
+      "count": 5
+    },
+    {
+      "text": "nhiêu",
+      "count": 5
+    },
+    {
+      "text": "rẻ",
+      "count": 5
+    },
+    {
+      "text": "đến",
+      "count": 5
+    },
+    {
+      "text": "biết",
+      "count": 5
+    },
+    {
+      "text": "mới",
+      "count": 5
+    },
+    {
+      "text": "nay",
+      "count": 4
+    },
+    {
+      "text": "nữa",
+      "count": 4
+    },
+    {
+      "text": "nước",
+      "count": 4
+    },
+    {
+      "text": "thái",
+      "count": 4
+    },
+    {
+      "text": "khoảng",
+      "count": 4
+    },
+    {
+      "text": "lâu",
+      "count": 4
+    },
+    {
+      "text": "về",
+      "count": 4
+    },
+    {
+      "text": "năm",
+      "count": 4
+    },
+    {
+      "text": "tất",
+      "count": 3
+    },
+    {
+      "text": "thông",
+      "count": 3
+    },
+    {
+      "text": "hồi",
+      "count": 3
+    },
+    {
+      "text": "khác",
+      "count": 3
+    },
+    {
+      "text": "âm",
+      "count": 3
+    },
+    {
+      "text": "nhạc",
+      "count": 3
+    },
+    {
+      "text": "tháng",
+      "count": 3
+    },
+    {
+      "text": "xài",
+      "count": 3
+    },
+    {
+      "text": "mua",
+      "count": 3
+    },
+    {
+      "text": "quần",
+      "count": 3
+    },
+    {
+      "text": "áo",
+      "count": 3
+    },
+    {
+      "text": "trợ",
+      "count": 3
+    }
+  ],
+  "bigrams": [
+    {
+      "text": "cái này",
+      "count": 12
+    },
+    {
+      "text": "nói chung",
+      "count": 12
+    },
+    {
+      "text": "này là",
+      "count": 9
+    },
+    {
+      "text": "chung là",
+      "count": 9
+    },
+    {
+      "text": "bao nhiêu",
+      "count": 5
+    },
+    {
+      "text": "các bạn",
+      "count": 4
+    },
+    {
+      "text": "là hàng",
+      "count": 4
+    },
+    {
+      "text": "bán ở",
+      "count": 4
+    },
+    {
+      "text": "tất cả",
+      "count": 3
+    },
+    {
+      "text": "âm nhạc",
+      "count": 3
+    },
+    {
+      "text": "cái gì",
+      "count": 3
+    },
+    {
+      "text": "mấy cái",
+      "count": 3
+    },
+    {
+      "text": "có thể",
+      "count": 3
+    },
+    {
+      "text": "này của",
+      "count": 3
+    },
+    {
+      "text": "của thái",
+      "count": 3
+    },
+    {
+      "text": "thì nó",
+      "count": 3
+    },
+    {
+      "text": "dao động",
+      "count": 3
+    },
+    {
+      "text": "chị bán",
+      "count": 3
+    },
+    {
+      "text": "ở đây",
+      "count": 3
+    },
+    {
+      "text": "chợ này",
+      "count": 3
+    },
+    {
+      "text": "thì nói",
+      "count": 3
+    },
+    {
+      "text": "mấy bạn",
+      "count": 3
+    },
+    {
+      "text": "hiện nay",
+      "count": 2
+    },
+    {
+      "text": "nay mình",
+      "count": 2
+    },
+    {
+      "text": "mình đang",
+      "count": 2
+    },
+    {
+      "text": "thông tây",
+      "count": 2
+    },
+    {
+      "text": "chợ thì",
+      "count": 2
+    },
+    {
+      "text": "rất là",
+      "count": 2
+    },
+    {
+      "text": "là ở",
+      "count": 2
+    },
+    {
+      "text": "ở chợ",
+      "count": 2
+    },
+    {
+      "text": "ờ cái",
+      "count": 2
+    },
+    {
+      "text": "là cái",
+      "count": 2
+    },
+    {
+      "text": "gì vậy",
+      "count": 2
+    },
+    {
+      "text": "vậy chị",
+      "count": 2
+    },
+    {
+      "text": "mì quản",
+      "count": 2
+    },
+    {
+      "text": "quản đúng",
+      "count": 2
+    },
+    {
+      "text": "em mua",
+      "count": 2
+    },
+    {
+      "text": "mua được",
+      "count": 2
+    },
+    {
+      "text": "quần áo",
+      "count": 2
+    },
+    {
+      "text": "là không",
+      "count": 2
+    },
+    {
+      "text": "mặt hàng",
+      "count": 2
+    },
+    {
+      "text": "em có",
+      "count": 2
+    },
+    {
+      "text": "cho chị",
+      "count": 2
+    },
+    {
+      "text": "của nó",
+      "count": 2
+    },
+    {
+      "text": "thế nào",
+      "count": 2
+    },
+    {
+      "text": "được không",
+      "count": 2
+    },
+    {
+      "text": "hàng sale",
+      "count": 2
+    },
+    {
+      "text": "qu lợ",
+      "count": 2
+    },
+    {
+      "text": "lợ đ",
+      "count": 2
+    },
+    {
+      "text": "đ em",
+      "count": 2
+    }
+  ],
+  "trigrams": [
+    {
+      "text": "cái này là",
+      "count": 9
+    },
+    {
+      "text": "nói chung là",
+      "count": 9
+    },
+    {
+      "text": "chị bán ở",
+      "count": 3
+    },
+    {
+      "text": "bán ở đây",
+      "count": 3
+    },
+    {
+      "text": "thì nói chung",
+      "count": 3
+    },
+    {
+      "text": "hiện nay mình",
+      "count": 2
+    },
+    {
+      "text": "nay mình đang",
+      "count": 2
+    },
+    {
+      "text": "ờ cái này",
+      "count": 2
+    },
+    {
+      "text": "này là cái",
+      "count": 2
+    },
+    {
+      "text": "là cái gì",
+      "count": 2
+    },
+    {
+      "text": "cái gì vậy",
+      "count": 2
+    },
+    {
+      "text": "gì vậy chị",
+      "count": 2
+    },
+    {
+      "text": "mì quản đúng",
+      "count": 2
+    },
+    {
+      "text": "em mua được",
+      "count": 2
+    },
+    {
+      "text": "này là hàng",
+      "count": 2
+    },
+    {
+      "text": "qu lợ đ",
+      "count": 2
+    },
+    {
+      "text": "lợ đ em",
+      "count": 2
+    },
+    {
+      "text": "đ em gái",
+      "count": 2
+    },
+    {
+      "text": "cái này của",
+      "count": 2
+    },
+    {
+      "text": "này của thái",
+      "count": 2
+    },
+    {
+      "text": "dao động từ",
+      "count": 2
+    },
+    {
+      "text": "của nước nào",
+      "count": 2
+    },
+    {
+      "text": "vô tình biết",
+      "count": 2
+    },
+    {
+      "text": "khoảng bao nhiêu",
+      "count": 2
+    },
+    {
+      "text": "bao nhiêu lần",
+      "count": 2
+    },
+    {
+      "text": "có nhận xét",
+      "count": 2
+    },
+    {
+      "text": "nhận xét gì",
+      "count": 2
+    },
+    {
+      "text": "xét gì về",
+      "count": 2
+    },
+    {
+      "text": "phù hợp với",
+      "count": 2
+    },
+    {
+      "text": "mình mới đến",
+      "count": 2
+    }
+  ],
+  "fourgrams": [
+    {
+      "text": "chị bán ở đây",
+      "count": 3
+    },
+    {
+      "text": "thì nói chung là",
+      "count": 3
+    },
+    {
+      "text": "hiện nay mình đang",
+      "count": 2
+    },
+    {
+      "text": "ờ cái này là",
+      "count": 2
+    },
+    {
+      "text": "cái này là cái",
+      "count": 2
+    },
+    {
+      "text": "này là cái gì",
+      "count": 2
+    },
+    {
+      "text": "cái gì vậy chị",
+      "count": 2
+    },
+    {
+      "text": "cái này là hàng",
+      "count": 2
+    },
+    {
+      "text": "qu lợ đ em",
+      "count": 2
+    },
+    {
+      "text": "lợ đ em gái",
+      "count": 2
+    },
+    {
+      "text": "cái này của thái",
+      "count": 2
+    },
+    {
+      "text": "khoảng bao nhiêu lần",
+      "count": 2
+    },
+    {
+      "text": "có nhận xét gì",
+      "count": 2
+    },
+    {
+      "text": "nhận xét gì về",
+      "count": 2
+    }
+  ],
+  "stats": {
+    "unigrams": 50,
+    "bigrams": 50,
+    "trigrams": 30,
+    "fourgrams": 14
+  }
+}

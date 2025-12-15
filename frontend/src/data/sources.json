@@ -1,0 +1,56 @@
+[
+  {
+    "id": "gWZ620nh_S0",
+    "title": "Vietnamese Pride",
+    "url": "https://www.youtube.com/watch?v=gWZ620nh_S0",
+    "description": "Street interviews about Vietnamese pride, tourism, and food",
+    "topics": ["culture", "tourism", "food"],
+    "difficulty": "intermediate",
+    "wordCount": 53
+  },
+  {
+    "id": "Dps2_fUosJo",
+    "title": "Hot Weather in HCMC",
+    "url": "https://www.youtube.com/watch?v=Dps2_fUosJo",
+    "description": "Street interviews on Nguyen Hue walking street about the hot weather and city life",
+    "topics": ["city", "weather", "travel"],
+    "difficulty": "intermediate",
+    "wordCount": 97
+  },
+  {
+    "id": "knJVlNiXjhQ",
+    "title": "Night Market Tour",
+    "url": "https://www.youtube.com/watch?v=knJVlNiXjhQ",
+    "description": "Shopping at a local night market, asking about prices and products",
+    "topics": ["shopping", "market", "prices"],
+    "difficulty": "intermediate",
+    "wordCount": 26
+  },
+  {
+    "id": "wB_LiN9bPOo",
+    "title": "Old Bookshops Street",
+    "url": "https://www.youtube.com/watch?v=wB_LiN9bPOo",
+    "description": "Exploring the famous old bookshop street in Saigon, talking about books and education",
+    "topics": ["books", "education", "culture"],
+    "difficulty": "intermediate",
+    "wordCount": 38
+  },
+  {
+    "id": "WXVppNA4xzA",
+    "title": "Park Sports Activities",
+    "url": "https://www.youtube.com/watch?v=WXVppNA4xzA",
+    "description": "Conversations about sports and exercise at a local park",
+    "topics": ["sports", "health", "exercise"],
+    "difficulty": "intermediate",
+    "wordCount": 22
+  },
+  {
+    "id": "wABsPLBbRZE",
+    "title": "Dam Sen Amusement Park",
+    "url": "https://www.youtube.com/watch?v=wABsPLBbRZE",
+    "description": "Visiting Dam Sen amusement park, talking about games and attractions",
+    "topics": ["entertainment", "family", "fun"],
+    "difficulty": "beginner",
+    "wordCount": 29
+  }
+]

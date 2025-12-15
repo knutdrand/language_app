@@ -1,14 +1,18 @@
 import { useCallback, useMemo } from 'react';
 import { createEmptyCard, fsrs, Rating, type Card } from 'ts-fsrs';
-import type { Word, CardState } from '../types';
+import type { Word, CardState, DrillMode } from '../types';
 
-const STORAGE_KEY = 'language_app_cards';
+const STORAGE_KEY_BASE = 'language_app_cards';
 
 const f = fsrs();
 
-function loadCardStates(): Map<number, Card> {
+function getStorageKey(mode: DrillMode): string {
+  return mode === 'image' ? STORAGE_KEY_BASE : `${STORAGE_KEY_BASE}_${mode}`;
+}
+
+function loadCardStates(mode: DrillMode): Map<number, Card> {
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(getStorageKey(mode));
     if (stored) {
       const parsed = JSON.parse(stored) as CardState[];
       const map = new Map<number, Card>();
@@ -29,16 +33,16 @@ function loadCardStates(): Map<number, Card> {
   return new Map();
 }
 
-function saveCardStates(cards: Map<number, Card>): void {
+function saveCardStates(cards: Map<number, Card>, mode: DrillMode): void {
   const states: CardState[] = [];
   cards.forEach((card, wordId) => {
     states.push({ wordId, card });
   });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
+  localStorage.setItem(getStorageKey(mode), JSON.stringify(states));
 }
 
-export function useFSRS(words: Word[]) {
-  const cardStates = useMemo(() => loadCardStates(), []);
+export function useFSRS(words: Word[], mode: DrillMode = 'image') {
+  const cardStates = useMemo(() => loadCardStates(mode), [mode]);
 
   const getCardForWord = useCallback((wordId: number): Card => {
     const existing = cardStates.get(wordId);
@@ -87,8 +91,8 @@ export function useFSRS(words: Word[]) {
     const newCard = result[rating].card;
 
     cardStates.set(wordId, newCard);
-    saveCardStates(cardStates);
-  }, [cardStates, getCardForWord]);
+    saveCardStates(cardStates, mode);
+  }, [cardStates, getCardForWord, mode]);
 
   const getDueCount = useCallback((): number => {
     const now = new Date();

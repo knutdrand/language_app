@@ -1,0 +1,580 @@
+{
+  "unigrams": [
+    {
+      "text": "em",
+      "count": 28
+    },
+    {
+      "text": "chơi",
+      "count": 21
+    },
+    {
+      "text": "nhiều",
+      "count": 11
+    },
+    {
+      "text": "vui",
+      "count": 9
+    },
+    {
+      "text": "tụi",
+      "count": 9
+    },
+    {
+      "text": "dạ",
+      "count": 9
+    },
+    {
+      "text": "bạn",
+      "count": 9
+    },
+    {
+      "text": "đầm",
+      "count": 8
+    },
+    {
+      "text": "một",
+      "count": 8
+    },
+    {
+      "text": "mình",
+      "count": 8
+    },
+    {
+      "text": "không",
+      "count": 8
+    },
+    {
+      "text": "con",
+      "count": 8
+    },
+    {
+      "text": "trò",
+      "count": 8
+    },
+    {
+      "text": "rất",
+      "count": 8
+    },
+    {
+      "text": "chị",
+      "count": 7
+    },
+    {
+      "text": "đi",
+      "count": 6
+    },
+    {
+      "text": "chụp",
+      "count": 6
+    },
+    {
+      "text": "đẹp",
+      "count": 6
+    },
+    {
+      "text": "sen",
+      "count": 5
+    },
+    {
+      "text": "những",
+      "count": 5
+    },
+    {
+      "text": "tên",
+      "count": 5
+    },
+    {
+      "text": "tàu",
+      "count": 5
+    },
+    {
+      "text": "lúc",
+      "count": 5
+    },
+    {
+      "text": "thích",
+      "count": 5
+    },
+    {
+      "text": "năm",
+      "count": 4
+    },
+    {
+      "text": "đến",
+      "count": 4
+    },
+    {
+      "text": "chưa",
+      "count": 4
+    },
+    {
+      "text": "hai",
+      "count": 4
+    },
+    {
+      "text": "tham",
+      "count": 4
+    },
+    {
+      "text": "gia",
+      "count": 4
+    },
+    {
+      "text": "muốn",
+      "count": 4
+    },
+    {
+      "text": "hình",
+      "count": 4
+    },
+    {
+      "text": "siêu",
+      "count": 4
+    },
+    {
+      "text": "tới",
+      "count": 4
+    },
+    {
+      "text": "nó",
+      "count": 4
+    },
+    {
+      "text": "kỷ",
+      "count": 4
+    },
+    {
+      "text": "niệm",
+      "count": 4
+    },
+    {
+      "text": "người",
+      "count": 3
+    },
+    {
+      "text": "khu",
+      "count": 3
+    },
+    {
+      "text": "thành",
+      "count": 3
+    },
+    {
+      "text": "hơn",
+      "count": 3
+    },
+    {
+      "text": "nay",
+      "count": 3
+    },
+    {
+      "text": "sài",
+      "count": 3
+    },
+    {
+      "text": "gòn",
+      "count": 3
+    },
+    {
+      "text": "hôm",
+      "count": 3
+    },
+    {
+      "text": "hả",
+      "count": 3
+    },
+    {
+      "text": "giờ",
+      "count": 3
+    },
+    {
+      "text": "nè",
+      "count": 3
+    },
+    {
+      "text": "tóc",
+      "count": 3
+    },
+    {
+      "text": "lượng",
+      "count": 3
+    }
+  ],
+  "bigrams": [
+    {
+      "text": "tụi em",
+      "count": 8
+    },
+    {
+      "text": "rất là",
+      "count": 7
+    },
+    {
+      "text": "em là",
+      "count": 6
+    },
+    {
+      "text": "đầm sen",
+      "count": 5
+    },
+    {
+      "text": "trò chơi",
+      "count": 5
+    },
+    {
+      "text": "là một",
+      "count": 4
+    },
+    {
+      "text": "nhiều trò",
+      "count": 4
+    },
+    {
+      "text": "chụp hình",
+      "count": 4
+    },
+    {
+      "text": "là nhiều",
+      "count": 4
+    },
+    {
+      "text": "tới đây",
+      "count": 4
+    },
+    {
+      "text": "kỷ niệm",
+      "count": 4
+    },
+    {
+      "text": "khu vui",
+      "count": 3
+    },
+    {
+      "text": "vui chơi",
+      "count": 3
+    },
+    {
+      "text": "sài gòn",
+      "count": 3
+    },
+    {
+      "text": "em có",
+      "count": 3
+    },
+    {
+      "text": "em của",
+      "count": 3
+    },
+    {
+      "text": "của em",
+      "count": 3
+    },
+    {
+      "text": "tham gia",
+      "count": 3
+    },
+    {
+      "text": "dạ có",
+      "count": 3
+    },
+    {
+      "text": "tàu lượng",
+      "count": 3
+    },
+    {
+      "text": "cảm giác",
+      "count": 3
+    },
+    {
+      "text": "giác của",
+      "count": 3
+    },
+    {
+      "text": "lúc đó",
+      "count": 3
+    },
+    {
+      "text": "như thế",
+      "count": 3
+    },
+    {
+      "text": "thế nào",
+      "count": 3
+    },
+    {
+      "text": "ở đây",
+      "count": 3
+    },
+    {
+      "text": "đây thì",
+      "count": 3
+    },
+    {
+      "text": "em thích",
+      "count": 3
+    },
+    {
+      "text": "có nhiều",
+      "count": 3
+    },
+    {
+      "text": "chơi thì",
+      "count": 3
+    },
+    {
+      "text": "là vui",
+      "count": 3
+    },
+    {
+      "text": "xin chào",
+      "count": 2
+    },
+    {
+      "text": "có mặt",
+      "count": 2
+    },
+    {
+      "text": "mặt tại",
+      "count": 2
+    },
+    {
+      "text": "sen là",
+      "count": 2
+    },
+    {
+      "text": "một khu",
+      "count": 2
+    },
+    {
+      "text": "đã có",
+      "count": 2
+    },
+    {
+      "text": "người dân",
+      "count": 2
+    },
+    {
+      "text": "hôm nay",
+      "count": 2
+    },
+    {
+      "text": "chúng ta",
+      "count": 2
+    },
+    {
+      "text": "điều gì",
+      "count": 2
+    },
+    {
+      "text": "có thể",
+      "count": 2
+    },
+    {
+      "text": "ạ dạ",
+      "count": 2
+    },
+    {
+      "text": "ở nhà",
+      "count": 2
+    },
+    {
+      "text": "chị của",
+      "count": 2
+    },
+    {
+      "text": "của hai",
+      "count": 2
+    },
+    {
+      "text": "em này",
+      "count": 2
+    },
+    {
+      "text": "là em",
+      "count": 2
+    },
+    {
+      "text": "chị này",
+      "count": 2
+    },
+    {
+      "text": "là tên",
+      "count": 2
+    }
+  ],
+  "trigrams": [
+    {
+      "text": "rất là nhiều",
+      "count": 4
+    },
+    {
+      "text": "khu vui chơi",
+      "count": 3
+    },
+    {
+      "text": "nhiều trò chơi",
+      "count": 3
+    },
+    {
+      "text": "cảm giác của",
+      "count": 3
+    },
+    {
+      "text": "như thế nào",
+      "count": 3
+    },
+    {
+      "text": "rất là vui",
+      "count": 3
+    },
+    {
+      "text": "có mặt tại",
+      "count": 2
+    },
+    {
+      "text": "đầm sen là",
+      "count": 2
+    },
+    {
+      "text": "sen là một",
+      "count": 2
+    },
+    {
+      "text": "là một khu",
+      "count": 2
+    },
+    {
+      "text": "một khu vui",
+      "count": 2
+    },
+    {
+      "text": "em có thể",
+      "count": 2
+    },
+    {
+      "text": "em là em",
+      "count": 2
+    },
+    {
+      "text": "là em của",
+      "count": 2
+    },
+    {
+      "text": "em là tên",
+      "count": 2
+    },
+    {
+      "text": "tụi em chơi",
+      "count": 2
+    },
+    {
+      "text": "chơi băng đăng",
+      "count": 2
+    },
+    {
+      "text": "băng đăng nè",
+      "count": 2
+    },
+    {
+      "text": "quay siêu tóc",
+      "count": 2
+    },
+    {
+      "text": "rồi tàu lượng",
+      "count": 2
+    },
+    {
+      "text": "tàu lượng siêu",
+      "count": 2
+    },
+    {
+      "text": "lượng siêu tốc",
+      "count": 2
+    },
+    {
+      "text": "giác của bạn",
+      "count": 2
+    },
+    {
+      "text": "lâu đài kinh",
+      "count": 2
+    },
+    {
+      "text": "có nhiều trò",
+      "count": 2
+    },
+    {
+      "text": "chụp hình còn",
+      "count": 2
+    },
+    {
+      "text": "nó có nhiều",
+      "count": 2
+    },
+    {
+      "text": "của tụi em",
+      "count": 2
+    },
+    {
+      "text": "bạn chơi thì",
+      "count": 2
+    },
+    {
+      "text": "chơi rất là",
+      "count": 2
+    }
+  ],
+  "fourgrams": [
+    {
+      "text": "đầm sen là một",
+      "count": 2
+    },
+    {
+      "text": "sen là một khu",
+      "count": 2
+    },
+    {
+      "text": "là một khu vui",
+      "count": 2
+    },
+    {
+      "text": "một khu vui chơi",
+      "count": 2
+    },
+    {
+      "text": "em là em của",
+      "count": 2
+    },
+    {
+      "text": "chơi băng đăng nè",
+      "count": 2
+    },
+    {
+      "text": "tàu lượng siêu tốc",
+      "count": 2
+    },
+    {
+      "text": "cảm giác của bạn",
+      "count": 2
+    },
+    {
+      "text": "chơi rất là vui",
+      "count": 2
+    },
+    {
+      "text": "tới đây nữa không",
+      "count": 2
+    },
+    {
+      "text": "đây nữa không dạ",
+      "count": 2
+    }
+  ],
+  "stats": {
+    "unigrams": 50,
+    "bigrams": 50,
+    "trigrams": 30,
+    "fourgrams": 11
+  }
+}

@@ -1,51 +1,61 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { Word, Source } from '../types';
 import { AudioButton } from './AudioButton';
-import { ImageGrid } from './ImageGrid';
+import { ToneGrid } from './ToneGrid';
 import { useFSRS } from '../hooks/useFSRS';
 import { useProgress } from '../hooks/useProgress';
+import {
+  type ToneId,
+  getToneSequence,
+  getDistractorSequences,
+  formatToneSequence,
+  formatToneSequenceDiacritics,
+} from '../utils/tones';
 
-interface DrillProps {
+interface ToneDrillProps {
   words: Word[];
   sources?: Source[];
 }
 
-function getRandomDistractors(words: Word[], excludeId: number, count: number): Word[] {
-  const available = words.filter((w) => w.id !== excludeId);
-  const shuffled = [...available].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
-}
+export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
+  // Use separate FSRS storage for tone mode
+  const { getNextWord, recordReview, getDueCount } = useFSRS(words, 'tone');
 
-export function Drill({ words, sources = [] }: DrillProps) {
-  const { getNextWord, recordReview, getDueCount } = useFSRS(words);
+  const getSourceForWord = useCallback(
+    (word: Word | null): Source | undefined => {
+      if (!word?.sourceId) return undefined;
+      return sources.find((s) => s.id === word.sourceId);
+    },
+    [sources]
+  );
 
-  // Get source for current word
-  const getSourceForWord = useCallback((word: Word | null): Source | undefined => {
-    if (!word?.sourceId) return undefined;
-    return sources.find(s => s.id === word.sourceId);
-  }, [sources]);
   const { recordReview: recordProgress, reviewsToday, correctToday } = useProgress();
 
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
-  const [distractors, setDistractors] = useState<Word[]>([]);
+  const [correctSequence, setCorrectSequence] = useState<ToneId[]>([]);
+  const [distractorSequences, setDistractorSequences] = useState<ToneId[][]>([]);
   const [showingFeedback, setShowingFeedback] = useState(false);
-  const [lastResult, setLastResult] = useState<{ correct: boolean; word: Word } | null>(null);
-  const [showHint, setShowHint] = useState(false);
-  const [key, setKey] = useState(0); // For forcing re-render of ImageGrid
+  const [lastResult, setLastResult] = useState<{
+    correct: boolean;
+    word: Word;
+    correctSeq: ToneId[];
+  } | null>(null);
+  const [key, setKey] = useState(0);
 
   const loadNextWord = useCallback(() => {
     const next = getNextWord();
     if (next) {
+      const seq = getToneSequence(next.vietnamese);
       setCurrentWord(next);
-      setDistractors(getRandomDistractors(words, next.id, 3));
+      setCorrectSequence(seq);
+      setDistractorSequences(getDistractorSequences(seq));
       setShowingFeedback(false);
       setLastResult(null);
-      setShowHint(false);
       setKey((k) => k + 1);
     } else {
       setCurrentWord(null);
     }
-  }, [getNextWord, words]);
+  }, [getNextWord]);
 
   // Load first word on mount
   useEffect(() => {
@@ -53,10 +63,10 @@ export function Drill({ words, sources = [] }: DrillProps) {
   }, []);
 
   const handleSelect = useCallback(
-    (_selectedWord: Word, isCorrect: boolean) => {
+    (_selectedSequence: ToneId[], isCorrect: boolean) => {
       if (!currentWord) return;
 
-      setLastResult({ correct: isCorrect, word: currentWord });
+      setLastResult({ correct: isCorrect, word: currentWord, correctSeq: correctSequence });
       setShowingFeedback(true);
 
       // Record with FSRS and progress
@@ -68,7 +78,7 @@ export function Drill({ words, sources = [] }: DrillProps) {
         loadNextWord();
       }, 1500);
     },
-    [currentWord, recordReview, recordProgress, loadNextWord]
+    [currentWord, correctSequence, recordReview, recordProgress, loadNextWord]
   );
 
   const dueCount = useMemo(() => getDueCount(), [getDueCount, key]);
@@ -80,10 +90,10 @@ export function Drill({ words, sources = [] }: DrillProps) {
         <div className="text-6xl">🎉</div>
         <h2 className="text-2xl font-bold text-gray-800">All done for now!</h2>
         <p className="text-gray-600">
-          You've reviewed all due words. Come back later for more practice.
+          You've reviewed all due tones. Come back later for more practice.
         </p>
         <div className="mt-4 p-4 bg-gray-100 rounded-xl">
-          <p className="text-sm text-gray-500">Today's stats</p>
+          <p className="text-sm text-gray-500">Today's stats (Tone Mode)</p>
           <p className="text-xl font-semibold">
             {reviewsToday} reviews • {accuracy}% accuracy
           </p>
@@ -117,10 +127,12 @@ export function Drill({ words, sources = [] }: DrillProps) {
           `}
         >
           <p className="font-semibold">
-            {lastResult.correct ? '✓ Correct!' : `✗ It was "${lastResult.word.vietnamese}"`}
+            {lastResult.correct
+              ? '✓ Correct!'
+              : `✗ The tones were: ${formatToneSequence(lastResult.correctSeq)}`}
           </p>
           <p className="text-sm mt-1 opacity-80">
-            {lastResult.word.vietnamese} = {lastResult.word.english}
+            {lastResult.word.vietnamese} ({formatToneSequenceDiacritics(lastResult.correctSeq)})
           </p>
         </div>
       )}
@@ -130,21 +142,12 @@ export function Drill({ words, sources = [] }: DrillProps) {
         <AudioButton text={currentWord.vietnamese} autoPlay={!showingFeedback} />
       </div>
 
-      {/* Hint: Vietnamese text (on demand) */}
-      {showHint ? (
-        <p className="text-gray-600 text-lg font-medium">
-          {currentWord.vietnamese}
-        </p>
-      ) : (
-        <button
-          onClick={() => setShowHint(true)}
-          className="text-gray-400 text-sm hover:text-gray-600 transition-colors"
-        >
-          Show text hint
-        </button>
-      )}
+      {/* English meaning only (no Vietnamese spelling to avoid giving away tones) */}
+      <div className="text-center">
+        <p className="text-lg text-gray-600">{currentWord.english}</p>
+      </div>
 
-      {/* Source link (for corpus words) */}
+      {/* Source link */}
       {(() => {
         const source = getSourceForWord(currentWord);
         return source ? (
@@ -156,17 +159,25 @@ export function Drill({ words, sources = [] }: DrillProps) {
           >
             <span>From: {source.title}</span>
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+              />
             </svg>
           </a>
         ) : null;
       })()}
 
-      {/* Image grid */}
-      <ImageGrid
+      {/* Instruction */}
+      <p className="text-gray-500 text-sm">Select the correct tone sequence:</p>
+
+      {/* Tone grid */}
+      <ToneGrid
         key={key}
-        correctWord={currentWord}
-        distractors={distractors}
+        correctSequence={correctSequence}
+        distractorSequences={distractorSequences}
         onSelect={handleSelect}
         disabled={showingFeedback}
       />

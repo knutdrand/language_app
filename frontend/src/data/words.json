@@ -298,5 +298,2239 @@
     "vietnamese": "sữa",
     "english": "milk",
     "imageUrl": "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400"
+  },
+  {
+    "id": 51,
+    "vietnamese": "xin chào",
+    "english": "hello",
+    "imageUrl": "https://images.unsplash.com/photo-1516575448072-8f5a2ec0b4e0?w=400"
+  },
+  {
+    "id": 52,
+    "vietnamese": "tạm biệt",
+    "english": "goodbye",
+    "imageUrl": "https://images.unsplash.com/photo-1527168027773-0cc890c4f42e?w=400"
+  },
+  {
+    "id": 53,
+    "vietnamese": "cảm ơn",
+    "english": "thank you",
+    "imageUrl": "https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=400"
+  },
+  {
+    "id": 54,
+    "vietnamese": "xin lỗi",
+    "english": "sorry",
+    "imageUrl": "https://images.unsplash.com/photo-1534330207526-8e81f10ec6fc?w=400"
+  },
+  {
+    "id": 55,
+    "vietnamese": "bạn khỏe không",
+    "english": "how are you",
+    "imageUrl": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400"
+  },
+  {
+    "id": 56,
+    "vietnamese": "tôi khỏe",
+    "english": "I'm fine",
+    "imageUrl": "https://images.unsplash.com/photo-1545315003-c5ad6226c272?w=400"
+  },
+  {
+    "id": 57,
+    "vietnamese": "cho tôi hỏi",
+    "english": "excuse me / may I ask",
+    "imageUrl": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400"
+  },
+  {
+    "id": 58,
+    "vietnamese": "tôi không hiểu",
+    "english": "I don't understand",
+    "imageUrl": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400"
+  },
+  {
+    "id": 59,
+    "vietnamese": "bao nhiêu tiền",
+    "english": "how much",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400"
+  },
+  {
+    "id": 60,
+    "vietnamese": "một",
+    "english": "one",
+    "imageUrl": "https://images.unsplash.com/photo-1502570149819-b2260483d302?w=400"
+  },
+  {
+    "id": 61,
+    "vietnamese": "hai",
+    "english": "two",
+    "imageUrl": "https://images.unsplash.com/photo-1564939558297-fc396f18e5c7?w=400"
+  },
+  {
+    "id": 62,
+    "vietnamese": "ba",
+    "english": "three",
+    "imageUrl": "https://images.unsplash.com/photo-1586182987320-4f376d39d787?w=400"
+  },
+  {
+    "id": 63,
+    "vietnamese": "bốn",
+    "english": "four",
+    "imageUrl": "https://images.unsplash.com/photo-1541356665065-22676f35dd40?w=400"
+  },
+  {
+    "id": 64,
+    "vietnamese": "năm",
+    "english": "five",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400"
+  },
+  {
+    "id": 65,
+    "vietnamese": "sáu",
+    "english": "six",
+    "imageUrl": "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400"
+  },
+  {
+    "id": 66,
+    "vietnamese": "bảy",
+    "english": "seven",
+    "imageUrl": "https://images.unsplash.com/photo-1549049950-48d5887197a0?w=400"
+  },
+  {
+    "id": 67,
+    "vietnamese": "tám",
+    "english": "eight",
+    "imageUrl": "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400"
+  },
+  {
+    "id": 68,
+    "vietnamese": "chín",
+    "english": "nine",
+    "imageUrl": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400"
+  },
+  {
+    "id": 69,
+    "vietnamese": "mười",
+    "english": "ten",
+    "imageUrl": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400"
+  },
+  {
+    "id": 70,
+    "vietnamese": "việt nam",
+    "english": "Vietnam",
+    "imageUrl": "https://images.unsplash.com/photo-1555921015-5532091f6026?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 46
+  },
+  {
+    "id": 71,
+    "vietnamese": "người việt nam",
+    "english": "Vietnamese person/people",
+    "imageUrl": "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 17
+  },
+  {
+    "id": 72,
+    "vietnamese": "tự hào",
+    "english": "proud",
+    "imageUrl": "https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 10
+  },
+  {
+    "id": 73,
+    "vietnamese": "du lịch",
+    "english": "tourism / travel",
+    "imageUrl": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 8
+  },
+  {
+    "id": 74,
+    "vietnamese": "món ăn",
+    "english": "dish / food",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 75,
+    "vietnamese": "nổi tiếng",
+    "english": "famous",
+    "imageUrl": "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 7
+  },
+  {
+    "id": 76,
+    "vietnamese": "thân thiện",
+    "english": "friendly",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 3
+  },
+  {
+    "id": 77,
+    "vietnamese": "vịnh hạ long",
+    "english": "Ha Long Bay",
+    "imageUrl": "https://images.unsplash.com/photo-1528127269322-539801943592?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 78,
+    "vietnamese": "thành phố hồ chí minh",
+    "english": "Ho Chi Minh City",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 79,
+    "vietnamese": "rất là",
+    "english": "very / really",
+    "imageUrl": "https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 8
+  },
+  {
+    "id": 80,
+    "vietnamese": "đẹp",
+    "english": "beautiful",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 5
+  },
+  {
+    "id": 81,
+    "vietnamese": "đến việt nam",
+    "english": "come to Vietnam",
+    "imageUrl": "https://images.unsplash.com/photo-1555921015-5532091f6026?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 82,
+    "vietnamese": "thế giới",
+    "english": "world",
+    "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 3
+  },
+  {
+    "id": 83,
+    "vietnamese": "miền bắc",
+    "english": "Northern region",
+    "imageUrl": "https://images.unsplash.com/photo-1528127269322-539801943592?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 84,
+    "vietnamese": "miền tây",
+    "english": "Western region (Mekong Delta)",
+    "imageUrl": "https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 85,
+    "vietnamese": "nước ngoài",
+    "english": "foreign country / abroad",
+    "imageUrl": "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 3
+  },
+  {
+    "id": 86,
+    "vietnamese": "khách du lịch",
+    "english": "tourist",
+    "imageUrl": "https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 87,
+    "vietnamese": "tự hào là người việt nam",
+    "english": "proud to be Vietnamese",
+    "imageUrl": "https://images.unsplash.com/photo-1555921015-5532091f6026?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 88,
+    "vietnamese": "mình thích",
+    "english": "I like",
+    "imageUrl": "https://images.unsplash.com/photo-1516575448072-8f5a2ec0b4e0?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 3
+  },
+  {
+    "id": 89,
+    "vietnamese": "bún chả",
+    "english": "bun cha (grilled pork with noodles)",
+    "imageUrl": "https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 90,
+    "vietnamese": "văn hóa",
+    "english": "culture",
+    "imageUrl": "https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 91,
+    "vietnamese": "hà nội",
+    "english": "Hanoi",
+    "imageUrl": "https://images.unsplash.com/photo-1509030450996-dd1a26dda07a?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 3
+  },
+  {
+    "id": 92,
+    "vietnamese": "con người",
+    "english": "human / people",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 93,
+    "vietnamese": "địa điểm du lịch",
+    "english": "tourist destination",
+    "imageUrl": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 94,
+    "vietnamese": "kỳ quan thế giới",
+    "english": "world wonder",
+    "imageUrl": "https://images.unsplash.com/photo-1528127269322-539801943592?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 2
+  },
+  {
+    "id": 95,
+    "vietnamese": "mình",
+    "english": "I / me / myself",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 32
+  },
+  {
+    "id": 96,
+    "vietnamese": "bạn",
+    "english": "friend / you",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 13
+  },
+  {
+    "id": 97,
+    "vietnamese": "đến",
+    "english": "to come / arrive",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 11
+  },
+  {
+    "id": 98,
+    "vietnamese": "ăn cơm",
+    "english": "eat rice / have a meal",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 11
+  },
+  {
+    "id": 99,
+    "vietnamese": "nhất",
+    "english": "most / best",
+    "imageUrl": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 11
+  },
+  {
+    "id": 100,
+    "vietnamese": "những",
+    "english": "those / the (plural)",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 10
+  },
+  {
+    "id": 101,
+    "vietnamese": "nói",
+    "english": "speak / say",
+    "imageUrl": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 8
+  },
+  {
+    "id": 102,
+    "vietnamese": "về nhà",
+    "english": "go home / return home",
+    "imageUrl": "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 8
+  },
+  {
+    "id": 103,
+    "vietnamese": "không",
+    "english": "no / not",
+    "imageUrl": "https://images.unsplash.com/photo-1534330207526-8e81f10ec6fc?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 104,
+    "vietnamese": "nhiều",
+    "english": "many / much",
+    "imageUrl": "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 105,
+    "vietnamese": "chị",
+    "english": "older sister / Ms",
+    "imageUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 106,
+    "vietnamese": "đi chơi",
+    "english": "go out / hang out",
+    "imageUrl": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 107,
+    "vietnamese": "thích",
+    "english": "like",
+    "imageUrl": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 108,
+    "vietnamese": "anh",
+    "english": "older brother / Mr",
+    "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 5
+  },
+  {
+    "id": 109,
+    "vietnamese": "thấy",
+    "english": "see",
+    "imageUrl": "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 5
+  },
+  {
+    "id": 110,
+    "vietnamese": "khách",
+    "english": "guest / customer",
+    "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 111,
+    "vietnamese": "nơi",
+    "english": "place",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 112,
+    "vietnamese": "người việt",
+    "english": "Vietnamese person",
+    "imageUrl": "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 18
+  },
+  {
+    "id": 113,
+    "vietnamese": "ở việt nam",
+    "english": "in Vietnam",
+    "imageUrl": "https://images.unsplash.com/photo-1555921015-5532091f6026?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 11
+  },
+  {
+    "id": 114,
+    "vietnamese": "có thể",
+    "english": "can / able to",
+    "imageUrl": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 6
+  },
+  {
+    "id": 115,
+    "vietnamese": "các bạn",
+    "english": "you all / everyone",
+    "imageUrl": "https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 5
+  },
+  {
+    "id": 116,
+    "vietnamese": "nhất là",
+    "english": "especially",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 5
+  },
+  {
+    "id": 117,
+    "vietnamese": "đó là",
+    "english": "that is",
+    "imageUrl": "https://images.unsplash.com/photo-1453227588063-bb302b62f50b?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 118,
+    "vietnamese": "là người việt",
+    "english": "is Vietnamese",
+    "imageUrl": "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 10
+  },
+  {
+    "id": 119,
+    "vietnamese": "mình là người",
+    "english": "I am a person",
+    "imageUrl": "https://images.unsplash.com/photo-1499996860823-5f57e8f12c?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 5
+  },
+  {
+    "id": 120,
+    "vietnamese": "là tự hào",
+    "english": "is proud",
+    "imageUrl": "https://images.unsplash.com/photo-1504439904031-93ded9f93e4e?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 121,
+    "vietnamese": "là người việt nam",
+    "english": "is Vietnamese",
+    "imageUrl": "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 9
+  },
+  {
+    "id": 122,
+    "vietnamese": "mình là người việt",
+    "english": "I am Vietnamese",
+    "imageUrl": "https://images.unsplash.com/photo-1557672172-298e090bd0f1?w=400",
+    "sourceId": "gWZ620nh_S0",
+    "frequency": 4
+  },
+  {
+    "id": 123,
+    "vietnamese": "cái",
+    "english": "thing / classifier",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 35
+  },
+  {
+    "id": 124,
+    "vietnamese": "đi",
+    "english": "go / walk",
+    "imageUrl": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 29
+  },
+  {
+    "id": 125,
+    "vietnamese": "em",
+    "english": "younger sibling / I",
+    "imageUrl": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 28
+  },
+  {
+    "id": 126,
+    "vietnamese": "thành",
+    "english": "city / become",
+    "imageUrl": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 21
+  },
+  {
+    "id": 127,
+    "vietnamese": "chơi",
+    "english": "play",
+    "imageUrl": "https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 21
+  },
+  {
+    "id": 128,
+    "vietnamese": "phố",
+    "english": "street / urban",
+    "imageUrl": "https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 20
+  },
+  {
+    "id": 129,
+    "vietnamese": "đường",
+    "english": "road / street",
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 18
+  },
+  {
+    "id": 130,
+    "vietnamese": "mua",
+    "english": "buy",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 18
+  },
+  {
+    "id": 131,
+    "vietnamese": "con",
+    "english": "child / animal classifier",
+    "imageUrl": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 17
+  },
+  {
+    "id": 132,
+    "vietnamese": "rất",
+    "english": "very",
+    "imageUrl": "https://images.unsplash.com/photo-1517960413843-0aee8e2b3285?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 17
+  },
+  {
+    "id": 133,
+    "vietnamese": "dạ",
+    "english": "yes (polite)",
+    "imageUrl": "https://images.unsplash.com/photo-1516575448072-8f5a2ec0b4e0?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 17
+  },
+  {
+    "id": 134,
+    "vietnamese": "con đường",
+    "english": "road / street",
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 15
+  },
+  {
+    "id": 135,
+    "vietnamese": "ta",
+    "english": "we / us",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 14
+  },
+  {
+    "id": 136,
+    "vietnamese": "chú",
+    "english": "uncle / mister",
+    "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 13
+  },
+  {
+    "id": 137,
+    "vietnamese": "lần",
+    "english": "time / occurrence",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 13
+  },
+  {
+    "id": 138,
+    "vietnamese": "bộ",
+    "english": "walk / ministry",
+    "imageUrl": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 13
+  },
+  {
+    "id": 139,
+    "vietnamese": "nó",
+    "english": "it / he/she",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 13
+  },
+  {
+    "id": 140,
+    "vietnamese": "thành phố",
+    "english": "city",
+    "imageUrl": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 13
+  },
+  {
+    "id": 141,
+    "vietnamese": "hàng",
+    "english": "goods / row",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 13
+  },
+  {
+    "id": 142,
+    "vietnamese": "đầu",
+    "english": "head / first",
+    "imageUrl": "https://images.unsplash.com/photo-1564429238535-5ba3aca9d427?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 12
+  },
+  {
+    "id": 143,
+    "vietnamese": "tiên",
+    "english": "first / fairy",
+    "imageUrl": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 12
+  },
+  {
+    "id": 144,
+    "vietnamese": "lần đầu",
+    "english": "first time",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 12
+  },
+  {
+    "id": 145,
+    "vietnamese": "đầu tiên",
+    "english": "first",
+    "imageUrl": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 12
+  },
+  {
+    "id": 146,
+    "vietnamese": "nói chung",
+    "english": "in general / generally",
+    "imageUrl": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 12
+  },
+  {
+    "id": 147,
+    "vietnamese": "lần đầu tiên",
+    "english": "first time",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 12
+  },
+  {
+    "id": 148,
+    "vietnamese": "chung",
+    "english": "general / common",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 12
+  },
+  {
+    "id": 149,
+    "vietnamese": "cái này",
+    "english": "this thing",
+    "imageUrl": "https://images.unsplash.com/photo-1453227588063-bb302b62f50b?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 12
+  },
+  {
+    "id": 150,
+    "vietnamese": "biết",
+    "english": "know",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 11
+  },
+  {
+    "id": 151,
+    "vietnamese": "đi bộ",
+    "english": "walk (on foot)",
+    "imageUrl": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 11
+  },
+  {
+    "id": 152,
+    "vietnamese": "học",
+    "english": "study / learn",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 11
+  },
+  {
+    "id": 153,
+    "vietnamese": "đúng",
+    "english": "correct / right",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 11
+  },
+  {
+    "id": 154,
+    "vietnamese": "người ta",
+    "english": "people / they",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 11
+  },
+  {
+    "id": 155,
+    "vietnamese": "cầu",
+    "english": "bridge / badminton",
+    "imageUrl": "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 11
+  },
+  {
+    "id": 156,
+    "vietnamese": "đá",
+    "english": "stone / kick",
+    "imageUrl": "https://images.unsplash.com/photo-1579952363873-27f03aa01a76?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 11
+  },
+  {
+    "id": 157,
+    "vietnamese": "cô",
+    "english": "aunt / miss",
+    "imageUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 10
+  },
+  {
+    "id": 158,
+    "vietnamese": "chợ",
+    "english": "market",
+    "imageUrl": "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 10
+  },
+  {
+    "id": 159,
+    "vietnamese": "mấy",
+    "english": "how many / some",
+    "imageUrl": "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 10
+  },
+  {
+    "id": 160,
+    "vietnamese": "vui",
+    "english": "happy / fun",
+    "imageUrl": "https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 9
+  },
+  {
+    "id": 161,
+    "vietnamese": "thể",
+    "english": "body / can",
+    "imageUrl": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 9
+  },
+  {
+    "id": 162,
+    "vietnamese": "một cái",
+    "english": "one (thing)",
+    "imageUrl": "https://images.unsplash.com/photo-1502570149819-b2260483d302?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 9
+  },
+  {
+    "id": 163,
+    "vietnamese": "không biết",
+    "english": "don't know",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 9
+  },
+  {
+    "id": 164,
+    "vietnamese": "biết là",
+    "english": "know that",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 9
+  },
+  {
+    "id": 165,
+    "vietnamese": "chung là",
+    "english": "in general is",
+    "imageUrl": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 9
+  },
+  {
+    "id": 166,
+    "vietnamese": "không biết là",
+    "english": "don't know that",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 9
+  },
+  {
+    "id": 167,
+    "vietnamese": "nói chung là",
+    "english": "generally speaking",
+    "imageUrl": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 9
+  },
+  {
+    "id": 168,
+    "vietnamese": "bán",
+    "english": "sell",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 9
+  },
+  {
+    "id": 169,
+    "vietnamese": "mới",
+    "english": "new / just",
+    "imageUrl": "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 9
+  },
+  {
+    "id": 170,
+    "vietnamese": "này là",
+    "english": "this is",
+    "imageUrl": "https://images.unsplash.com/photo-1453227588063-bb302b62f50b?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 9
+  },
+  {
+    "id": 171,
+    "vietnamese": "cái này là",
+    "english": "this is",
+    "imageUrl": "https://images.unsplash.com/photo-1453227588063-bb302b62f50b?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 9
+  },
+  {
+    "id": 172,
+    "vietnamese": "môn",
+    "english": "subject / sport",
+    "imageUrl": "https://images.unsplash.com/photo-1461896836934- voices?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 9
+  },
+  {
+    "id": 173,
+    "vietnamese": "tụi",
+    "english": "(tụi)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 9
+  },
+  {
+    "id": 174,
+    "vietnamese": "giờ",
+    "english": "hour / now",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 175,
+    "vietnamese": "hơn",
+    "english": "more / than",
+    "imageUrl": "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 176,
+    "vietnamese": "mọi",
+    "english": "every",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 177,
+    "vietnamese": "trên",
+    "english": "on / above",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 178,
+    "vietnamese": "huệ",
+    "english": "Hue (name)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 179,
+    "vietnamese": "tới",
+    "english": "arrive / to",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 8
+  },
+  {
+    "id": 180,
+    "vietnamese": "mọi người",
+    "english": "everyone",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 181,
+    "vietnamese": "đường này",
+    "english": "(đường này)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 8
+  },
+  {
+    "id": 182,
+    "vietnamese": "giá",
+    "english": "price",
+    "imageUrl": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 8
+  },
+  {
+    "id": 183,
+    "vietnamese": "tìm",
+    "english": "find / search",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 8
+  },
+  {
+    "id": 184,
+    "vietnamese": "đọc",
+    "english": "read",
+    "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 8
+  },
+  {
+    "id": 185,
+    "vietnamese": "cuốn",
+    "english": "classifier for books",
+    "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 8
+  },
+  {
+    "id": 186,
+    "vietnamese": "phải",
+    "english": "must / right",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 8
+  },
+  {
+    "id": 187,
+    "vietnamese": "đầm",
+    "english": "(đầm)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 8
+  },
+  {
+    "id": 188,
+    "vietnamese": "trò",
+    "english": "game / trick",
+    "imageUrl": "https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 8
+  },
+  {
+    "id": 189,
+    "vietnamese": "tụi em",
+    "english": "we (young people)",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 8
+  },
+  {
+    "id": 190,
+    "vietnamese": "hồ",
+    "english": "lake / Ho (name)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 191,
+    "vietnamese": "chí",
+    "english": "will / Chi (name)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 192,
+    "vietnamese": "minh",
+    "english": "bright / Minh (name)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 193,
+    "vietnamese": "bây",
+    "english": "now",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 194,
+    "vietnamese": "nguyễn",
+    "english": "Nguyen (name)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 195,
+    "vietnamese": "ngày",
+    "english": "day",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 196,
+    "vietnamese": "hồ chí",
+    "english": "Ho Chi",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 197,
+    "vietnamese": "bây giờ",
+    "english": "now",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 198,
+    "vietnamese": "đến từ",
+    "english": "(đến từ)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 199,
+    "vietnamese": "nguyễn huệ",
+    "english": "Nguyen Hue (street name)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 200,
+    "vietnamese": "của anh",
+    "english": "of older brother",
+    "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 201,
+    "vietnamese": "những cái",
+    "english": "those things",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 7
+  },
+  {
+    "id": 202,
+    "vietnamese": "con đường này",
+    "english": "this road",
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 7
+  },
+  {
+    "id": 203,
+    "vietnamese": "thôi",
+    "english": "only / stop",
+    "imageUrl": "https://images.unsplash.com/photo-1534330207526-8e81f10ec6fc?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 7
+  },
+  {
+    "id": 204,
+    "vietnamese": "thường",
+    "english": "often / usually",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 7
+  },
+  {
+    "id": 205,
+    "vietnamese": "các",
+    "english": "the (plural)",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 206,
+    "vietnamese": "tên",
+    "english": "name",
+    "imageUrl": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 207,
+    "vietnamese": "đổi",
+    "english": "change / exchange",
+    "imageUrl": "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 208,
+    "vietnamese": "phố hồ",
+    "english": "Ho (Chi Minh) City",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 209,
+    "vietnamese": "chí minh",
+    "english": "Chi Minh",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 210,
+    "vietnamese": "nhưng mà",
+    "english": "but / however",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 211,
+    "vietnamese": "khi mà",
+    "english": "when",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 212,
+    "vietnamese": "ở đây",
+    "english": "here",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 213,
+    "vietnamese": "dạ thì",
+    "english": "yes then",
+    "imageUrl": "https://images.unsplash.com/photo-1516575448072-8f5a2ec0b4e0?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 214,
+    "vietnamese": "là lần",
+    "english": "is the time",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 215,
+    "vietnamese": "thành phố hồ",
+    "english": "Ho (Chi Minh) City",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 216,
+    "vietnamese": "phố hồ chí",
+    "english": "Ho Chi (Minh) City",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 217,
+    "vietnamese": "hồ chí minh",
+    "english": "Ho Chi Minh",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 218,
+    "vietnamese": "là lần đầu",
+    "english": "(là lần đầu)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 219,
+    "vietnamese": "thành phố hồ chí",
+    "english": "Ho Chi (Minh) City",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 220,
+    "vietnamese": "là lần đầu tiên",
+    "english": "is the first time",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 6
+  },
+  {
+    "id": 221,
+    "vietnamese": "bao",
+    "english": "how much / bag",
+    "imageUrl": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 6
+  },
+  {
+    "id": 222,
+    "vietnamese": "viết",
+    "english": "write",
+    "imageUrl": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 6
+  },
+  {
+    "id": 223,
+    "vietnamese": "thầy",
+    "english": "teacher (male)",
+    "imageUrl": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 6
+  },
+  {
+    "id": 224,
+    "vietnamese": "cũng có",
+    "english": "also have",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 6
+  },
+  {
+    "id": 225,
+    "vietnamese": "thao",
+    "english": "(thao)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 6
+  },
+  {
+    "id": 226,
+    "vietnamese": "khỏe",
+    "english": "healthy / strong",
+    "imageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 6
+  },
+  {
+    "id": 227,
+    "vietnamese": "bóng",
+    "english": "ball",
+    "imageUrl": "https://images.unsplash.com/photo-1579952363873-27f03aa01a76?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 6
+  },
+  {
+    "id": 228,
+    "vietnamese": "thể thao",
+    "english": "sports",
+    "imageUrl": "https://images.unsplash.com/photo-1461896836934-ead67b2de?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 6
+  },
+  {
+    "id": 229,
+    "vietnamese": "chụp",
+    "english": "(chụp)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 6
+  },
+  {
+    "id": 230,
+    "vietnamese": "em là",
+    "english": "(em là)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 6
+  },
+  {
+    "id": 231,
+    "vietnamese": "sau",
+    "english": "after",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 232,
+    "vietnamese": "sự",
+    "english": "matter / thing",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 233,
+    "vietnamese": "khác",
+    "english": "different / other",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 234,
+    "vietnamese": "xin",
+    "english": "please / ask",
+    "imageUrl": "https://images.unsplash.com/photo-1516575448072-8f5a2ec0b4e0?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 235,
+    "vietnamese": "cảm",
+    "english": "feel",
+    "imageUrl": "https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 236,
+    "vietnamese": "cái con",
+    "english": "that (animal/road)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 237,
+    "vietnamese": "đường nguyễn",
+    "english": "Nguyen street",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 238,
+    "vietnamese": "âm nhạc",
+    "english": "music",
+    "imageUrl": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 239,
+    "vietnamese": "là người",
+    "english": "is a person",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 240,
+    "vietnamese": "thay đổi",
+    "english": "change",
+    "imageUrl": "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 241,
+    "vietnamese": "thì không",
+    "english": "then not",
+    "imageUrl": "https://images.unsplash.com/photo-1534330207526-8e81f10ec6fc?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 242,
+    "vietnamese": "không ạ",
+    "english": "no (polite)",
+    "imageUrl": "https://images.unsplash.com/photo-1534330207526-8e81f10ec6fc?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 243,
+    "vietnamese": "phố đi",
+    "english": "walking street",
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 244,
+    "vietnamese": "để cho",
+    "english": "in order to",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 245,
+    "vietnamese": "cái con đường",
+    "english": "that road",
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 246,
+    "vietnamese": "con đường nguyễn",
+    "english": "Nguyen road",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 247,
+    "vietnamese": "đường nguyễn huệ",
+    "english": "Nguyen Hue street",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 248,
+    "vietnamese": "thì không biết",
+    "english": "then don't know",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 249,
+    "vietnamese": "phố đi bộ",
+    "english": "walking street",
+    "imageUrl": "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 250,
+    "vietnamese": "phố hồ chí minh",
+    "english": "Ho Chi Minh City",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 251,
+    "vietnamese": "con đường nguyễn huệ",
+    "english": "Nguyen Hue street",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 252,
+    "vietnamese": "thì không biết là",
+    "english": "then don't know that",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 5
+  },
+  {
+    "id": 253,
+    "vietnamese": "cả",
+    "english": "all / even",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 5
+  },
+  {
+    "id": 254,
+    "vietnamese": "mặt",
+    "english": "face / surface",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 5
+  },
+  {
+    "id": 255,
+    "vietnamese": "tây",
+    "english": "west / foreigner",
+    "imageUrl": "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 5
+  },
+  {
+    "id": 256,
+    "vietnamese": "nhiêu",
+    "english": "how much",
+    "imageUrl": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 5
+  },
+  {
+    "id": 257,
+    "vietnamese": "rẻ",
+    "english": "cheap",
+    "imageUrl": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 5
+  },
+  {
+    "id": 258,
+    "vietnamese": "bao nhiêu",
+    "english": "how much",
+    "imageUrl": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 5
+  },
+  {
+    "id": 259,
+    "vietnamese": "tiệm",
+    "english": "shop",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 5
+  },
+  {
+    "id": 260,
+    "vietnamese": "là anh",
+    "english": "is older brother",
+    "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 5
+  },
+  {
+    "id": 261,
+    "vietnamese": "người thầy",
+    "english": "teacher (male)",
+    "imageUrl": "https://images.unsplash.com/photo-1544717305-2782549b5136?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 5
+  },
+  {
+    "id": 262,
+    "vietnamese": "sức",
+    "english": "strength",
+    "imageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 5
+  },
+  {
+    "id": 263,
+    "vietnamese": "lúc",
+    "english": "time / moment",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 5
+  },
+  {
+    "id": 264,
+    "vietnamese": "sen",
+    "english": "lotus",
+    "imageUrl": "https://images.unsplash.com/photo-1606567595334-d39972c85dfd?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 5
+  },
+  {
+    "id": 265,
+    "vietnamese": "tàu",
+    "english": "ship / train",
+    "imageUrl": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 5
+  },
+  {
+    "id": 266,
+    "vietnamese": "đầm sen",
+    "english": "lotus pond (Dam Sen)",
+    "imageUrl": "https://images.unsplash.com/photo-1606567595334-d39972c85dfd?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 5
+  },
+  {
+    "id": 267,
+    "vietnamese": "trò chơi",
+    "english": "game / ride",
+    "imageUrl": "https://images.unsplash.com/photo-1472162072942-cd5147eb3902?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 5
+  },
+  {
+    "id": 268,
+    "vietnamese": "với lại",
+    "english": "moreover / and also",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 269,
+    "vietnamese": "được cái",
+    "english": "got the",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 270,
+    "vietnamese": "này thì",
+    "english": "this then",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 271,
+    "vietnamese": "có những",
+    "english": "have those",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 272,
+    "vietnamese": "hôm nay",
+    "english": "today",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 273,
+    "vietnamese": "là mình",
+    "english": "is I/me",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 274,
+    "vietnamese": "hay là",
+    "english": "or",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 275,
+    "vietnamese": "người dân",
+    "english": "citizen / people",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 276,
+    "vietnamese": "thì chú",
+    "english": "then uncle",
+    "imageUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 277,
+    "vietnamese": "huệ này",
+    "english": "this Hue (street)",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 278,
+    "vietnamese": "đây là",
+    "english": "this is",
+    "imageUrl": "https://images.unsplash.com/photo-1453227588063-bb302b62f50b?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 279,
+    "vietnamese": "đây thì",
+    "english": "here then",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 280,
+    "vietnamese": "sự thay",
+    "english": "the change",
+    "imageUrl": "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 281,
+    "vietnamese": "cái cảnh",
+    "english": "the scene",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 282,
+    "vietnamese": "nguyễn huệ này",
+    "english": "this Nguyen Hue",
+    "imageUrl": "https://images.unsplash.com/photo-1583417267826-aebc4d1542e7?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 283,
+    "vietnamese": "sự thay đổi",
+    "english": "the change",
+    "imageUrl": "https://images.unsplash.com/photo-1493612276216-ee3925520721?w=400",
+    "sourceId": "Dps2_fUosJo",
+    "frequency": 4
+  },
+  {
+    "id": 284,
+    "vietnamese": "nay",
+    "english": "today / now",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 285,
+    "vietnamese": "nữa",
+    "english": "(nữa)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 286,
+    "vietnamese": "thái",
+    "english": "Thailand / slice",
+    "imageUrl": "https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 287,
+    "vietnamese": "khoảng",
+    "english": "about / approximately",
+    "imageUrl": "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 288,
+    "vietnamese": "lâu",
+    "english": "long time",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 289,
+    "vietnamese": "về",
+    "english": "(về)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 290,
+    "vietnamese": "là hàng",
+    "english": "is goods",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 291,
+    "vietnamese": "bán ở",
+    "english": "sell at",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+    "sourceId": "knJVlNiXjhQ",
+    "frequency": 4
+  },
+  {
+    "id": 292,
+    "vietnamese": "đâu",
+    "english": "where",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 293,
+    "vietnamese": "luôn",
+    "english": "always",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 294,
+    "vietnamese": "chuyện",
+    "english": "story / matter",
+    "imageUrl": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 295,
+    "vietnamese": "hồi",
+    "english": "time / ago",
+    "imageUrl": "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 296,
+    "vietnamese": "thức",
+    "english": "wake / type",
+    "imageUrl": "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 297,
+    "vietnamese": "trường",
+    "english": "school",
+    "imageUrl": "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 298,
+    "vietnamese": "giỏi",
+    "english": "good at / talented",
+    "imageUrl": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 299,
+    "vietnamese": "nghe",
+    "english": "listen / hear",
+    "imageUrl": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 300,
+    "vietnamese": "mạng",
+    "english": "internet / net",
+    "imageUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 301,
+    "vietnamese": "mua sách",
+    "english": "buy books",
+    "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 302,
+    "vietnamese": "viết ra",
+    "english": "write out",
+    "imageUrl": "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 303,
+    "vietnamese": "tìm những",
+    "english": "find those",
+    "imageUrl": "https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 304,
+    "vietnamese": "mình đi",
+    "english": "I go",
+    "imageUrl": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 305,
+    "vietnamese": "cái người",
+    "english": "that person",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 306,
+    "vietnamese": "đúng không",
+    "english": "right? / correct?",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 307,
+    "vietnamese": "ra được",
+    "english": "can produce",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wB_LiN9bPOo",
+    "frequency": 4
+  },
+  {
+    "id": 308,
+    "vietnamese": "động",
+    "english": "move / motion",
+    "imageUrl": "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 309,
+    "vietnamese": "lông",
+    "english": "feather / hair",
+    "imageUrl": "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 310,
+    "vietnamese": "tập",
+    "english": "practice / exercise",
+    "imageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 311,
+    "vietnamese": "chứ",
+    "english": "emphasis particle",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 312,
+    "vietnamese": "xuyên",
+    "english": "through / frequent",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 313,
+    "vietnamese": "sáng",
+    "english": "morning / bright",
+    "imageUrl": "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 314,
+    "vietnamese": "sức khỏe",
+    "english": "health",
+    "imageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 315,
+    "vietnamese": "chơi cầu",
+    "english": "play badminton",
+    "imageUrl": "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 316,
+    "vietnamese": "bóng đá",
+    "english": "soccer",
+    "imageUrl": "https://images.unsplash.com/photo-1579952363873-27f03aa01a76?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 317,
+    "vietnamese": "cầu lông",
+    "english": "badminton",
+    "imageUrl": "https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 318,
+    "vietnamese": "thường xuyên",
+    "english": "frequently",
+    "imageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 319,
+    "vietnamese": "không có",
+    "english": "don't have",
+    "imageUrl": "https://images.unsplash.com/photo-1534330207526-8e81f10ec6fc?w=400",
+    "sourceId": "WXVppNA4xzA",
+    "frequency": 4
+  },
+  {
+    "id": 320,
+    "vietnamese": "chưa",
+    "english": "(chưa)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 321,
+    "vietnamese": "tham",
+    "english": "participate",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 322,
+    "vietnamese": "gia",
+    "english": "family / participate",
+    "imageUrl": "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 323,
+    "vietnamese": "muốn",
+    "english": "want",
+    "imageUrl": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 324,
+    "vietnamese": "hình",
+    "english": "image / photo",
+    "imageUrl": "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 325,
+    "vietnamese": "siêu",
+    "english": "super",
+    "imageUrl": "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 326,
+    "vietnamese": "kỷ",
+    "english": "anniversary",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 327,
+    "vietnamese": "niệm",
+    "english": "remember",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 328,
+    "vietnamese": "là một",
+    "english": "(là một)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 329,
+    "vietnamese": "nhiều trò",
+    "english": "(nhiều trò)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 330,
+    "vietnamese": "chụp hình",
+    "english": "take photos",
+    "imageUrl": "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 331,
+    "vietnamese": "là nhiều",
+    "english": "(là nhiều)",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 332,
+    "vietnamese": "tới đây",
+    "english": "come here",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 333,
+    "vietnamese": "kỷ niệm",
+    "english": "memory / souvenir",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
+  },
+  {
+    "id": 334,
+    "vietnamese": "rất là nhiều",
+    "english": "very many",
+    "imageUrl": "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=400",
+    "sourceId": "wABsPLBbRZE",
+    "frequency": 4
   }
 ]

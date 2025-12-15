@@ -5,6 +5,18 @@ export interface Word {
   vietnamese: string;
   english: string;
   imageUrl: string;
+  sourceId?: string;
+  frequency?: number;
+}
+
+export interface Source {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+  topics: string[];
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  wordCount: number;
 }
 
 export interface CardState {
@@ -23,3 +35,5 @@ export interface SessionStats {
   correctToday: number;
   lastReviewDate: string;
 }
+
+export type DrillMode = 'image' | 'tone';

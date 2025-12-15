@@ -1,0 +1,17 @@
+{
+  "sources": [
+    {
+      "id": "gWZ620nh_S0",
+      "title": "Vietnamese Pride - Street Interviews",
+      "url": "https://www.youtube.com/watch?v=gWZ620nh_S0",
+      "type": "youtube",
+      "language": "vi",
+      "description": "Street interviews with Vietnamese people about their pride in Vietnam, tourism, food, and culture",
+      "topics": ["culture", "tourism", "food", "identity"],
+      "difficulty": "intermediate",
+      "transcript_file": "gWZ620nh_S0.txt",
+      "ngrams_file": "gWZ620nh_S0_ngrams.json",
+      "added_date": "2024-12-15"
+    }
+  ]
+}

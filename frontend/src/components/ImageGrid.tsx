@@ -58,34 +58,38 @@ export function ImageGrid({ correctWord, distractors, onSelect, disabled = false
   return (
     <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
       {options.map((word) => (
-        <button
-          key={word.id}
-          onClick={() => handleSelect(word)}
-          disabled={disabled || showResult}
-          className={`
-            relative aspect-square rounded-xl overflow-hidden
-            border-4 transition-all duration-200
-            ${getButtonStyle(word)}
-            ${!disabled && !showResult ? 'cursor-pointer active:scale-95' : 'cursor-default'}
-          `}
-        >
-          <img
-            src={word.imageUrl}
-            alt={word.english}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          {showResult && word.id === correctWord.id && (
-            <div className="absolute inset-0 flex items-center justify-center bg-green-500/20">
-              <span className="text-5xl">✓</span>
-            </div>
-          )}
-          {showResult && word.id === selectedId && word.id !== correctWord.id && (
-            <div className="absolute inset-0 flex items-center justify-center bg-red-500/20">
-              <span className="text-5xl">✗</span>
-            </div>
-          )}
-        </button>
+        <div key={word.id} className="flex flex-col">
+          <button
+            onClick={() => handleSelect(word)}
+            disabled={disabled || showResult}
+            className={`
+              relative aspect-square rounded-xl overflow-hidden
+              border-4 transition-all duration-200
+              ${getButtonStyle(word)}
+              ${!disabled && !showResult ? 'cursor-pointer active:scale-95' : 'cursor-default'}
+            `}
+          >
+            <img
+              src={word.imageUrl}
+              alt={word.english}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            {showResult && word.id === correctWord.id && (
+              <div className="absolute inset-0 flex items-center justify-center bg-green-500/20">
+                <span className="text-5xl">✓</span>
+              </div>
+            )}
+            {showResult && word.id === selectedId && word.id !== correctWord.id && (
+              <div className="absolute inset-0 flex items-center justify-center bg-red-500/20">
+                <span className="text-5xl">✗</span>
+              </div>
+            )}
+          </button>
+          <p className="text-center text-sm text-gray-600 mt-1 truncate px-1">
+            {word.english}
+          </p>
+        </div>
       ))}
     </div>
   );

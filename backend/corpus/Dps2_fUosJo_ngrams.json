@@ -1,0 +1,616 @@
+{
+  "unigrams": [
+    {
+      "text": "cái",
+      "count": 35
+    },
+    {
+      "text": "đi",
+      "count": 29
+    },
+    {
+      "text": "thành",
+      "count": 21
+    },
+    {
+      "text": "không",
+      "count": 20
+    },
+    {
+      "text": "phố",
+      "count": 20
+    },
+    {
+      "text": "người",
+      "count": 20
+    },
+    {
+      "text": "mình",
+      "count": 19
+    },
+    {
+      "text": "đường",
+      "count": 18
+    },
+    {
+      "text": "con",
+      "count": 17
+    },
+    {
+      "text": "rất",
+      "count": 17
+    },
+    {
+      "text": "anh",
+      "count": 17
+    },
+    {
+      "text": "dạ",
+      "count": 17
+    },
+    {
+      "text": "thấy",
+      "count": 14
+    },
+    {
+      "text": "chú",
+      "count": 13
+    },
+    {
+      "text": "lần",
+      "count": 13
+    },
+    {
+      "text": "bộ",
+      "count": 13
+    },
+    {
+      "text": "đến",
+      "count": 12
+    },
+    {
+      "text": "em",
+      "count": 12
+    },
+    {
+      "text": "đầu",
+      "count": 12
+    },
+    {
+      "text": "tiên",
+      "count": 12
+    },
+    {
+      "text": "một",
+      "count": 11
+    },
+    {
+      "text": "những",
+      "count": 11
+    },
+    {
+      "text": "biết",
+      "count": 11
+    },
+    {
+      "text": "nó",
+      "count": 11
+    },
+    {
+      "text": "nhiều",
+      "count": 9
+    },
+    {
+      "text": "cô",
+      "count": 9
+    },
+    {
+      "text": "giờ",
+      "count": 8
+    },
+    {
+      "text": "hơn",
+      "count": 8
+    },
+    {
+      "text": "mọi",
+      "count": 8
+    },
+    {
+      "text": "trên",
+      "count": 8
+    },
+    {
+      "text": "huệ",
+      "count": 8
+    },
+    {
+      "text": "hồ",
+      "count": 7
+    },
+    {
+      "text": "chí",
+      "count": 7
+    },
+    {
+      "text": "minh",
+      "count": 7
+    },
+    {
+      "text": "bây",
+      "count": 7
+    },
+    {
+      "text": "nguyễn",
+      "count": 7
+    },
+    {
+      "text": "ngày",
+      "count": 7
+    },
+    {
+      "text": "chị",
+      "count": 7
+    },
+    {
+      "text": "tới",
+      "count": 7
+    },
+    {
+      "text": "các",
+      "count": 6
+    },
+    {
+      "text": "vui",
+      "count": 6
+    },
+    {
+      "text": "tên",
+      "count": 6
+    },
+    {
+      "text": "đổi",
+      "count": 6
+    },
+    {
+      "text": "sau",
+      "count": 5
+    },
+    {
+      "text": "sự",
+      "count": 5
+    },
+    {
+      "text": "thể",
+      "count": 5
+    },
+    {
+      "text": "khác",
+      "count": 5
+    },
+    {
+      "text": "thích",
+      "count": 5
+    },
+    {
+      "text": "xin",
+      "count": 5
+    },
+    {
+      "text": "cảm",
+      "count": 5
+    }
+  ],
+  "bigrams": [
+    {
+      "text": "con đường",
+      "count": 15
+    },
+    {
+      "text": "rất là",
+      "count": 14
+    },
+    {
+      "text": "thành phố",
+      "count": 13
+    },
+    {
+      "text": "lần đầu",
+      "count": 12
+    },
+    {
+      "text": "đầu tiên",
+      "count": 12
+    },
+    {
+      "text": "đi bộ",
+      "count": 11
+    },
+    {
+      "text": "một cái",
+      "count": 9
+    },
+    {
+      "text": "không biết",
+      "count": 9
+    },
+    {
+      "text": "biết là",
+      "count": 9
+    },
+    {
+      "text": "mọi người",
+      "count": 8
+    },
+    {
+      "text": "đường này",
+      "count": 8
+    },
+    {
+      "text": "hồ chí",
+      "count": 7
+    },
+    {
+      "text": "bây giờ",
+      "count": 7
+    },
+    {
+      "text": "đến từ",
+      "count": 7
+    },
+    {
+      "text": "nguyễn huệ",
+      "count": 7
+    },
+    {
+      "text": "của anh",
+      "count": 7
+    },
+    {
+      "text": "phố hồ",
+      "count": 6
+    },
+    {
+      "text": "chí minh",
+      "count": 6
+    },
+    {
+      "text": "nhưng mà",
+      "count": 6
+    },
+    {
+      "text": "khi mà",
+      "count": 6
+    },
+    {
+      "text": "những cái",
+      "count": 6
+    },
+    {
+      "text": "ở đây",
+      "count": 6
+    },
+    {
+      "text": "dạ thì",
+      "count": 6
+    },
+    {
+      "text": "là lần",
+      "count": 6
+    },
+    {
+      "text": "cái con",
+      "count": 5
+    },
+    {
+      "text": "có thể",
+      "count": 5
+    },
+    {
+      "text": "đường nguyễn",
+      "count": 5
+    },
+    {
+      "text": "âm nhạc",
+      "count": 5
+    },
+    {
+      "text": "là người",
+      "count": 5
+    },
+    {
+      "text": "thay đổi",
+      "count": 5
+    },
+    {
+      "text": "thì không",
+      "count": 5
+    },
+    {
+      "text": "không ạ",
+      "count": 5
+    },
+    {
+      "text": "phố đi",
+      "count": 5
+    },
+    {
+      "text": "để cho",
+      "count": 5
+    },
+    {
+      "text": "với lại",
+      "count": 4
+    },
+    {
+      "text": "được cái",
+      "count": 4
+    },
+    {
+      "text": "này thì",
+      "count": 4
+    },
+    {
+      "text": "có những",
+      "count": 4
+    },
+    {
+      "text": "hôm nay",
+      "count": 4
+    },
+    {
+      "text": "là mình",
+      "count": 4
+    },
+    {
+      "text": "hay là",
+      "count": 4
+    },
+    {
+      "text": "người dân",
+      "count": 4
+    },
+    {
+      "text": "thì chú",
+      "count": 4
+    },
+    {
+      "text": "huệ này",
+      "count": 4
+    },
+    {
+      "text": "đây là",
+      "count": 4
+    },
+    {
+      "text": "đây thì",
+      "count": 4
+    },
+    {
+      "text": "sự thay",
+      "count": 4
+    },
+    {
+      "text": "nói chung",
+      "count": 4
+    },
+    {
+      "text": "chung là",
+      "count": 4
+    },
+    {
+      "text": "cái cảnh",
+      "count": 4
+    }
+  ],
+  "trigrams": [
+    {
+      "text": "lần đầu tiên",
+      "count": 12
+    },
+    {
+      "text": "không biết là",
+      "count": 9
+    },
+    {
+      "text": "con đường này",
+      "count": 7
+    },
+    {
+      "text": "thành phố hồ",
+      "count": 6
+    },
+    {
+      "text": "phố hồ chí",
+      "count": 6
+    },
+    {
+      "text": "hồ chí minh",
+      "count": 6
+    },
+    {
+      "text": "là lần đầu",
+      "count": 6
+    },
+    {
+      "text": "cái con đường",
+      "count": 5
+    },
+    {
+      "text": "con đường nguyễn",
+      "count": 5
+    },
+    {
+      "text": "đường nguyễn huệ",
+      "count": 5
+    },
+    {
+      "text": "thì không biết",
+      "count": 5
+    },
+    {
+      "text": "phố đi bộ",
+      "count": 5
+    },
+    {
+      "text": "nguyễn huệ này",
+      "count": 4
+    },
+    {
+      "text": "sự thay đổi",
+      "count": 4
+    },
+    {
+      "text": "nói chung là",
+      "count": 4
+    },
+    {
+      "text": "của thành phố",
+      "count": 3
+    },
+    {
+      "text": "hiện tại bây",
+      "count": 3
+    },
+    {
+      "text": "tại bây giờ",
+      "count": 3
+    },
+    {
+      "text": "được cái sự",
+      "count": 3
+    },
+    {
+      "text": "rất là nhiều",
+      "count": 3
+    },
+    {
+      "text": "có những cái",
+      "count": 3
+    },
+    {
+      "text": "hay là mình",
+      "count": 3
+    },
+    {
+      "text": "mình là người",
+      "count": 3
+    },
+    {
+      "text": "là người dân",
+      "count": 3
+    },
+    {
+      "text": "tên gì ạ",
+      "count": 3
+    },
+    {
+      "text": "mình đến từ",
+      "count": 3
+    },
+    {
+      "text": "đây là lần",
+      "count": 3
+    },
+    {
+      "text": "đầu tiên tới",
+      "count": 3
+    },
+    {
+      "text": "thành một cái",
+      "count": 3
+    },
+    {
+      "text": "mọi người có",
+      "count": 3
+    }
+  ],
+  "fourgrams": [
+    {
+      "text": "thành phố hồ chí",
+      "count": 6
+    },
+    {
+      "text": "là lần đầu tiên",
+      "count": 6
+    },
+    {
+      "text": "phố hồ chí minh",
+      "count": 5
+    },
+    {
+      "text": "con đường nguyễn huệ",
+      "count": 5
+    },
+    {
+      "text": "thì không biết là",
+      "count": 5
+    },
+    {
+      "text": "hiện tại bây giờ",
+      "count": 3
+    },
+    {
+      "text": "đường nguyễn huệ này",
+      "count": 3
+    },
+    {
+      "text": "đây là lần đầu",
+      "count": 3
+    },
+    {
+      "text": "lần đầu tiên tới",
+      "count": 3
+    },
+    {
+      "text": "của thành phố hồ",
+      "count": 2
+    },
+    {
+      "text": "nhưng mà sau khi",
+      "count": 2
+    },
+    {
+      "text": "tất cả mọi người",
+      "count": 2
+    },
+    {
+      "text": "trên cái con đường",
+      "count": 2
+    },
+    {
+      "text": "cái con đường này",
+      "count": 2
+    },
+    {
+      "text": "rất là nhiều người",
+      "count": 2
+    },
+    {
+      "text": "có những cái suy",
+      "count": 2
+    },
+    {
+      "text": "những cái suy nghĩ",
+      "count": 2
+    },
+    {
+      "text": "mình là người dân",
+      "count": 2
+    },
+    {
+      "text": "người dân ở đây",
+      "count": 2
+    },
+    {
+      "text": "thì em xin chào",
+      "count": 2
+    }
+  ],
+  "stats": {
+    "unigrams": 50,
+    "bigrams": 50,
+    "trigrams": 30,
+    "fourgrams": 20
+  }
+}

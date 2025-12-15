@@ -1,0 +1,560 @@
+{
+  "unigrams": [
+    {
+      "text": "chơi",
+      "count": 18
+    },
+    {
+      "text": "mình",
+      "count": 17
+    },
+    {
+      "text": "đi",
+      "count": 17
+    },
+    {
+      "text": "không",
+      "count": 17
+    },
+    {
+      "text": "cầu",
+      "count": 11
+    },
+    {
+      "text": "đá",
+      "count": 11
+    },
+    {
+      "text": "nó",
+      "count": 11
+    },
+    {
+      "text": "chị",
+      "count": 10
+    },
+    {
+      "text": "thể",
+      "count": 9
+    },
+    {
+      "text": "em",
+      "count": 9
+    },
+    {
+      "text": "môn",
+      "count": 9
+    },
+    {
+      "text": "anh",
+      "count": 7
+    },
+    {
+      "text": "thường",
+      "count": 7
+    },
+    {
+      "text": "bộ",
+      "count": 7
+    },
+    {
+      "text": "ngày",
+      "count": 7
+    },
+    {
+      "text": "thao",
+      "count": 6
+    },
+    {
+      "text": "khỏe",
+      "count": 6
+    },
+    {
+      "text": "bạn",
+      "count": 6
+    },
+    {
+      "text": "bóng",
+      "count": 6
+    },
+    {
+      "text": "thấy",
+      "count": 6
+    },
+    {
+      "text": "mọi",
+      "count": 5
+    },
+    {
+      "text": "người",
+      "count": 5
+    },
+    {
+      "text": "sức",
+      "count": 5
+    },
+    {
+      "text": "cái",
+      "count": 5
+    },
+    {
+      "text": "động",
+      "count": 4
+    },
+    {
+      "text": "tên",
+      "count": 4
+    },
+    {
+      "text": "thôi",
+      "count": 4
+    },
+    {
+      "text": "hồi",
+      "count": 4
+    },
+    {
+      "text": "học",
+      "count": 4
+    },
+    {
+      "text": "giờ",
+      "count": 4
+    },
+    {
+      "text": "lông",
+      "count": 4
+    },
+    {
+      "text": "tập",
+      "count": 4
+    },
+    {
+      "text": "lúc",
+      "count": 4
+    },
+    {
+      "text": "chứ",
+      "count": 4
+    },
+    {
+      "text": "xuyên",
+      "count": 4
+    },
+    {
+      "text": "nói",
+      "count": 4
+    },
+    {
+      "text": "sáng",
+      "count": 4
+    },
+    {
+      "text": "hơn",
+      "count": 4
+    },
+    {
+      "text": "các",
+      "count": 4
+    },
+    {
+      "text": "chào",
+      "count": 3
+    },
+    {
+      "text": "tất",
+      "count": 3
+    },
+    {
+      "text": "cả",
+      "count": 3
+    },
+    {
+      "text": "nhiều",
+      "count": 3
+    },
+    {
+      "text": "những",
+      "count": 3
+    },
+    {
+      "text": "luyện",
+      "count": 3
+    },
+    {
+      "text": "lợi",
+      "count": 3
+    },
+    {
+      "text": "ích",
+      "count": 3
+    },
+    {
+      "text": "âm",
+      "count": 3
+    },
+    {
+      "text": "nhạc",
+      "count": 3
+    },
+    {
+      "text": "dạ",
+      "count": 3
+    }
+  ],
+  "bigrams": [
+    {
+      "text": "thể thao",
+      "count": 6
+    },
+    {
+      "text": "mọi người",
+      "count": 5
+    },
+    {
+      "text": "sức khỏe",
+      "count": 4
+    },
+    {
+      "text": "chơi cầu",
+      "count": 4
+    },
+    {
+      "text": "đi bộ",
+      "count": 4
+    },
+    {
+      "text": "bóng đá",
+      "count": 4
+    },
+    {
+      "text": "cầu lông",
+      "count": 4
+    },
+    {
+      "text": "thường xuyên",
+      "count": 4
+    },
+    {
+      "text": "không có",
+      "count": 4
+    },
+    {
+      "text": "tất cả",
+      "count": 3
+    },
+    {
+      "text": "lợi ích",
+      "count": 3
+    },
+    {
+      "text": "âm nhạc",
+      "count": 3
+    },
+    {
+      "text": "chơi môn",
+      "count": 3
+    },
+    {
+      "text": "môn thể",
+      "count": 3
+    },
+    {
+      "text": "thao nào",
+      "count": 3
+    },
+    {
+      "text": "không thì",
+      "count": 3
+    },
+    {
+      "text": "có chơi",
+      "count": 3
+    },
+    {
+      "text": "chị cũng",
+      "count": 3
+    },
+    {
+      "text": "hay là",
+      "count": 3
+    },
+    {
+      "text": "chung là",
+      "count": 3
+    },
+    {
+      "text": "là mình",
+      "count": 3
+    },
+    {
+      "text": "em đi",
+      "count": 3
+    },
+    {
+      "text": "đá cầu",
+      "count": 3
+    },
+    {
+      "text": "chạy bộ",
+      "count": 3
+    },
+    {
+      "text": "vô đây",
+      "count": 3
+    },
+    {
+      "text": "lời khuyên",
+      "count": 3
+    },
+    {
+      "text": "các bạn",
+      "count": 3
+    },
+    {
+      "text": "cả mọi",
+      "count": 2
+    },
+    {
+      "text": "những hoạt",
+      "count": 2
+    },
+    {
+      "text": "hoạt động",
+      "count": 2
+    },
+    {
+      "text": "cho hỏi",
+      "count": 2
+    },
+    {
+      "text": "hỏi là",
+      "count": 2
+    },
+    {
+      "text": "là anh",
+      "count": 2
+    },
+    {
+      "text": "tên gì",
+      "count": 2
+    },
+    {
+      "text": "ạ mình",
+      "count": 2
+    },
+    {
+      "text": "chào em",
+      "count": 2
+    },
+    {
+      "text": "em tên",
+      "count": 2
+    },
+    {
+      "text": "thường hay",
+      "count": 2
+    },
+    {
+      "text": "hay chơi",
+      "count": 2
+    },
+    {
+      "text": "cầu long",
+      "count": 2
+    },
+    {
+      "text": "thì cũng",
+      "count": 2
+    },
+    {
+      "text": "cũng có",
+      "count": 2
+    },
+    {
+      "text": "đá banh",
+      "count": 2
+    },
+    {
+      "text": "hoặc là",
+      "count": 2
+    },
+    {
+      "text": "chủ yếu",
+      "count": 2
+    },
+    {
+      "text": "yếu là",
+      "count": 2
+    },
+    {
+      "text": "bộ và",
+      "count": 2
+    },
+    {
+      "text": "và đá",
+      "count": 2
+    },
+    {
+      "text": "đi học",
+      "count": 2
+    },
+    {
+      "text": "học thì",
+      "count": 2
+    }
+  ],
+  "trigrams": [
+    {
+      "text": "môn thể thao",
+      "count": 3
+    },
+    {
+      "text": "thể thao nào",
+      "count": 3
+    },
+    {
+      "text": "tất cả mọi",
+      "count": 2
+    },
+    {
+      "text": "cả mọi người",
+      "count": 2
+    },
+    {
+      "text": "những hoạt động",
+      "count": 2
+    },
+    {
+      "text": "cho hỏi là",
+      "count": 2
+    },
+    {
+      "text": "hỏi là anh",
+      "count": 2
+    },
+    {
+      "text": "chơi môn thể",
+      "count": 2
+    },
+    {
+      "text": "chơi cầu long",
+      "count": 2
+    },
+    {
+      "text": "chủ yếu là",
+      "count": 2
+    },
+    {
+      "text": "bộ và đá",
+      "count": 2
+    },
+    {
+      "text": "đi học thì",
+      "count": 2
+    },
+    {
+      "text": "học thì bóng",
+      "count": 2
+    },
+    {
+      "text": "thì bóng đá",
+      "count": 2
+    },
+    {
+      "text": "thường xuyên không",
+      "count": 2
+    },
+    {
+      "text": "nói chung là",
+      "count": 2
+    },
+    {
+      "text": "thì em đi",
+      "count": 2
+    },
+    {
+      "text": "thứ hai là",
+      "count": 2
+    },
+    {
+      "text": "hai là mình",
+      "count": 2
+    },
+    {
+      "text": "đá cầu thì",
+      "count": 2
+    },
+    {
+      "text": "cái lợi ích",
+      "count": 2
+    },
+    {
+      "text": "ra mồ hôi",
+      "count": 2
+    },
+    {
+      "text": "chị vô đây",
+      "count": 2
+    },
+    {
+      "text": "vô đây chị",
+      "count": 2
+    },
+    {
+      "text": "đây chị cũng",
+      "count": 2
+    },
+    {
+      "text": "chị cũng thấy",
+      "count": 2
+    }
+  ],
+  "fourgrams": [
+    {
+      "text": "môn thể thao nào",
+      "count": 3
+    },
+    {
+      "text": "tất cả mọi người",
+      "count": 2
+    },
+    {
+      "text": "cho hỏi là anh",
+      "count": 2
+    },
+    {
+      "text": "chơi môn thể thao",
+      "count": 2
+    },
+    {
+      "text": "đi học thì bóng",
+      "count": 2
+    },
+    {
+      "text": "học thì bóng đá",
+      "count": 2
+    },
+    {
+      "text": "thứ hai là mình",
+      "count": 2
+    },
+    {
+      "text": "chị vô đây chị",
+      "count": 2
+    },
+    {
+      "text": "vô đây chị cũng",
+      "count": 2
+    },
+    {
+      "text": "đây chị cũng thấy",
+      "count": 2
+    }
+  ],
+  "stats": {
+    "unigrams": 50,
+    "bigrams": 50,
+    "trigrams": 26,
+    "fourgrams": 10
+  }
+}
