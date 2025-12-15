@@ -105,6 +105,13 @@ export function formatToneSymbols(sequence: ToneId[]): string {
 }
 
 /**
+ * Create a unique string key for a tone sequence (e.g., "3-2" for Rising→Falling)
+ */
+export function getToneSequenceKey(sequence: ToneId[]): string {
+  return sequence.join("-");
+}
+
+/**
  * Check if two tone sequences are equal
  */
 export function sequencesEqual(a: ToneId[], b: ToneId[]): boolean {

@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import type { Word, Source } from '../types';
 import { AudioButton } from './AudioButton';
 import { ToneGrid } from './ToneGrid';
-import { useFSRS } from '../hooks/useFSRS';
+import { useToneFSRS } from '../hooks/useToneFSRS';
 import { useProgress } from '../hooks/useProgress';
 import {
   type ToneId,
@@ -18,8 +18,8 @@ interface ToneDrillProps {
 }
 
 export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
-  // Use separate FSRS storage for tone mode
-  const { getNextWord, recordReview, getDueCount } = useFSRS(words, 'tone');
+  // Use tone sequence-based FSRS tracking
+  const { getNextWord, recordReview, getDueCount } = useToneFSRS(words);
 
   const getSourceForWord = useCallback(
     (word: Word | null): Source | undefined => {
@@ -32,6 +32,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   const { recordReview: recordProgress, reviewsToday, correctToday } = useProgress();
 
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
+  const [currentSequenceKey, setCurrentSequenceKey] = useState<string | null>(null);
   const [correctSequence, setCorrectSequence] = useState<ToneId[]>([]);
   const [distractorSequences, setDistractorSequences] = useState<ToneId[][]>([]);
   const [showingFeedback, setShowingFeedback] = useState(false);
@@ -45,8 +46,9 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   const loadNextWord = useCallback(() => {
     const next = getNextWord();
     if (next) {
-      const seq = getToneSequence(next.vietnamese);
-      setCurrentWord(next);
+      const seq = getToneSequence(next.word.vietnamese);
+      setCurrentWord(next.word);
+      setCurrentSequenceKey(next.sequenceKey);
       setCorrectSequence(seq);
       setDistractorSequences(getDistractorSequences(seq));
       setShowingFeedback(false);
@@ -54,6 +56,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       setKey((k) => k + 1);
     } else {
       setCurrentWord(null);
+      setCurrentSequenceKey(null);
     }
   }, [getNextWord]);
 
@@ -64,13 +67,13 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
 
   const handleSelect = useCallback(
     (_selectedSequence: ToneId[], isCorrect: boolean) => {
-      if (!currentWord) return;
+      if (!currentWord || !currentSequenceKey) return;
 
       setLastResult({ correct: isCorrect, word: currentWord, correctSeq: correctSequence });
       setShowingFeedback(true);
 
-      // Record with FSRS and progress
-      recordReview(currentWord.id, isCorrect);
+      // Record with FSRS (by sequence key) and progress
+      recordReview(currentSequenceKey, isCorrect);
       recordProgress(isCorrect);
 
       // Auto-advance after delay
@@ -78,7 +81,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
         loadNextWord();
       }, 1500);
     },
-    [currentWord, correctSequence, recordReview, recordProgress, loadNextWord]
+    [currentWord, currentSequenceKey, correctSequence, recordReview, recordProgress, loadNextWord]
   );
 
   const dueCount = useMemo(() => getDueCount(), [getDueCount, key]);
