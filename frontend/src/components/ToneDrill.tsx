@@ -1,9 +1,10 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import type { Word, Source } from '../types';
 import { AudioButton } from './AudioButton';
 import { ToneGrid } from './ToneGrid';
 import { useToneFSRS } from '../hooks/useToneFSRS';
 import { useProgress } from '../hooks/useProgress';
+import { useAttemptLog } from '../hooks/useAttemptLog';
 import {
   type ToneId,
   getToneSequence,
@@ -19,7 +20,7 @@ interface ToneDrillProps {
 
 export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   // Use tone sequence-based FSRS tracking
-  const { getNextWord, recordReview, getDueCount } = useToneFSRS(words);
+  const { getNextWord, recordReview, getDueCount, isLoading } = useToneFSRS(words);
 
   const getSourceForWord = useCallback(
     (word: Word | null): Source | undefined => {
@@ -30,6 +31,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   );
 
   const { recordReview: recordProgress, reviewsToday, correctToday } = useProgress();
+  const { logToneAttempt } = useAttemptLog();
 
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const [currentSequenceKey, setCurrentSequenceKey] = useState<string | null>(null);
@@ -42,6 +44,9 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
     correctSeq: ToneId[];
   } | null>(null);
   const [key, setKey] = useState(0);
+  const attemptStartTime = useRef<number | null>(null);
+  const hasLoadedInitial = useRef(false);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const loadNextWord = useCallback(() => {
     const next = getNextWord();
@@ -54,20 +59,53 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       setShowingFeedback(false);
       setLastResult(null);
       setKey((k) => k + 1);
+      attemptStartTime.current = Date.now();
     } else {
       setCurrentWord(null);
       setCurrentSequenceKey(null);
     }
   }, [getNextWord]);
 
-  // Load first word on mount
+  // Load first word when loading completes (only once)
   useEffect(() => {
-    loadNextWord();
+    if (!isLoading && !hasLoadedInitial.current) {
+      hasLoadedInitial.current = true;
+      loadNextWord();
+    }
+  }, [isLoading, loadNextWord]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+      }
+    };
   }, []);
 
   const handleSelect = useCallback(
-    (_selectedSequence: ToneId[], isCorrect: boolean) => {
+    (selectedSequence: ToneId[], isCorrect: boolean) => {
       if (!currentWord || !currentSequenceKey) return;
+
+      // Prevent double-firing if already showing feedback
+      if (showingFeedback) return;
+
+      // Calculate response time
+      const responseTimeMs = attemptStartTime.current
+        ? Date.now() - attemptStartTime.current
+        : undefined;
+
+      // Log attempt to backend
+      logToneAttempt({
+        wordId: currentWord.id,
+        vietnamese: currentWord.vietnamese,
+        english: currentWord.english,
+        correctSequence,
+        selectedSequence,
+        alternatives: distractorSequences,
+        isCorrect,
+        responseTimeMs,
+      });
 
       setLastResult({ correct: isCorrect, word: currentWord, correctSeq: correctSequence });
       setShowingFeedback(true);
@@ -76,16 +114,30 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       recordReview(currentSequenceKey, isCorrect);
       recordProgress(isCorrect);
 
+      // Clear any existing timer
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+      }
+
       // Auto-advance after delay
-      setTimeout(() => {
+      advanceTimerRef.current = setTimeout(() => {
+        advanceTimerRef.current = null;
         loadNextWord();
       }, 1500);
     },
-    [currentWord, currentSequenceKey, correctSequence, recordReview, recordProgress, loadNextWord]
+    [currentWord, currentSequenceKey, correctSequence, distractorSequences, showingFeedback, recordReview, recordProgress, loadNextWord, logToneAttempt]
   );
 
   const dueCount = useMemo(() => getDueCount(), [getDueCount, key]);
   const accuracy = reviewsToday > 0 ? Math.round((correctToday / reviewsToday) * 100) : 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 p-8 text-center">
+        <div className="text-4xl animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
   if (!currentWord) {
     return (
@@ -142,7 +194,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
 
       {/* Audio button */}
       <div className="my-4">
-        <AudioButton text={currentWord.vietnamese} autoPlay={!showingFeedback} />
+        <AudioButton wordId={currentWord.id} text={currentWord.vietnamese} autoPlay={!showingFeedback} />
       </div>
 
       {/* English meaning only (no Vietnamese spelling to avoid giving away tones) */}

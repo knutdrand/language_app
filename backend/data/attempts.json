@@ -1,0 +1,2680 @@
+{
+  "tone_attempts": [
+    {
+      "timestamp": "2025-12-15T14:38:35.676Z",
+      "word_id": 260,
+      "vietnamese": "là anh",
+      "english": "is older brother",
+      "correct_sequence": [
+        2,
+        1
+      ],
+      "selected_sequence": [
+        2,
+        1
+      ],
+      "alternatives": [
+        [
+          6,
+          2
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 13378
+    },
+    {
+      "timestamp": "2025-12-15T14:39:42.098Z",
+      "word_id": 92,
+      "vietnamese": "con người",
+      "english": "human / people",
+      "correct_sequence": [
+        1,
+        2
+      ],
+      "selected_sequence": [
+        1,
+        2
+      ],
+      "alternatives": [
+        [
+          5,
+          6
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 64914
+    },
+    {
+      "timestamp": "2025-12-15T14:39:48.295Z",
+      "word_id": 207,
+      "vietnamese": "đổi",
+      "english": "change / exchange",
+      "correct_sequence": [
+        4
+      ],
+      "selected_sequence": [
+        4
+      ],
+      "alternatives": [
+        [
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 4693
+    },
+    {
+      "timestamp": "2025-12-15T14:39:56.873Z",
+      "word_id": 330,
+      "vietnamese": "chụp hình",
+      "english": "take photos",
+      "correct_sequence": [
+        6,
+        2
+      ],
+      "selected_sequence": [
+        5,
+        2
+      ],
+      "alternatives": [
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7076
+    },
+    {
+      "timestamp": "2025-12-15T14:40:05.663Z",
+      "word_id": 313,
+      "vietnamese": "sáng",
+      "english": "morning / bright",
+      "correct_sequence": [
+        3
+      ],
+      "selected_sequence": [
+        3
+      ],
+      "alternatives": [
+        [
+          6
+        ],
+        [
+          5
+        ],
+        [
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7287
+    },
+    {
+      "timestamp": "2025-12-15T14:40:35.826Z",
+      "word_id": 40,
+      "vietnamese": "quần áo",
+      "english": "clothes",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        2,
+        3
+      ],
+      "alternatives": [
+        [
+          6,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 28660
+    },
+    {
+      "timestamp": "2025-12-15T14:40:53.364Z",
+      "word_id": 181,
+      "vietnamese": "đường này",
+      "english": "(đường này)",
+      "correct_sequence": [
+        2,
+        2
+      ],
+      "selected_sequence": [
+        2,
+        2
+      ],
+      "alternatives": [
+        [
+          6,
+          3
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          1,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 16035
+    },
+    {
+      "timestamp": "2025-12-15T14:41:12.303Z",
+      "word_id": 194,
+      "vietnamese": "nguyễn",
+      "english": "Nguyen (name)",
+      "correct_sequence": [
+        5
+      ],
+      "selected_sequence": [
+        4
+      ],
+      "alternatives": [
+        [
+          6
+        ],
+        [
+          2
+        ],
+        [
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 17436
+    },
+    {
+      "timestamp": "2025-12-15T14:41:37.154Z",
+      "word_id": 307,
+      "vietnamese": "ra được",
+      "english": "can produce",
+      "correct_sequence": [
+        1,
+        6
+      ],
+      "selected_sequence": [
+        6,
+        3
+      ],
+      "alternatives": [
+        [
+          5,
+          1
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 23349
+    },
+    {
+      "timestamp": "2025-12-15T14:41:45.715Z",
+      "word_id": 74,
+      "vietnamese": "món ăn",
+      "english": "dish / food",
+      "correct_sequence": [
+        3,
+        1
+      ],
+      "selected_sequence": [
+        2,
+        1
+      ],
+      "alternatives": [
+        [
+          5,
+          6
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7059
+    },
+    {
+      "timestamp": "2025-12-15T14:42:08.426Z",
+      "word_id": 180,
+      "vietnamese": "mọi người",
+      "english": "everyone",
+      "correct_sequence": [
+        6,
+        2
+      ],
+      "selected_sequence": [
+        1,
+        1
+      ],
+      "alternatives": [
+        [
+          5,
+          3
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 21208
+    },
+    {
+      "timestamp": "2025-12-15T14:42:28.966Z",
+      "word_id": 212,
+      "vietnamese": "ở đây",
+      "english": "here",
+      "correct_sequence": [
+        4,
+        1
+      ],
+      "selected_sequence": [
+        6,
+        3
+      ],
+      "alternatives": [
+        [
+          5,
+          6
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 19037
+    },
+    {
+      "timestamp": "2025-12-15T14:42:39.213Z",
+      "word_id": 281,
+      "vietnamese": "cái cảnh",
+      "english": "the scene",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        6,
+        6
+      ],
+      "alternatives": [
+        [
+          2,
+          3
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          6,
+          6
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 8745
+    },
+    {
+      "timestamp": "2025-12-15T14:42:45.450Z",
+      "word_id": 194,
+      "vietnamese": "nguyễn",
+      "english": "Nguyen (name)",
+      "correct_sequence": [
+        5
+      ],
+      "selected_sequence": [
+        5
+      ],
+      "alternatives": [
+        [
+          4
+        ],
+        [
+          6
+        ],
+        [
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 4733
+    },
+    {
+      "timestamp": "2025-12-15T14:42:54.158Z",
+      "word_id": 70,
+      "vietnamese": "việt nam",
+      "english": "Vietnam",
+      "correct_sequence": [
+        6,
+        1
+      ],
+      "selected_sequence": [
+        3,
+        3
+      ],
+      "alternatives": [
+        [
+          3,
+          3
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7205
+    },
+    {
+      "timestamp": "2025-12-15T14:43:09.713Z",
+      "word_id": 238,
+      "vietnamese": "âm nhạc",
+      "english": "music",
+      "correct_sequence": [
+        1,
+        6
+      ],
+      "selected_sequence": [
+        1,
+        6
+      ],
+      "alternatives": [
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 14053
+    },
+    {
+      "timestamp": "2025-12-15T14:43:19.361Z",
+      "word_id": 213,
+      "vietnamese": "dạ thì",
+      "english": "yes then",
+      "correct_sequence": [
+        6,
+        2
+      ],
+      "selected_sequence": [
+        6,
+        2
+      ],
+      "alternatives": [
+        [
+          4,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 8144
+    },
+    {
+      "timestamp": "2025-12-15T14:43:34.750Z",
+      "word_id": 306,
+      "vietnamese": "đúng không",
+      "english": "right? / correct?",
+      "correct_sequence": [
+        3,
+        1
+      ],
+      "selected_sequence": [
+        3,
+        1
+      ],
+      "alternatives": [
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 13885
+    },
+    {
+      "timestamp": "2025-12-15T14:43:42.824Z",
+      "word_id": 212,
+      "vietnamese": "ở đây",
+      "english": "here",
+      "correct_sequence": [
+        4,
+        1
+      ],
+      "selected_sequence": [
+        4,
+        1
+      ],
+      "alternatives": [
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 6570
+    },
+    {
+      "timestamp": "2025-12-15T14:44:02.351Z",
+      "word_id": 91,
+      "vietnamese": "hà nội",
+      "english": "Hanoi",
+      "correct_sequence": [
+        2,
+        6
+      ],
+      "selected_sequence": [
+        1,
+        4
+      ],
+      "alternatives": [
+        [
+          2,
+          2
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 18024
+    },
+    {
+      "timestamp": "2025-12-15T14:44:12.071Z",
+      "word_id": 291,
+      "vietnamese": "bán ở",
+      "english": "sell at",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        6,
+        1
+      ],
+      "alternatives": [
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          6,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 8217
+    },
+    {
+      "timestamp": "2025-12-15T14:44:17.955Z",
+      "word_id": 38,
+      "vietnamese": "cửa sổ",
+      "english": "window",
+      "correct_sequence": [
+        4,
+        4
+      ],
+      "selected_sequence": [
+        4,
+        4
+      ],
+      "alternatives": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 4380
+    },
+    {
+      "timestamp": "2025-12-15T14:44:32.259Z",
+      "word_id": 34,
+      "vietnamese": "máy tính",
+      "english": "computer",
+      "correct_sequence": [
+        3,
+        3
+      ],
+      "selected_sequence": [
+        3,
+        3
+      ],
+      "alternatives": [
+        [
+          1,
+          2
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 12801
+    },
+    {
+      "timestamp": "2025-12-15T14:44:39.262Z",
+      "word_id": 54,
+      "vietnamese": "xin lỗi",
+      "english": "sorry",
+      "correct_sequence": [
+        1,
+        5
+      ],
+      "selected_sequence": [
+        3,
+        5
+      ],
+      "alternatives": [
+        [
+          4,
+          2
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 5501
+    },
+    {
+      "timestamp": "2025-12-15T14:44:51.188Z",
+      "word_id": 58,
+      "vietnamese": "tôi không hiểu",
+      "english": "I don't understand",
+      "correct_sequence": [
+        1,
+        1,
+        4
+      ],
+      "selected_sequence": [
+        3,
+        1,
+        4
+      ],
+      "alternatives": [
+        [
+          2,
+          1,
+          6
+        ],
+        [
+          1,
+          3,
+          2
+        ],
+        [
+          3,
+          1,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 10423
+    },
+    {
+      "timestamp": "2025-12-15T14:45:17.331Z",
+      "word_id": 59,
+      "vietnamese": "bao nhiêu tiền",
+      "english": "how much",
+      "correct_sequence": [
+        1,
+        1,
+        2
+      ],
+      "selected_sequence": [
+        1,
+        3,
+        2
+      ],
+      "alternatives": [
+        [
+          5,
+          1,
+          2
+        ],
+        [
+          5,
+          4,
+          5
+        ],
+        [
+          1,
+          3,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 24640
+    },
+    {
+      "timestamp": "2025-12-15T14:45:40.164Z",
+      "word_id": 71,
+      "vietnamese": "người việt nam",
+      "english": "Vietnamese person/people",
+      "correct_sequence": [
+        2,
+        6,
+        1
+      ],
+      "selected_sequence": [
+        3,
+        1,
+        2
+      ],
+      "alternatives": [
+        [
+          5,
+          1,
+          4
+        ],
+        [
+          3,
+          1,
+          2
+        ],
+        [
+          2,
+          5,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 21328
+    },
+    {
+      "timestamp": "2025-12-15T14:46:00.780Z",
+      "word_id": 55,
+      "vietnamese": "bạn khỏe không",
+      "english": "how are you",
+      "correct_sequence": [
+        6,
+        4,
+        1
+      ],
+      "selected_sequence": [
+        4,
+        3,
+        1
+      ],
+      "alternatives": [
+        [
+          4,
+          3,
+          1
+        ],
+        [
+          1,
+          5,
+          6
+        ],
+        [
+          2,
+          4,
+          5
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 19112
+    },
+    {
+      "timestamp": "2025-12-15T14:46:09.366Z",
+      "word_id": 77,
+      "vietnamese": "vịnh hạ long",
+      "english": "Ha Long Bay",
+      "correct_sequence": [
+        6,
+        6,
+        1
+      ],
+      "selected_sequence": [
+        6,
+        6,
+        1
+      ],
+      "alternatives": [
+        [
+          3,
+          6,
+          1
+        ],
+        [
+          2,
+          6,
+          3
+        ],
+        [
+          4,
+          6,
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7081
+    },
+    {
+      "timestamp": "2025-12-15T14:00:00Z",
+      "word_id": 1,
+      "vietnamese": "xin chào",
+      "english": "hello",
+      "correct_sequence": [
+        1,
+        2
+      ],
+      "selected_sequence": [
+        1,
+        3
+      ],
+      "alternatives": [
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 2500
+    },
+    {
+      "timestamp": "2025-12-15T14:50:52.067Z",
+      "word_id": 78,
+      "vietnamese": "thành phố hồ chí minh",
+      "english": "Ho Chi Minh City",
+      "correct_sequence": [
+        2,
+        3,
+        2,
+        3,
+        1
+      ],
+      "selected_sequence": [
+        2,
+        3,
+        2,
+        3,
+        1
+      ],
+      "alternatives": [
+        [
+          5,
+          2,
+          6,
+          3,
+          4
+        ],
+        [
+          5,
+          6,
+          6,
+          6,
+          5
+        ],
+        [
+          3,
+          3,
+          6,
+          2,
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 281197
+    },
+    {
+      "timestamp": "2025-12-15T14:51:03.224Z",
+      "word_id": 196,
+      "vietnamese": "hồ chí",
+      "english": "Ho Chi",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        2,
+        3
+      ],
+      "alternatives": [
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 9650
+    },
+    {
+      "timestamp": "2025-12-15T15:20:12.501Z",
+      "word_id": 43,
+      "vietnamese": "kính",
+      "english": "glasses",
+      "correct_sequence": [
+        3
+      ],
+      "selected_sequence": [
+        3
+      ],
+      "alternatives": [
+        [
+          6
+        ],
+        [
+          1
+        ],
+        [
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 10508
+    },
+    {
+      "timestamp": "2025-12-15T15:20:20.150Z",
+      "word_id": 141,
+      "vietnamese": "hàng",
+      "english": "goods / row",
+      "correct_sequence": [
+        2
+      ],
+      "selected_sequence": [
+        1
+      ],
+      "alternatives": [
+        [
+          1
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 6140
+    },
+    {
+      "timestamp": "2025-12-15T15:20:32.503Z",
+      "word_id": 176,
+      "vietnamese": "mọi",
+      "english": "every",
+      "correct_sequence": [
+        6
+      ],
+      "selected_sequence": [
+        4
+      ],
+      "alternatives": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 10848
+    },
+    {
+      "timestamp": "2025-12-15T15:20:58.257Z",
+      "word_id": 292,
+      "vietnamese": "đâu",
+      "english": "where",
+      "correct_sequence": [
+        1
+      ],
+      "selected_sequence": [
+        2
+      ],
+      "alternatives": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 24249
+    },
+    {
+      "timestamp": "2025-12-15T15:21:15.534Z",
+      "word_id": 235,
+      "vietnamese": "cảm",
+      "english": "feel",
+      "correct_sequence": [
+        4
+      ],
+      "selected_sequence": [
+        4
+      ],
+      "alternatives": [
+        [
+          2
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 9926
+    },
+    {
+      "timestamp": "2025-12-15T15:21:24.763Z",
+      "word_id": 50,
+      "vietnamese": "sữa",
+      "english": "milk",
+      "correct_sequence": [
+        5
+      ],
+      "selected_sequence": [
+        5
+      ],
+      "alternatives": [
+        [
+          6
+        ],
+        [
+          4
+        ],
+        [
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7718
+    },
+    {
+      "timestamp": "2025-12-15T15:22:50.351Z",
+      "word_id": 173,
+      "vietnamese": "tụi",
+      "english": "(tụi)",
+      "correct_sequence": [
+        6
+      ],
+      "selected_sequence": [
+        6
+      ],
+      "alternatives": [
+        [
+          2
+        ],
+        [
+          5
+        ],
+        [
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 4790
+    },
+    {
+      "timestamp": "2025-12-15T15:23:05.028Z",
+      "word_id": 131,
+      "vietnamese": "con",
+      "english": "child / animal classifier",
+      "correct_sequence": [
+        1
+      ],
+      "selected_sequence": [
+        1
+      ],
+      "alternatives": [
+        [
+          2
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 4286
+    },
+    {
+      "timestamp": "2025-12-15T15:37:07.805Z",
+      "word_id": 174,
+      "vietnamese": "giờ",
+      "english": "hour / now",
+      "correct_sequence": [
+        2
+      ],
+      "selected_sequence": [
+        2
+      ],
+      "alternatives": [
+        [
+          1
+        ],
+        [
+          5
+        ],
+        [
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 5942
+    },
+    {
+      "timestamp": "2025-12-15T15:37:22.488Z",
+      "word_id": 188,
+      "vietnamese": "trò",
+      "english": "game / trick",
+      "correct_sequence": [
+        2
+      ],
+      "selected_sequence": [
+        2
+      ],
+      "alternatives": [
+        [
+          4
+        ],
+        [
+          3
+        ],
+        [
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 13179
+    },
+    {
+      "timestamp": "2025-12-15T15:37:30.469Z",
+      "word_id": 67,
+      "vietnamese": "tám",
+      "english": "eight",
+      "correct_sequence": [
+        3
+      ],
+      "selected_sequence": [
+        3
+      ],
+      "alternatives": [
+        [
+          6
+        ],
+        [
+          5
+        ],
+        [
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 6479
+    },
+    {
+      "timestamp": "2025-12-15T15:39:16.469Z",
+      "word_id": 179,
+      "vietnamese": "tới",
+      "english": "arrive / to",
+      "correct_sequence": [
+        3
+      ],
+      "selected_sequence": [
+        3
+      ],
+      "alternatives": [
+        [
+          4
+        ],
+        [
+          2
+        ],
+        [
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 104496
+    },
+    {
+      "timestamp": "2025-12-15T15:42:37.784Z",
+      "word_id": 298,
+      "vietnamese": "giỏi",
+      "english": "good at / talented",
+      "correct_sequence": [
+        4
+      ],
+      "selected_sequence": [
+        5
+      ],
+      "alternatives": [
+        [
+          6
+        ],
+        [
+          1
+        ],
+        [
+          5
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 5588
+    },
+    {
+      "timestamp": "2025-12-15T15:42:52.292Z",
+      "word_id": 8,
+      "vietnamese": "phở",
+      "english": "pho soup",
+      "correct_sequence": [
+        4
+      ],
+      "selected_sequence": [
+        4
+      ],
+      "alternatives": [
+        [
+          3
+        ],
+        [
+          2
+        ],
+        [
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 13003
+    },
+    {
+      "timestamp": "2025-12-15T15:42:58.935Z",
+      "word_id": 194,
+      "vietnamese": "nguyễn",
+      "english": "Nguyen (name)",
+      "correct_sequence": [
+        5
+      ],
+      "selected_sequence": [
+        5
+      ],
+      "alternatives": [
+        [
+          3
+        ],
+        [
+          6
+        ],
+        [
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 5138
+    },
+    {
+      "timestamp": "2025-12-15T15:43:22.600Z",
+      "word_id": 31,
+      "vietnamese": "gia đình",
+      "english": "family",
+      "correct_sequence": [
+        1,
+        2
+      ],
+      "selected_sequence": [
+        2,
+        2
+      ],
+      "alternatives": [
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 22159
+    },
+    {
+      "timestamp": "2025-12-15T15:43:30.136Z",
+      "word_id": 31,
+      "vietnamese": "gia đình",
+      "english": "family",
+      "correct_sequence": [
+        1,
+        2
+      ],
+      "selected_sequence": [
+        1,
+        2
+      ],
+      "alternatives": [
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          1,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 6032
+    },
+    {
+      "timestamp": "2025-12-15T15:43:43.714Z",
+      "word_id": 117,
+      "vietnamese": "đó là",
+      "english": "that is",
+      "correct_sequence": [
+        3,
+        2
+      ],
+      "selected_sequence": [
+        2,
+        2
+      ],
+      "alternatives": [
+        [
+          3,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 12074
+    },
+    {
+      "timestamp": "2025-12-15T15:44:12.691Z",
+      "word_id": 85,
+      "vietnamese": "nước ngoài",
+      "english": "foreign country / abroad",
+      "correct_sequence": [
+        3,
+        2
+      ],
+      "selected_sequence": [
+        3,
+        2
+      ],
+      "alternatives": [
+        [
+          1,
+          3
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 27472
+    },
+    {
+      "timestamp": "2025-12-15T15:44:19.901Z",
+      "word_id": 331,
+      "vietnamese": "là nhiều",
+      "english": "(là nhiều)",
+      "correct_sequence": [
+        2,
+        2
+      ],
+      "selected_sequence": [
+        4,
+        5
+      ],
+      "alternatives": [
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          2,
+          6
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 5705
+    },
+    {
+      "timestamp": "2025-12-15T15:44:30.175Z",
+      "word_id": 266,
+      "vietnamese": "đầm sen",
+      "english": "lotus pond (Dam Sen)",
+      "correct_sequence": [
+        2,
+        1
+      ],
+      "selected_sequence": [
+        2,
+        1
+      ],
+      "alternatives": [
+        [
+          3,
+          3
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 8769
+    },
+    {
+      "timestamp": "2025-12-15T15:44:39.563Z",
+      "word_id": 302,
+      "vietnamese": "viết ra",
+      "english": "write out",
+      "correct_sequence": [
+        3,
+        1
+      ],
+      "selected_sequence": [
+        1,
+        6
+      ],
+      "alternatives": [
+        [
+          3,
+          4
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7884
+    },
+    {
+      "timestamp": "2025-12-15T15:44:48.492Z",
+      "word_id": 243,
+      "vietnamese": "phố đi",
+      "english": "walking street",
+      "correct_sequence": [
+        3,
+        1
+      ],
+      "selected_sequence": [
+        2,
+        3
+      ],
+      "alternatives": [
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          1,
+          6
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7426
+    },
+    {
+      "timestamp": "2025-12-15T15:44:58.101Z",
+      "word_id": 15,
+      "vietnamese": "xe đạp",
+      "english": "bicycle",
+      "correct_sequence": [
+        1,
+        6
+      ],
+      "selected_sequence": [
+        1,
+        6
+      ],
+      "alternatives": [
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 8105
+    },
+    {
+      "timestamp": "2025-12-15T15:45:04.909Z",
+      "word_id": 25,
+      "vietnamese": "ngôi sao",
+      "english": "star",
+      "correct_sequence": [
+        1,
+        1
+      ],
+      "selected_sequence": [
+        1,
+        1
+      ],
+      "alternatives": [
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          2,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 5303
+    },
+    {
+      "timestamp": "2025-12-15T15:45:16.191Z",
+      "word_id": 196,
+      "vietnamese": "hồ chí",
+      "english": "Ho Chi",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        6,
+        5
+      ],
+      "alternatives": [
+        [
+          1,
+          6
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 9777
+    },
+    {
+      "timestamp": "2025-12-15T15:45:24.785Z",
+      "word_id": 83,
+      "vietnamese": "miền bắc",
+      "english": "Northern region",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        4,
+        6
+      ],
+      "alternatives": [
+        [
+          1,
+          1
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7090
+    },
+    {
+      "timestamp": "2025-12-15T15:45:31.943Z",
+      "word_id": 290,
+      "vietnamese": "là hàng",
+      "english": "is goods",
+      "correct_sequence": [
+        2,
+        2
+      ],
+      "selected_sequence": [
+        2,
+        2
+      ],
+      "alternatives": [
+        [
+          6,
+          5
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 5654
+    },
+    {
+      "timestamp": "2025-12-15T15:45:38.928Z",
+      "word_id": 3,
+      "vietnamese": "con cá",
+      "english": "fish",
+      "correct_sequence": [
+        1,
+        3
+      ],
+      "selected_sequence": [
+        2,
+        1
+      ],
+      "alternatives": [
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 5481
+    },
+    {
+      "timestamp": "2025-12-15T15:45:52.466Z",
+      "word_id": 213,
+      "vietnamese": "dạ thì",
+      "english": "yes then",
+      "correct_sequence": [
+        6,
+        2
+      ],
+      "selected_sequence": [
+        6,
+        2
+      ],
+      "alternatives": [
+        [
+          2,
+          5
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 12033
+    },
+    {
+      "timestamp": "2025-12-15T15:46:00.830Z",
+      "word_id": 330,
+      "vietnamese": "chụp hình",
+      "english": "take photos",
+      "correct_sequence": [
+        6,
+        2
+      ],
+      "selected_sequence": [
+        6,
+        6
+      ],
+      "alternatives": [
+        [
+          6,
+          6
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 6859
+    },
+    {
+      "timestamp": "2025-12-15T15:46:15.559Z",
+      "word_id": 281,
+      "vietnamese": "cái cảnh",
+      "english": "the scene",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        3,
+        4
+      ],
+      "alternatives": [
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 13225
+    },
+    {
+      "timestamp": "2025-12-15T15:46:33.350Z",
+      "word_id": 89,
+      "vietnamese": "bún chả",
+      "english": "bun cha (grilled pork with noodles)",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        2,
+        4
+      ],
+      "alternatives": [
+        [
+          2,
+          6
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 16288
+    },
+    {
+      "timestamp": "2025-12-15T15:46:38.836Z",
+      "word_id": 244,
+      "vietnamese": "để cho",
+      "english": "in order to",
+      "correct_sequence": [
+        4,
+        1
+      ],
+      "selected_sequence": [
+        1,
+        1
+      ],
+      "alternatives": [
+        [
+          1,
+          1
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 3982
+    },
+    {
+      "timestamp": "2025-12-15T15:46:48.030Z",
+      "word_id": 2,
+      "vietnamese": "con chó",
+      "english": "dog",
+      "correct_sequence": [
+        1,
+        3
+      ],
+      "selected_sequence": [
+        1,
+        5
+      ],
+      "alternatives": [
+        [
+          4,
+          1
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7690
+    },
+    {
+      "timestamp": "2025-12-15T15:46:56.046Z",
+      "word_id": 243,
+      "vietnamese": "phố đi",
+      "english": "walking street",
+      "correct_sequence": [
+        3,
+        1
+      ],
+      "selected_sequence": [
+        4,
+        1
+      ],
+      "alternatives": [
+        [
+          3,
+          6
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 6512
+    },
+    {
+      "timestamp": "2025-12-15T15:47:03.389Z",
+      "word_id": 10,
+      "vietnamese": "trái cây",
+      "english": "fruit",
+      "correct_sequence": [
+        3,
+        1
+      ],
+      "selected_sequence": [
+        3,
+        1
+      ],
+      "alternatives": [
+        [
+          5,
+          2
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          2,
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 5838
+    },
+    {
+      "timestamp": "2025-12-15T15:47:13.306Z",
+      "word_id": 23,
+      "vietnamese": "mặt trời",
+      "english": "sun",
+      "correct_sequence": [
+        6,
+        2
+      ],
+      "selected_sequence": [
+        6,
+        2
+      ],
+      "alternatives": [
+        [
+          4,
+          3
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 8412
+    },
+    {
+      "timestamp": "2025-12-15T15:47:18.875Z",
+      "word_id": 280,
+      "vietnamese": "sự thay",
+      "english": "the change",
+      "correct_sequence": [
+        6,
+        1
+      ],
+      "selected_sequence": [
+        6,
+        1
+      ],
+      "alternatives": [
+        [
+          3,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 4065
+    },
+    {
+      "timestamp": "2025-12-15T15:47:25.846Z",
+      "word_id": 189,
+      "vietnamese": "tụi em",
+      "english": "we (young people)",
+      "correct_sequence": [
+        6,
+        1
+      ],
+      "selected_sequence": [
+        6,
+        1
+      ],
+      "alternatives": [
+        [
+          4,
+          3
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 5468
+    },
+    {
+      "timestamp": "2025-12-15T15:47:32.704Z",
+      "word_id": 196,
+      "vietnamese": "hồ chí",
+      "english": "Ho Chi",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        6,
+        1
+      ],
+      "alternatives": [
+        [
+          6,
+          1
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 5353
+    },
+    {
+      "timestamp": "2025-12-15T15:47:38.878Z",
+      "word_id": 40,
+      "vietnamese": "quần áo",
+      "english": "clothes",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        6,
+        4
+      ],
+      "alternatives": [
+        [
+          3,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          6,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 4670
+    },
+    {
+      "timestamp": "2025-12-15T15:47:46.948Z",
+      "word_id": 30,
+      "vietnamese": "trẻ em",
+      "english": "child",
+      "correct_sequence": [
+        4,
+        1
+      ],
+      "selected_sequence": [
+        6,
+        3
+      ],
+      "alternatives": [
+        [
+          1,
+          3
+        ],
+        [
+          6,
+          3
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 6565
+    },
+    {
+      "timestamp": "2025-12-15T15:47:58.491Z",
+      "word_id": 291,
+      "vietnamese": "bán ở",
+      "english": "sell at",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        6,
+        4
+      ],
+      "alternatives": [
+        [
+          6,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 10038
+    },
+    {
+      "timestamp": "2025-12-15T15:48:07.394Z",
+      "word_id": 163,
+      "vietnamese": "không biết",
+      "english": "don't know",
+      "correct_sequence": [
+        1,
+        3
+      ],
+      "selected_sequence": [
+        1,
+        3
+      ],
+      "alternatives": [
+        [
+          3,
+          6
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7398
+    },
+    {
+      "timestamp": "2025-12-15T15:48:15.569Z",
+      "word_id": 82,
+      "vietnamese": "thế giới",
+      "english": "world",
+      "correct_sequence": [
+        3,
+        3
+      ],
+      "selected_sequence": [
+        3,
+        5
+      ],
+      "alternatives": [
+        [
+          3,
+          5
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 6671
+    },
+    {
+      "timestamp": "2025-12-15T15:48:30.540Z",
+      "word_id": 112,
+      "vietnamese": "người việt",
+      "english": "Vietnamese person",
+      "correct_sequence": [
+        2,
+        6
+      ],
+      "selected_sequence": [
+        2,
+        6
+      ],
+      "alternatives": [
+        [
+          1,
+          6
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 13467
+    },
+    {
+      "timestamp": "2025-12-15T15:48:35.439Z",
+      "word_id": 38,
+      "vietnamese": "cửa sổ",
+      "english": "window",
+      "correct_sequence": [
+        4,
+        4
+      ],
+      "selected_sequence": [
+        4,
+        4
+      ],
+      "alternatives": [
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          5
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 3396
+    },
+    {
+      "timestamp": "2025-12-15T15:48:41.782Z",
+      "word_id": 75,
+      "vietnamese": "nổi tiếng",
+      "english": "famous",
+      "correct_sequence": [
+        4,
+        3
+      ],
+      "selected_sequence": [
+        4,
+        5
+      ],
+      "alternatives": [
+        [
+          2,
+          6
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 4837
+    },
+    {
+      "timestamp": "2025-12-15T15:48:51.205Z",
+      "word_id": 88,
+      "vietnamese": "mình thích",
+      "english": "I like",
+      "correct_sequence": [
+        2,
+        3
+      ],
+      "selected_sequence": [
+        2,
+        3
+      ],
+      "alternatives": [
+        [
+          4,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          5,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7919
+    },
+    {
+      "timestamp": "2025-12-15T15:48:59.747Z",
+      "word_id": 212,
+      "vietnamese": "ở đây",
+      "english": "here",
+      "correct_sequence": [
+        4,
+        1
+      ],
+      "selected_sequence": [
+        4,
+        1
+      ],
+      "alternatives": [
+        [
+          4,
+          4
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          6,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7037
+    },
+    {
+      "timestamp": "2025-12-15T15:49:13.597Z",
+      "word_id": 89,
+      "vietnamese": "bún chả",
+      "english": "bun cha (grilled pork with noodles)",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        4,
+        2
+      ],
+      "alternatives": [
+        [
+          2,
+          2
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          5
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 12346
+    },
+    {
+      "timestamp": "2025-12-15T15:49:20.898Z",
+      "word_id": 314,
+      "vietnamese": "sức khỏe",
+      "english": "health",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        4,
+        1
+      ],
+      "alternatives": [
+        [
+          4,
+          1
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 5795
+    },
+    {
+      "timestamp": "2025-12-15T15:49:30.664Z",
+      "word_id": 316,
+      "vietnamese": "bóng đá",
+      "english": "soccer",
+      "correct_sequence": [
+        3,
+        3
+      ],
+      "selected_sequence": [
+        3,
+        3
+      ],
+      "alternatives": [
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          4,
+          6
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 8261
+    },
+    {
+      "timestamp": "2025-12-15T15:49:39.758Z",
+      "word_id": 44,
+      "vietnamese": "túi xách",
+      "english": "bag",
+      "correct_sequence": [
+        3,
+        3
+      ],
+      "selected_sequence": [
+        4,
+        4
+      ],
+      "alternatives": [
+        [
+          6,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7589
+    },
+    {
+      "timestamp": "2025-12-15T15:49:59.128Z",
+      "word_id": 199,
+      "vietnamese": "nguyễn huệ",
+      "english": "Nguyen Hue (street name)",
+      "correct_sequence": [
+        5,
+        6
+      ],
+      "selected_sequence": [
+        3,
+        5
+      ],
+      "alternatives": [
+        [
+          1,
+          3
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 17866
+    },
+    {
+      "timestamp": "2025-12-15T15:50:18.220Z",
+      "word_id": 54,
+      "vietnamese": "xin lỗi",
+      "english": "sorry",
+      "correct_sequence": [
+        1,
+        5
+      ],
+      "selected_sequence": [
+        1,
+        5
+      ],
+      "alternatives": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 17588
+    },
+    {
+      "timestamp": "2025-12-15T15:50:39.181Z",
+      "word_id": 54,
+      "vietnamese": "xin lỗi",
+      "english": "sorry",
+      "correct_sequence": [
+        1,
+        5
+      ],
+      "selected_sequence": [
+        1,
+        5
+      ],
+      "alternatives": [
+        [
+          3,
+          5
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 19459
+    },
+    {
+      "timestamp": "2025-12-15T15:50:49.353Z",
+      "word_id": 201,
+      "vietnamese": "những cái",
+      "english": "those things",
+      "correct_sequence": [
+        5,
+        3
+      ],
+      "selected_sequence": [
+        2,
+        4
+      ],
+      "alternatives": [
+        [
+          2,
+          2
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 8667
+    }
+  ],
+  "drill_attempts": []
+}

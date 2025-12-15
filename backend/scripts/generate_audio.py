@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.tts import (
     generate_audio,
     slugify,
+    get_audio_filename,
     MODELS_DIR,
     AUDIO_DIR,
     SPEAKERS,
@@ -173,14 +174,15 @@ def main():
     fail_count = 0
 
     for i, word in enumerate(words, 1):
+        word_id = word["id"]
         vietnamese = word["vietnamese"]
         english = word["english"]
-        slug = slugify(vietnamese)
-        output_path = output_dir / f"{slug}.wav"
+        filename = get_audio_filename(word_id, vietnamese, "wav")
+        output_path = output_dir / filename
 
         # Skip if already exists (unless --force)
         if output_path.exists() and not args.force:
-            print(f"[{i}/{len(words)}] Skip (exists): {vietnamese} -> {slug}.wav")
+            print(f"[{i}/{len(words)}] Skip (exists): {vietnamese} -> {filename}")
             skip_count += 1
             continue
 
@@ -191,7 +193,7 @@ def main():
             speaker = args.speaker
 
         speaker_info = f" [speaker {speaker}]" if speaker is not None else ""
-        print(f"[{i}/{len(words)}] Generating: {vietnamese} ({english}) -> {slug}.wav{speaker_info}")
+        print(f"[{i}/{len(words)}] Generating: {vietnamese} ({english}) -> {filename}{speaker_info}")
 
         if generate_audio(
             vietnamese,

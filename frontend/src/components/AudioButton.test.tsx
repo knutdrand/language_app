@@ -11,12 +11,12 @@ beforeEach(() => {
 
 describe('AudioButton', () => {
   it('renders play button', () => {
-    render(<AudioButton text="xin chào" />);
+    render(<AudioButton wordId={1} text="xin chào" />);
     expect(screen.getByText('Play Word')).toBeInTheDocument();
   });
 
   it('should not auto-play when autoPlay is false', async () => {
-    render(<AudioButton text="xin chào" autoPlay={false} />);
+    render(<AudioButton wordId={1} text="xin chào" autoPlay={false} />);
 
     // Wait a bit for any potential autoPlay to trigger
     await act(async () => {
@@ -28,7 +28,7 @@ describe('AudioButton', () => {
   });
 
   it('should auto-play when autoPlay is true', async () => {
-    render(<AudioButton text="xin chào" autoPlay={true} />);
+    render(<AudioButton wordId={1} text="xin chào" autoPlay={true} />);
 
     // Wait for autoPlay timeout and fallback
     await act(async () => {
@@ -43,7 +43,7 @@ describe('AudioButton', () => {
   });
 
   it('should auto-play again when text changes', async () => {
-    const { rerender } = render(<AudioButton text="xin chào" autoPlay={true} />);
+    const { rerender } = render(<AudioButton wordId={1} text="xin chào" autoPlay={true} />);
 
     // Wait for initial autoPlay
     await act(async () => {
@@ -55,7 +55,7 @@ describe('AudioButton', () => {
     mockAudioPlay.mockClear();
 
     // Change to a new word
-    rerender(<AudioButton text="con mèo" autoPlay={true} />);
+    rerender(<AudioButton wordId={2} text="con mèo" autoPlay={true} />);
 
     await act(async () => {
       await new Promise((r) => setTimeout(r, 200));
@@ -66,7 +66,7 @@ describe('AudioButton', () => {
   });
 
   it('should not replay on re-render with same text', async () => {
-    const { rerender } = render(<AudioButton text="xin chào" autoPlay={true} />);
+    const { rerender } = render(<AudioButton wordId={1} text="xin chào" autoPlay={true} />);
 
     // Wait for initial autoPlay
     await act(async () => {
@@ -77,7 +77,7 @@ describe('AudioButton', () => {
     mockSpeak.mockClear();
 
     // Re-render with same text
-    rerender(<AudioButton text="xin chào" autoPlay={true} />);
+    rerender(<AudioButton wordId={1} text="xin chào" autoPlay={true} />);
 
     await act(async () => {
       await new Promise((r) => setTimeout(r, 200));

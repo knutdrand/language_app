@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from app.routers import audio
+from app.routers import audio, attempts, fsrs
 
 app = FastAPI(
     title="Language App API",
@@ -27,6 +27,8 @@ if audio_dir.exists():
 
 # Include routers
 app.include_router(audio.router, prefix="/api", tags=["audio"])
+app.include_router(attempts.router, prefix="/api", tags=["attempts"])
+app.include_router(fsrs.router, prefix="/api", tags=["fsrs"])
 
 
 @app.get("/health")

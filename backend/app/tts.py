@@ -29,17 +29,32 @@ def get_model_config_path() -> Path:
 
 
 def slugify(text: str) -> str:
-    """Convert Vietnamese text to a safe filename slug."""
+    """Convert Vietnamese text to a safe filename slug (for readability only)."""
     import unicodedata
     # Normalize unicode
     text = unicodedata.normalize('NFD', text)
     # Remove diacritics for filename but keep the original for TTS
     slug = text.lower()
+    # Replace đ with d (NFD doesn't decompose đ)
+    slug = slug.replace('đ', 'd')
     # Replace spaces with underscores
     slug = slug.replace(' ', '_')
     # Keep only alphanumeric and underscores
     slug = ''.join(c for c in slug if c.isalnum() or c == '_')
     return slug
+
+
+def get_audio_filename(word_id: int, text: str, ext: str = "wav") -> str:
+    """Generate unique audio filename using word ID and slug.
+
+    Format: {id}_{slug}.{ext}
+    Example: 42_ban.wav
+
+    The ID ensures uniqueness even when different Vietnamese words
+    have the same ASCII slug (e.g., bàn, bạn, bán all become 'ban').
+    """
+    slug = slugify(text)
+    return f"{word_id}_{slug}.{ext}"
 
 
 def generate_audio(
@@ -114,10 +129,17 @@ def generate_audio(
         return False
 
 
-def get_audio_path(text: str, language: str = "vi") -> Path:
-    """Get the path where audio for this text should be stored."""
-    slug = slugify(text)
-    return AUDIO_DIR / language / f"{slug}.wav"
+def get_audio_path(text: str, language: str = "vi", word_id: Optional[int] = None) -> Path:
+    """Get the path where audio for this text should be stored.
+
+    If word_id is provided, uses the new ID-based naming scheme.
+    Otherwise falls back to slug-only naming (deprecated).
+    """
+    if word_id is not None:
+        filename = get_audio_filename(word_id, text, "wav")
+    else:
+        filename = f"{slugify(text)}.wav"
+    return AUDIO_DIR / language / filename
 
 
 def ensure_audio_exists(text: str, language: str = "vi") -> Optional[Path]:

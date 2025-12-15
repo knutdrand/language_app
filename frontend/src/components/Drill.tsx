@@ -1,9 +1,10 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import type { Word, Source } from '../types';
 import { AudioButton } from './AudioButton';
 import { ImageGrid } from './ImageGrid';
 import { useFSRS } from '../hooks/useFSRS';
 import { useProgress } from '../hooks/useProgress';
+import { useAttemptLog } from '../hooks/useAttemptLog';
 
 interface DrillProps {
   words: Word[];
@@ -17,7 +18,7 @@ function getRandomDistractors(words: Word[], excludeId: number, count: number): 
 }
 
 export function Drill({ words, sources = [] }: DrillProps) {
-  const { getNextWord, recordReview, getDueCount } = useFSRS(words);
+  const { getNextWord, recordReview, getDueCount, isLoading } = useFSRS(words);
 
   // Get source for current word
   const getSourceForWord = useCallback((word: Word | null): Source | undefined => {
@@ -25,6 +26,7 @@ export function Drill({ words, sources = [] }: DrillProps) {
     return sources.find(s => s.id === word.sourceId);
   }, [sources]);
   const { recordReview: recordProgress, reviewsToday, correctToday } = useProgress();
+  const { logDrillAttempt } = useAttemptLog();
 
   const [currentWord, setCurrentWord] = useState<Word | null>(null);
   const [distractors, setDistractors] = useState<Word[]>([]);
@@ -32,6 +34,9 @@ export function Drill({ words, sources = [] }: DrillProps) {
   const [lastResult, setLastResult] = useState<{ correct: boolean; word: Word } | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [key, setKey] = useState(0); // For forcing re-render of ImageGrid
+  const attemptStartTime = useRef<number | null>(null);
+  const hasLoadedInitial = useRef(false);
+  const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const loadNextWord = useCallback(() => {
     const next = getNextWord();
@@ -42,19 +47,52 @@ export function Drill({ words, sources = [] }: DrillProps) {
       setLastResult(null);
       setShowHint(false);
       setKey((k) => k + 1);
+      attemptStartTime.current = Date.now();
     } else {
       setCurrentWord(null);
     }
   }, [getNextWord, words]);
 
-  // Load first word on mount
+  // Load first word when loading completes (only once)
   useEffect(() => {
-    loadNextWord();
+    if (!isLoading && !hasLoadedInitial.current) {
+      hasLoadedInitial.current = true;
+      loadNextWord();
+    }
+  }, [isLoading, loadNextWord]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+      }
+    };
   }, []);
 
   const handleSelect = useCallback(
-    (_selectedWord: Word, isCorrect: boolean) => {
+    (selectedWord: Word, isCorrect: boolean) => {
       if (!currentWord) return;
+
+      // Prevent double-firing if already showing feedback
+      if (showingFeedback) return;
+
+      // Calculate response time
+      const responseTimeMs = attemptStartTime.current
+        ? Date.now() - attemptStartTime.current
+        : undefined;
+
+      // Log attempt to backend
+      logDrillAttempt({
+        wordId: currentWord.id,
+        vietnamese: currentWord.vietnamese,
+        english: currentWord.english,
+        correctImageId: currentWord.id,
+        selectedImageId: selectedWord.id,
+        alternativeWordIds: distractors.map(d => d.id),
+        isCorrect,
+        responseTimeMs,
+      });
 
       setLastResult({ correct: isCorrect, word: currentWord });
       setShowingFeedback(true);
@@ -63,16 +101,30 @@ export function Drill({ words, sources = [] }: DrillProps) {
       recordReview(currentWord.id, isCorrect);
       recordProgress(isCorrect);
 
+      // Clear any existing timer
+      if (advanceTimerRef.current) {
+        clearTimeout(advanceTimerRef.current);
+      }
+
       // Auto-advance after delay
-      setTimeout(() => {
+      advanceTimerRef.current = setTimeout(() => {
+        advanceTimerRef.current = null;
         loadNextWord();
       }, 1500);
     },
-    [currentWord, recordReview, recordProgress, loadNextWord]
+    [currentWord, distractors, showingFeedback, recordReview, recordProgress, loadNextWord, logDrillAttempt]
   );
 
   const dueCount = useMemo(() => getDueCount(), [getDueCount, key]);
   const accuracy = reviewsToday > 0 ? Math.round((correctToday / reviewsToday) * 100) : 0;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 p-8 text-center">
+        <div className="text-4xl animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
   if (!currentWord) {
     return (
@@ -127,7 +179,7 @@ export function Drill({ words, sources = [] }: DrillProps) {
 
       {/* Audio button */}
       <div className="my-4">
-        <AudioButton text={currentWord.vietnamese} autoPlay={!showingFeedback} />
+        <AudioButton wordId={currentWord.id} text={currentWord.vietnamese} autoPlay={!showingFeedback} />
       </div>
 
       {/* Hint: Vietnamese text (on demand) */}

@@ -71,9 +71,9 @@ globalThis.Audio = MockAudio;
 
 // Mock config module
 vi.mock('../config', () => ({
-  getAudioUrl: (text: string, language: string = 'vi') => {
+  getAudioUrl: (wordId: number, text: string, language: string = 'vi') => {
     const slug = text.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
-    return `http://localhost:8000/audio/${language}/${slug}.wav`;
+    return `http://localhost:8000/audio/${language}/${wordId}_${slug}.wav`;
   },
   API_BASE_URL: 'http://localhost:8000',
 }));

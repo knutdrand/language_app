@@ -1,45 +1,60 @@
-import { useCallback, useMemo } from 'react';
-import { createEmptyCard, fsrs, Rating, type Card } from 'ts-fsrs';
+import { useCallback, useMemo, useState, useEffect } from 'react';
+import { createEmptyCard, fsrs, Rating, type Card, type FSRSParameters } from 'ts-fsrs';
 import type { Word } from '../types';
 import { getToneSequence, getToneSequenceKey } from '../utils/tones';
+import { getFrequencyWeight } from '../data/toneFrequencies';
+import { API_BASE_URL } from '../config';
 
-const STORAGE_KEY = 'language_app_cards_tone_sequences';
+/**
+ * Mastery thresholds for progressive unlocking.
+ *
+ * Users must achieve these thresholds before unlocking longer sequences:
+ * - 1-syllable: Always available
+ * - 2-syllable: Unlocks when 1-syllable accuracy >= 70% with >= 10 attempts
+ * - 3-syllable: Unlocks when 2-syllable accuracy >= 70% with >= 10 attempts
+ * - 4+ syllable: Unlocks when 3-syllable accuracy >= 75% with >= 10 attempts
+ */
+const MASTERY_THRESHOLD = 0.70;  // 70% accuracy required
+const MIN_ATTEMPTS_FOR_MASTERY = 10;  // Need at least 10 attempts to prove mastery
+
+/**
+ * Custom FSRS parameters optimized for skill training (shorter intervals).
+ */
+const SKILL_TRAINING_PARAMS: Partial<FSRSParameters> = {
+  w: [
+    0.4, 0.6, 2.4, 5.8,
+    4.93, 0.94, 0.86, 0.01,
+    1.49, 0.14, 0.94, 2.18,
+    0.05, 0.34, 1.26, 0.29, 2.61
+  ],
+  request_retention: 0.85,
+  maximum_interval: 3,
+};
+
+const f = fsrs(SKILL_TRAINING_PARAMS);
 
 interface ToneCardState {
   sequenceKey: string;
   card: Card;
+  correct: number;
+  total: number;
 }
 
-const f = fsrs();
-
-function loadCardStates(): Map<string, Card> {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      const parsed = JSON.parse(stored) as ToneCardState[];
-      const map = new Map<string, Card>();
-      for (const state of parsed) {
-        const card: Card = {
-          ...state.card,
-          due: new Date(state.card.due),
-          last_review: state.card.last_review ? new Date(state.card.last_review) : undefined,
-        };
-        map.set(state.sequenceKey, card);
-      }
-      return map;
-    }
-  } catch (e) {
-    console.error('Failed to load tone card states:', e);
-  }
-  return new Map();
-}
-
-function saveCardStates(cards: Map<string, Card>): void {
-  const states: ToneCardState[] = [];
-  cards.forEach((card, sequenceKey) => {
-    states.push({ sequenceKey, card });
-  });
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
+interface BackendCardState {
+  sequence_key: string;
+  card: {
+    due: string;
+    stability: number;
+    difficulty: number;
+    elapsed_days: number;
+    scheduled_days: number;
+    reps: number;
+    lapses: number;
+    state: number;
+    last_review?: string;
+  };
+  correct: number;
+  total: number;
 }
 
 interface WordWithSequence {
@@ -47,13 +62,149 @@ interface WordWithSequence {
   sequenceKey: string;
 }
 
+// Convert backend format to frontend format
+function fromBackend(backend: BackendCardState): ToneCardState {
+  return {
+    sequenceKey: backend.sequence_key,
+    card: {
+      ...backend.card,
+      due: new Date(backend.card.due),
+      last_review: backend.card.last_review ? new Date(backend.card.last_review) : undefined,
+    } as Card,
+    correct: backend.correct,
+    total: backend.total,
+  };
+}
+
+// Convert frontend format to backend format
+function toBackend(state: ToneCardState): BackendCardState {
+  return {
+    sequence_key: state.sequenceKey,
+    card: {
+      ...state.card,
+      due: state.card.due.toISOString(),
+      last_review: state.card.last_review?.toISOString(),
+    } as BackendCardState['card'],
+    correct: state.correct,
+    total: state.total,
+  };
+}
+
 /**
- * FSRS hook for tone sequence tracking.
- * Tracks mastery of tone sequences (e.g., "3-2" for Rising→Falling)
- * rather than individual words.
+ * Get syllable count from sequence key (e.g., "1-2-3" has 3 syllables)
+ */
+function getSyllableCount(sequenceKey: string): number {
+  return sequenceKey.split('-').length;
+}
+
+/**
+ * Check if a syllable level is unlocked based on mastery of previous level.
+ */
+function isSyllableLevelUnlocked(
+  targetSyllables: number,
+  cardStates: Map<string, ToneCardState>
+): boolean {
+  if (targetSyllables <= 1) return true;
+
+  const prevSyllables = targetSyllables - 1;
+  let totalCorrect = 0;
+  let totalAttempts = 0;
+
+  cardStates.forEach((state) => {
+    if (getSyllableCount(state.sequenceKey) === prevSyllables) {
+      totalCorrect += state.correct;
+      totalAttempts += state.total;
+    }
+  });
+
+  if (totalAttempts < MIN_ATTEMPTS_FOR_MASTERY) return false;
+  const accuracy = totalCorrect / totalAttempts;
+  return accuracy >= MASTERY_THRESHOLD;
+}
+
+/**
+ * Calculate priority score for a tone sequence.
+ */
+function calculatePriorityScore(
+  sequenceKey: string,
+  card: Card | null,
+  accuracy: number,
+  now: Date,
+  cardStates: Map<string, ToneCardState>
+): number {
+  const syllableCount = getSyllableCount(sequenceKey);
+
+  if (!isSyllableLevelUnlocked(syllableCount, cardStates)) {
+    return 0;
+  }
+
+  const frequencyWeight = getFrequencyWeight(sequenceKey);
+
+  const syllablePenalty = syllableCount === 1 ? 1.0 :
+                          syllableCount === 2 ? 0.5 :
+                          syllableCount === 3 ? 0.25 : 0.1;
+
+  let dueUrgency = 1;
+  if (card) {
+    const msOverdue = now.getTime() - card.due.getTime();
+    if (msOverdue > 0) {
+      const hoursOverdue = msOverdue / (1000 * 60 * 60);
+      dueUrgency = 1 + Math.min(hoursOverdue / 24, 5);
+    } else {
+      dueUrgency = 0.05;
+    }
+  } else {
+    dueUrgency = 1.0;
+  }
+
+  const proficiency = accuracy > 0 ? accuracy : 0.5;
+  const proficiencyFactor = 1.5 - proficiency;
+
+  return frequencyWeight * syllablePenalty * dueUrgency * proficiencyFactor;
+}
+
+/**
+ * FSRS hook for tone sequence tracking with backend persistence.
  */
 export function useToneFSRS(words: Word[]) {
-  const cardStates = useMemo(() => loadCardStates(), []);
+  const [cardStates, setCardStates] = useState<Map<string, ToneCardState>>(new Map());
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load from backend on mount
+  useEffect(() => {
+    async function loadFromBackend() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/fsrs/tone-cards`);
+        if (response.ok) {
+          const data = await response.json();
+          const map = new Map<string, ToneCardState>();
+          for (const card of data.cards) {
+            const state = fromBackend(card);
+            map.set(state.sequenceKey, state);
+          }
+          setCardStates(map);
+        }
+      } catch (e) {
+        console.error('Failed to load tone cards from backend:', e);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadFromBackend();
+  }, []);
+
+  // Save single card to backend
+  const saveCardToBackend = useCallback(async (state: ToneCardState) => {
+    try {
+      await fetch(`${API_BASE_URL}/api/fsrs/tone-cards/${encodeURIComponent(state.sequenceKey)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(toBackend(state)),
+      });
+    } catch (e) {
+      console.error('Failed to save tone card to backend:', e);
+    }
+  }, []);
 
   // Group words by their tone sequence
   const wordsBySequence = useMemo(() => {
@@ -68,56 +219,63 @@ export function useToneFSRS(words: Word[]) {
     return map;
   }, [words]);
 
-  // Get all unique sequence keys
   const allSequenceKeys = useMemo(() => {
     return Array.from(wordsBySequence.keys());
   }, [wordsBySequence]);
 
-  const getCardForSequence = useCallback((sequenceKey: string): Card => {
+  const getCardForSequence = useCallback((sequenceKey: string): ToneCardState => {
     const existing = cardStates.get(sequenceKey);
     if (existing) return existing;
 
-    const newCard = createEmptyCard();
-    cardStates.set(sequenceKey, newCard);
-    return newCard;
+    return {
+      sequenceKey,
+      card: createEmptyCard(),
+      correct: 0,
+      total: 0,
+    };
   }, [cardStates]);
 
-  /**
-   * Get next word to review based on due tone sequences.
-   * Returns a random word from the most due sequence.
-   */
   const getNextWord = useCallback((): WordWithSequence | null => {
-    const now = new Date();
+    if (isLoading) return null;
 
-    // Find sequences that are due or new
-    const dueSequences: { key: string; card: Card }[] = [];
-    const newSequences: string[] = [];
+    const now = new Date();
+    const scoredSequences: { key: string; score: number }[] = [];
 
     for (const key of allSequenceKeys) {
-      const card = cardStates.get(key);
-      if (!card) {
-        newSequences.push(key);
-      } else if (card.due <= now) {
-        dueSequences.push({ key, card });
+      const state = cardStates.get(key);
+      const card = state?.card || null;
+
+      if (card && card.due > now) {
+        continue;
+      }
+
+      const accuracy = state && state.total > 0 ? state.correct / state.total : 0;
+      const score = calculatePriorityScore(key, card, accuracy, now, cardStates);
+
+      if (score > 0) {
+        scoredSequences.push({ key, score });
       }
     }
 
-    let selectedKey: string | null = null;
-
-    // Prioritize due sequences (oldest first)
-    if (dueSequences.length > 0) {
-      dueSequences.sort((a, b) => a.card.due.getTime() - b.card.due.getTime());
-      selectedKey = dueSequences[0].key;
-    } else if (newSequences.length > 0) {
-      // Then new sequences
-      selectedKey = newSequences[0];
-    }
-
-    if (!selectedKey) {
+    if (scoredSequences.length === 0) {
       return null;
     }
 
-    // Pick a random word with this sequence
+    scoredSequences.sort((a, b) => b.score - a.score);
+
+    const topN = Math.min(3, scoredSequences.length);
+    const totalScore = scoredSequences.slice(0, topN).reduce((sum, s) => sum + s.score, 0);
+    let random = Math.random() * totalScore;
+
+    let selectedKey = scoredSequences[0].key;
+    for (let i = 0; i < topN; i++) {
+      random -= scoredSequences[i].score;
+      if (random <= 0) {
+        selectedKey = scoredSequences[i].key;
+        break;
+      }
+    }
+
     const wordsWithSequence = wordsBySequence.get(selectedKey);
     if (!wordsWithSequence || wordsWithSequence.length === 0) {
       return null;
@@ -128,42 +286,78 @@ export function useToneFSRS(words: Word[]) {
       word: wordsWithSequence[randomIndex],
       sequenceKey: selectedKey,
     };
-  }, [allSequenceKeys, cardStates, wordsBySequence]);
+  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading]);
 
-  /**
-   * Record a review for a tone sequence
-   */
   const recordReview = useCallback((sequenceKey: string, correct: boolean): void => {
-    const card = getCardForSequence(sequenceKey);
+    const state = getCardForSequence(sequenceKey);
     const rating = correct ? Rating.Good : Rating.Again;
-    const result = f.repeat(card, new Date());
+    const result = f.repeat(state.card, new Date());
     const newCard = result[rating].card;
 
-    cardStates.set(sequenceKey, newCard);
-    saveCardStates(cardStates);
-  }, [cardStates, getCardForSequence]);
+    const updatedState: ToneCardState = {
+      sequenceKey,
+      card: newCard,
+      correct: state.correct + (correct ? 1 : 0),
+      total: state.total + 1,
+    };
 
-  /**
-   * Get count of due sequences (not words)
-   */
+    // Update local state
+    setCardStates(prev => {
+      const newMap = new Map(prev);
+      newMap.set(sequenceKey, updatedState);
+      return newMap;
+    });
+
+    // Save to backend
+    saveCardToBackend(updatedState);
+  }, [getCardForSequence, saveCardToBackend]);
+
   const getDueCount = useCallback((): number => {
+    if (isLoading) return 0;
+
     const now = new Date();
     let count = 0;
 
     for (const key of allSequenceKeys) {
-      const card = cardStates.get(key);
-      if (!card || card.due <= now) {
-        count++;
+      const state = cardStates.get(key);
+      if (!state || state.card.due <= now) {
+        // Check if syllable level is unlocked
+        const syllables = getSyllableCount(key);
+        if (isSyllableLevelUnlocked(syllables, cardStates)) {
+          count++;
+        }
       }
     }
 
     return count;
-  }, [allSequenceKeys, cardStates]);
+  }, [allSequenceKeys, cardStates, isLoading]);
+
+  const getSequenceAccuracy = useCallback((sequenceKey: string): number | null => {
+    const state = cardStates.get(sequenceKey);
+    if (!state || state.total === 0) return null;
+    return state.correct / state.total;
+  }, [cardStates]);
+
+  const getOverallAccuracy = useCallback((): number | null => {
+    let totalCorrect = 0;
+    let totalReviews = 0;
+
+    cardStates.forEach((state) => {
+      totalCorrect += state.correct;
+      totalReviews += state.total;
+    });
+
+    if (totalReviews === 0) return null;
+    return totalCorrect / totalReviews;
+  }, [cardStates]);
 
   return {
     getNextWord,
     recordReview,
     getDueCount,
     getCardForSequence,
+    getSequenceAccuracy,
+    getOverallAccuracy,
+    isLoading,
   };
 }

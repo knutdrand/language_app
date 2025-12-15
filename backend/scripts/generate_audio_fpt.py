@@ -39,6 +39,16 @@ def slugify(text: str) -> str:
     return slug
 
 
+def get_audio_filename(word_id: int, text: str, ext: str = "mp3") -> str:
+    """Generate unique audio filename using word ID and slug.
+
+    Format: {id}_{slug}.{ext}
+    Example: 42_ban.mp3
+    """
+    slug = slugify(text)
+    return f"{word_id}_{slug}.{ext}"
+
+
 def generate_audio_fpt(text: str, api_key: str, voice: str = DEFAULT_VOICE) -> dict:
     """Call FPT.AI TTS API to generate audio."""
     headers = {
@@ -95,9 +105,10 @@ def main():
     fail_count = 0
 
     for i, word in enumerate(words, 1):
+        word_id = word["id"]
         vietnamese = word["vietnamese"]
-        slug = slugify(vietnamese)
-        output_path = AUDIO_DIR / f"{slug}.mp3"
+        filename = get_audio_filename(word_id, vietnamese, "mp3")
+        output_path = AUDIO_DIR / filename
 
         # Skip if already exists
         if output_path.exists():
@@ -105,7 +116,7 @@ def main():
             skip_count += 1
             continue
 
-        print(f"[{i}/{len(words)}] Generating: {vietnamese}...", end=" ", flush=True)
+        print(f"[{i}/{len(words)}] Generating: {vietnamese} -> {filename}...", end=" ", flush=True)
 
         # Call API
         result = generate_audio_fpt(vietnamese, api_key)

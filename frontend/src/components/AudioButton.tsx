@@ -2,14 +2,15 @@ import { useCallback, useState, useEffect, useRef } from 'react';
 import { getAudioUrl } from '../config';
 
 interface AudioButtonProps {
+  wordId: number;
   text: string;
   language?: string;
   autoPlay?: boolean;
 }
 
-export function AudioButton({ text, language = 'vi', autoPlay = false }: AudioButtonProps) {
+export function AudioButton({ wordId, text, language = 'vi', autoPlay = false }: AudioButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const lastPlayedText = useRef<string | null>(null);
+  const lastPlayedWordId = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Fallback to browser speech synthesis
@@ -46,7 +47,7 @@ export function AudioButton({ text, language = 'vi', autoPlay = false }: AudioBu
     speechSynthesis.cancel();
 
     try {
-      const audioUrl = getAudioUrl(text, language);
+      const audioUrl = getAudioUrl(wordId, text, language);
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
@@ -66,18 +67,19 @@ export function AudioButton({ text, language = 'vi', autoPlay = false }: AudioBu
       console.log('Failed to play backend audio, falling back to browser TTS');
       speakWithBrowser();
     }
-  }, [text, language, isPlaying, speakWithBrowser]);
+  }, [wordId, text, language, isPlaying, speakWithBrowser]);
 
-  // Auto-play when text changes (new word loaded)
+  // Auto-play when wordId changes (new word loaded)
   useEffect(() => {
-    if (autoPlay && text !== lastPlayedText.current) {
-      lastPlayedText.current = text;
+    if (autoPlay && wordId !== lastPlayedWordId.current) {
+      lastPlayedWordId.current = wordId;
+      // Small delay to ensure DOM is updated
       const timer = setTimeout(() => {
         speak();
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [autoPlay, text, speak]);
+  }, [autoPlay, wordId, speak]);
 
   // Cleanup on unmount
   useEffect(() => {
