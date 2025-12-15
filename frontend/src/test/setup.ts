@@ -6,8 +6,8 @@ export const mockSpeak = vi.fn();
 export const mockCancel = vi.fn();
 export const mockAudioPlay = vi.fn();
 
-// Track utterances for triggering callbacks
-let lastUtterance: MockSpeechSynthesisUtterance | null = null;
+// Track utterances for triggering callbacks (exported for potential test access)
+export let lastUtterance: MockSpeechSynthesisUtterance | null = null;
 
 // Mock SpeechSynthesisUtterance
 class MockSpeechSynthesisUtterance {

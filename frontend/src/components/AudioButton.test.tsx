@@ -1,5 +1,5 @@
 import { render, screen, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { AudioButton } from './AudioButton';
 import { mockSpeak, mockCancel, mockAudioPlay } from '../test/setup';
 

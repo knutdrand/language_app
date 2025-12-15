@@ -7,15 +7,16 @@ export interface Tone {
   diacritic: string;
   example: string;
   color: string;
+  symbol: string;
 }
 
 export const TONES: Tone[] = [
-  { id: 1, name: "Level", vietnamese: "Ngang", diacritic: "a", example: "ma", color: "#3B82F6" },
-  { id: 2, name: "Falling", vietnamese: "Huyền", diacritic: "à", example: "mà", color: "#8B5CF6" },
-  { id: 3, name: "Rising", vietnamese: "Sắc", diacritic: "á", example: "má", color: "#EF4444" },
-  { id: 4, name: "Dipping", vietnamese: "Hỏi", diacritic: "ả", example: "mả", color: "#F59E0B" },
-  { id: 5, name: "Creaky", vietnamese: "Ngã", diacritic: "ã", example: "mã", color: "#10B981" },
-  { id: 6, name: "Heavy", vietnamese: "Nặng", diacritic: "ạ", example: "mạ", color: "#6366F1" },
+  { id: 1, name: "Level", vietnamese: "Ngang", diacritic: "a", example: "ma", color: "#3B82F6", symbol: "―" },
+  { id: 2, name: "Falling", vietnamese: "Huyền", diacritic: "à", example: "mà", color: "#8B5CF6", symbol: "↘" },
+  { id: 3, name: "Rising", vietnamese: "Sắc", diacritic: "á", example: "má", color: "#EF4444", symbol: "↗" },
+  { id: 4, name: "Dipping", vietnamese: "Hỏi", diacritic: "ả", example: "mả", color: "#F59E0B", symbol: "∨" },
+  { id: 5, name: "Creaky", vietnamese: "Ngã", diacritic: "ã", example: "mã", color: "#10B981", symbol: "⤴" },
+  { id: 6, name: "Heavy", vietnamese: "Nặng", diacritic: "ạ", example: "mạ", color: "#6366F1", symbol: "↓" },
 ];
 
 export function getToneById(id: ToneId): Tone {
@@ -94,6 +95,13 @@ export function formatToneSequence(sequence: ToneId[]): string {
  */
 export function formatToneSequenceDiacritics(sequence: ToneId[]): string {
   return sequence.map((id) => getToneById(id).diacritic).join(" → ");
+}
+
+/**
+ * Format a tone sequence with arrow/line symbols: "↗ ↘"
+ */
+export function formatToneSymbols(sequence: ToneId[]): string {
+  return sequence.map((id) => getToneById(id).symbol).join(" ");
 }
 
 /**

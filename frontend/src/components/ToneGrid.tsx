@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   type ToneId,
-  formatToneSequence,
-  formatToneSequenceDiacritics,
+  formatToneSymbols,
   sequencesEqual,
   shuffleArray,
 } from '../utils/tones';
@@ -85,14 +84,9 @@ export function ToneGrid({
               ${!disabled && !showResult ? 'cursor-pointer active:scale-95' : 'cursor-default'}
             `}
           >
-            {/* Tone names */}
-            <div className="text-sm font-medium text-gray-700 text-center">
-              {formatToneSequence(option.sequence)}
-            </div>
-
-            {/* Diacritic examples */}
-            <div className="text-2xl font-bold text-indigo-600 mt-2 text-center">
-              {formatToneSequenceDiacritics(option.sequence)}
+            {/* Tone symbols only */}
+            <div className="text-3xl font-bold text-indigo-600 tracking-widest">
+              {formatToneSymbols(option.sequence)}
             </div>
 
             {/* Success/failure overlay */}
