@@ -1,12 +1,9 @@
 import { Platform } from 'react-native';
 
 // Backend API configuration
-// For Android emulator, use 10.0.2.2 instead of localhost
-// For iOS simulator and web, use localhost
+// When using ADB reverse (adb reverse tcp:8001 tcp:8001), localhost works on Android
+// This is required for Expo Go development
 const getDefaultApiUrl = () => {
-  if (Platform.OS === 'android') {
-    return 'http://10.0.2.2:8001';
-  }
   return 'http://localhost:8001';
 };
 
