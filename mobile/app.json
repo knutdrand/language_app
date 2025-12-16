@@ -1,25 +1,28 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Vietnamese Tone Trainer",
+    "slug": "vietnamese-tone-trainer",
     "version": "1.0.0",
     "updates": {
       "enabled": false
     },
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "vn-tone-trainer",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.knutdrand.vietnamesetonetrainer"
     },
     "android": {
+      "package": "com.knutdrand.vietnamesetonetrainer",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -37,6 +40,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0f658bb5-d4a9-46ed-949b-2d59253b23dd"
+      }
+    },
+    "owner": "knutdrand"
   }
 }
