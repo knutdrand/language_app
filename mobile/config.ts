@@ -12,6 +12,11 @@ export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || getDefaultApiUrl(
 // TTS provider: 'fpt' (cloud, higher quality) or 'piper' (local)
 export const TTS_PROVIDER = process.env.EXPO_PUBLIC_TTS_PROVIDER || 'fpt';
 
+// Audio source: 'embedded' (bundled in app) or 'remote' (fetch from backend)
+// Default to 'embedded' for offline support in production builds
+export const AUDIO_SOURCE: 'embedded' | 'remote' =
+  (process.env.EXPO_PUBLIC_AUDIO_SOURCE as 'embedded' | 'remote') || 'embedded';
+
 // Audio URL helper - now requires word ID for unique filenames
 export function getAudioUrl(wordId: number, text: string, language: string = 'vi'): string {
   const filename = getAudioFilename(wordId, text);
