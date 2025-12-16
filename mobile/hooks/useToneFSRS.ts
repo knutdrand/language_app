@@ -152,12 +152,24 @@ function calculatePriorityScore(
 export function useToneFSRS(words: Word[]) {
   const [cardStates, setCardStates] = useState<Map<string, ToneCardState>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Load from backend on mount
+  // Track when component is mounted (client-side only)
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Load from backend on mount (client-side only)
+  useEffect(() => {
+    // Skip if not mounted yet (SSR)
+    if (!isMounted) {
+      return;
+    }
+
     async function loadFromBackend() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/fsrs/tone-cards`);
+        const url = `${API_BASE_URL}/api/fsrs/tone-cards`;
+        const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
           const map = new Map<string, ToneCardState>();
@@ -174,7 +186,7 @@ export function useToneFSRS(words: Word[]) {
       }
     }
     loadFromBackend();
-  }, []);
+  }, [isMounted]);
 
   const saveCardToBackend = useCallback(async (state: ToneCardState) => {
     try {
