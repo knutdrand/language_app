@@ -156,19 +156,19 @@
     {
       "sequence_key": "2-1",
       "card": {
-        "due": "2025-12-15T15:54:30.176Z",
+        "due": "2025-12-19T01:48:13.020Z",
         "stability": 2.4,
-        "difficulty": 5.36633178,
+        "difficulty": 6.71147238,
         "elapsed_days": 0,
-        "scheduled_days": 0,
-        "reps": 1,
+        "scheduled_days": 3,
+        "reps": 3,
         "lapses": 0,
-        "learning_steps": 1,
-        "state": 1,
-        "last_review": "2025-12-15T15:44:30.176Z"
+        "learning_steps": 0,
+        "state": 2,
+        "last_review": "2025-12-16T01:48:13.020Z"
       },
-      "correct": 1,
-      "total": 1
+      "correct": 2,
+      "total": 3
     },
     {
       "sequence_key": "3-1",
@@ -190,19 +190,19 @@
     {
       "sequence_key": "1-6",
       "card": {
-        "due": "2025-12-15T15:54:58.103Z",
+        "due": "2025-12-16T01:49:32.848Z",
         "stability": 2.4,
-        "difficulty": 5.36633178,
+        "difficulty": 7.68717495,
         "elapsed_days": 0,
         "scheduled_days": 0,
-        "reps": 1,
+        "reps": 3,
         "lapses": 0,
-        "learning_steps": 1,
+        "learning_steps": 0,
         "state": 1,
-        "last_review": "2025-12-15T15:44:58.103Z"
+        "last_review": "2025-12-16T01:48:32.848Z"
       },
       "correct": 1,
-      "total": 1
+      "total": 3
     },
     {
       "sequence_key": "1-1",
@@ -275,19 +275,19 @@
     {
       "sequence_key": "3-4",
       "card": {
-        "due": "2025-12-15T15:50:20.899Z",
+        "due": "2025-12-19T01:46:18.073Z",
         "stability": 2.4,
-        "difficulty": 8.79469208,
+        "difficulty": 9.05610056,
         "elapsed_days": 0,
-        "scheduled_days": 0,
-        "reps": 5,
+        "scheduled_days": 3,
+        "reps": 7,
         "lapses": 0,
         "learning_steps": 0,
-        "state": 1,
-        "last_review": "2025-12-15T15:49:20.899Z"
+        "state": 2,
+        "last_review": "2025-12-16T01:46:18.073Z"
       },
-      "correct": 1,
-      "total": 5
+      "correct": 2,
+      "total": 7
     },
     {
       "sequence_key": "4-1",
@@ -326,19 +326,19 @@
     {
       "sequence_key": "3-3",
       "card": {
-        "due": "2025-12-15T15:59:39.760Z",
+        "due": "2025-12-16T01:56:38.899Z",
         "stability": 0.2401021,
-        "difficulty": 7.71676744,
-        "elapsed_days": 0,
+        "difficulty": 8.36264295,
+        "elapsed_days": 1,
         "scheduled_days": 0,
-        "reps": 3,
+        "reps": 4,
         "lapses": 1,
         "learning_steps": 0,
         "state": 3,
-        "last_review": "2025-12-15T15:49:39.760Z"
+        "last_review": "2025-12-16T01:46:38.899Z"
       },
       "correct": 1,
-      "total": 3
+      "total": 4
     },
     {
       "sequence_key": "2-6",
@@ -428,19 +428,19 @@
     {
       "sequence_key": "5-3",
       "card": {
-        "due": "2025-12-15T15:51:49.354Z",
+        "due": "2025-12-16T01:46:59.325Z",
         "stability": 0.4,
-        "difficulty": 6.81,
-        "elapsed_days": 0,
+        "difficulty": 7.736248,
+        "elapsed_days": 1,
         "scheduled_days": 0,
-        "reps": 1,
+        "reps": 2,
         "lapses": 0,
         "learning_steps": 0,
         "state": 1,
-        "last_review": "2025-12-15T15:50:49.354Z"
+        "last_review": "2025-12-16T01:45:59.325Z"
       },
       "correct": 0,
-      "total": 1
+      "total": 2
     }
   ]
 }

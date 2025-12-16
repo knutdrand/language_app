@@ -2674,6 +2674,246 @@
       ],
       "is_correct": false,
       "response_time_ms": 8667
+    },
+    {
+      "timestamp": "2025-12-16T01:45:59.324Z",
+      "word_id": 201,
+      "vietnamese": "những cái",
+      "english": "those things",
+      "correct_sequence": [
+        5,
+        3
+      ],
+      "selected_sequence": [
+        4,
+        1
+      ],
+      "alternatives": [
+        [
+          2,
+          6
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 35708466
+    },
+    {
+      "timestamp": "2025-12-16T01:46:08.492Z",
+      "word_id": 314,
+      "vietnamese": "sức khỏe",
+      "english": "health",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        2,
+        2
+      ],
+      "alternatives": [
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          4,
+          3
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7658
+    },
+    {
+      "timestamp": "2025-12-16T01:46:18.071Z",
+      "word_id": 291,
+      "vietnamese": "bán ở",
+      "english": "sell at",
+      "correct_sequence": [
+        3,
+        4
+      ],
+      "selected_sequence": [
+        3,
+        4
+      ],
+      "alternatives": [
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 8075
+    },
+    {
+      "timestamp": "2025-12-16T01:46:29.691Z",
+      "word_id": 76,
+      "vietnamese": "thân thiện",
+      "english": "friendly",
+      "correct_sequence": [
+        1,
+        6
+      ],
+      "selected_sequence": [
+        2,
+        5
+      ],
+      "alternatives": [
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          5,
+          3
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 10115
+    },
+    {
+      "timestamp": "2025-12-16T01:46:38.898Z",
+      "word_id": 316,
+      "vietnamese": "bóng đá",
+      "english": "soccer",
+      "correct_sequence": [
+        3,
+        3
+      ],
+      "selected_sequence": [
+        5,
+        1
+      ],
+      "alternatives": [
+        [
+          5,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          5
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 7703
+    },
+    {
+      "timestamp": "2025-12-16T01:48:03.608Z",
+      "word_id": 154,
+      "vietnamese": "người ta",
+      "english": "people / they",
+      "correct_sequence": [
+        2,
+        1
+      ],
+      "selected_sequence": [
+        6,
+        1
+      ],
+      "alternatives": [
+        [
+          6,
+          1
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          3,
+          6
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 83206
+    },
+    {
+      "timestamp": "2025-12-16T01:48:13.018Z",
+      "word_id": 154,
+      "vietnamese": "người ta",
+      "english": "people / they",
+      "correct_sequence": [
+        2,
+        1
+      ],
+      "selected_sequence": [
+        2,
+        1
+      ],
+      "alternatives": [
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "is_correct": true,
+      "response_time_ms": 7907
+    },
+    {
+      "timestamp": "2025-12-16T01:48:32.847Z",
+      "word_id": 242,
+      "vietnamese": "không ạ",
+      "english": "no (polite)",
+      "correct_sequence": [
+        1,
+        6
+      ],
+      "selected_sequence": [
+        6,
+        4
+      ],
+      "alternatives": [
+        [
+          6,
+          4
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          4
+        ]
+      ],
+      "is_correct": false,
+      "response_time_ms": 18323
     }
   ],
   "drill_attempts": []
