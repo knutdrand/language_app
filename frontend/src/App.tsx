@@ -2,13 +2,20 @@ import { useState, useMemo } from 'react';
 import { Drill } from './components/Drill';
 import { ToneDrill } from './components/ToneDrill';
 import { SourceSelector } from './components/SourceSelector';
+import { useAuth } from './contexts/AuthContext';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
 import words from './data/words.json';
 import sources from './data/sources.json';
 import type { Word, Source, DrillMode } from './types';
 
+type AuthView = 'login' | 'register';
+
 function App() {
+  const { isAuthenticated, isLoading, user, logout } = useAuth();
   const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
   const [drillMode, setDrillMode] = useState<DrillMode>('image');
+  const [authView, setAuthView] = useState<AuthView>('login');
 
   // Filter words by selected source
   const filteredWords = useMemo(() => {
@@ -22,6 +29,23 @@ function App() {
     ? 'Listen to the word and select the matching image'
     : 'Listen to the word and select the correct tone sequence';
 
+  // Show loading spinner while checking auth
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
+        <div className="text-indigo-600">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show login/register if not authenticated
+  if (!isAuthenticated) {
+    if (authView === 'login') {
+      return <LoginPage onSwitchToRegister={() => setAuthView('register')} />;
+    }
+    return <RegisterPage onSwitchToLogin={() => setAuthView('login')} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50">
       {/* Header */}
@@ -31,9 +55,18 @@ function App() {
             <h1 className="text-xl font-bold text-indigo-900">
               Vietnamese Vocab
             </h1>
-            <span className="text-sm text-gray-500">
-              {filteredWords.length} words
-            </span>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-500">
+                {filteredWords.length} words
+              </span>
+              <button
+                onClick={logout}
+                className="text-sm text-gray-500 hover:text-indigo-600 transition"
+                title={user?.email}
+              >
+                Sign out
+              </button>
+            </div>
           </div>
 
           {/* Mode toggle */}
