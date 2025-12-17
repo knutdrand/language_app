@@ -1,14 +1,25 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from app.routers import audio, attempts, fsrs
+from app.routers import audio, attempts, fsrs, auth
+from app.database import init_db
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initialize database on startup."""
+    await init_db()
+    yield
+
 
 app = FastAPI(
     title="Language App API",
     description="Backend for Vietnamese vocabulary learning app",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 # CORS for frontend
@@ -36,6 +47,7 @@ if audio_dir.exists():
 app.include_router(audio.router, prefix="/api", tags=["audio"])
 app.include_router(attempts.router, prefix="/api", tags=["attempts"])
 app.include_router(fsrs.router, prefix="/api", tags=["fsrs"])
+app.include_router(auth.router)  # Auth router has its own /api/auth prefix
 
 
 @app.get("/health")
