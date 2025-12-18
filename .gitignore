@@ -37,3 +37,6 @@ venv/
 # Backend generated files (large binaries)
 backend/models/
 backend/audio/
+
+# Backend database
+backend/data/

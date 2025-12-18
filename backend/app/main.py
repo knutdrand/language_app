@@ -6,6 +6,7 @@ from pathlib import Path
 
 from app.routers import audio, attempts, fsrs, auth, sync
 from app.database import init_db
+from app.config import get_settings
 
 
 @asynccontextmanager
@@ -22,17 +23,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS for frontend
+# CORS - configurable via ALLOWED_ORIGINS env var
+settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:8081",  # Expo default
-        "http://localhost:8082",  # Expo alternate
-        "http://127.0.0.1:8081",
-        "http://127.0.0.1:8082",
-    ],
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
