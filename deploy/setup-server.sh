@@ -17,7 +17,7 @@ fi
 # 1. Install dependencies
 echo "[1/7] Installing system dependencies..."
 apt update
-apt install -y python3.11 python3.11-venv python3.11-dev git nginx
+apt install -y python3 python3-venv python3-dev git nginx
 
 # 2. Create app directory
 echo "[2/7] Creating app directory..."
@@ -37,7 +37,7 @@ fi
 # 4. Setup Python virtual environment
 echo "[4/7] Setting up Python environment..."
 cd /var/www/language_app/backend
-sudo -u www-data python3.11 -m venv .venv
+sudo -u www-data python3 -m venv .venv
 sudo -u www-data .venv/bin/pip install --upgrade pip
 sudo -u www-data .venv/bin/pip install -r requirements.txt
 
