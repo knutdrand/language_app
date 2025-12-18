@@ -2,21 +2,18 @@
 # Copy to /etc/nginx/sites-available/language-app
 # Then: sudo ln -s /etc/nginx/sites-available/language-app /etc/nginx/sites-enabled/
 
-# Option 1: Subdomain (recommended) - replace YOUR_DOMAIN
+# Using port 8080 since port 80 may be used by other services
 server {
-    listen 80;
-    server_name language-api.YOUR_DOMAIN.com;
+    listen 8080;
+    server_name 68.183.12.6;
 
     location / {
         proxy_pass http://127.0.0.1:8001;
         proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
     }
 
     # Serve static audio files directly (faster than through Python)
@@ -26,21 +23,3 @@ server {
         add_header Cache-Control "public, immutable";
     }
 }
-
-# Option 2: IP-only access (no domain needed, for testing)
-# Uncomment below and comment out the server block above
-#
-# server {
-#     listen 80;
-#     server_name 68.183.12.6;
-#
-#     location /language-api/ {
-#         rewrite ^/language-api/(.*) /$1 break;
-#         proxy_pass http://127.0.0.1:8001;
-#         proxy_http_version 1.1;
-#         proxy_set_header Host $host;
-#         proxy_set_header X-Real-IP $remote_addr;
-#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-#         proxy_set_header X-Forwarded-Proto $scheme;
-#     }
-# }
