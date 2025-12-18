@@ -4,6 +4,7 @@ import type { Word } from '../types';
 import { getToneSequence, getToneSequenceKey } from '../utils/tones';
 import { getFrequencyWeight } from '../data/toneFrequencies';
 import { API_BASE_URL } from '../config';
+import * as syncApi from '../services/syncApi';
 
 /**
  * Mastery thresholds for progressive unlocking.
@@ -153,6 +154,7 @@ export function useToneFSRS(words: Word[]) {
   const [cardStates, setCardStates] = useState<Map<string, ToneCardState>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Track when component is mounted (client-side only)
   useEffect(() => {
@@ -168,16 +170,42 @@ export function useToneFSRS(words: Word[]) {
 
     async function loadFromBackend() {
       try {
-        const url = `${API_BASE_URL}/api/fsrs/tone-cards`;
-        const response = await fetch(url);
-        if (response.ok) {
-          const data = await response.json();
+        const authenticated = await syncApi.isAuthenticated();
+        setIsAuthenticated(authenticated);
+
+        if (authenticated) {
+          // Use authenticated sync endpoint
+          const data = await syncApi.getSyncData();
           const map = new Map<string, ToneCardState>();
-          for (const card of data.cards) {
-            const state = fromBackend(card);
+          for (const toneCard of data.tone_cards) {
+            const state: ToneCardState = {
+              sequenceKey: toneCard.sequence_key,
+              card: {
+                ...(toneCard.card as BackendCardState['card']),
+                due: new Date((toneCard.card as BackendCardState['card']).due),
+                last_review: (toneCard.card as BackendCardState['card']).last_review
+                  ? new Date((toneCard.card as BackendCardState['card']).last_review!)
+                  : undefined,
+              } as Card,
+              correct: toneCard.correct,
+              total: toneCard.total,
+            };
             map.set(state.sequenceKey, state);
           }
           setCardStates(map);
+        } else {
+          // Fall back to public endpoint
+          const url = `${API_BASE_URL}/api/fsrs/tone-cards`;
+          const response = await fetch(url);
+          if (response.ok) {
+            const data = await response.json();
+            const map = new Map<string, ToneCardState>();
+            for (const card of data.cards) {
+              const state = fromBackend(card);
+              map.set(state.sequenceKey, state);
+            }
+            setCardStates(map);
+          }
         }
       } catch (e) {
         console.error('Failed to load tone cards from backend:', e);
@@ -190,15 +218,26 @@ export function useToneFSRS(words: Word[]) {
 
   const saveCardToBackend = useCallback(async (state: ToneCardState) => {
     try {
-      await fetch(`${API_BASE_URL}/api/fsrs/tone-cards/${encodeURIComponent(state.sequenceKey)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(toBackend(state)),
-      });
+      if (isAuthenticated) {
+        // Use authenticated sync endpoint
+        const cardJson = {
+          ...state.card,
+          due: state.card.due.toISOString(),
+          last_review: state.card.last_review?.toISOString(),
+        };
+        await syncApi.updateToneCard(state.sequenceKey, cardJson, state.correct, state.total);
+      } else {
+        // Fall back to public endpoint
+        await fetch(`${API_BASE_URL}/api/fsrs/tone-cards/${encodeURIComponent(state.sequenceKey)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(toBackend(state)),
+        });
+      }
     } catch (e) {
       console.error('Failed to save tone card to backend:', e);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const wordsBySequence = useMemo(() => {
     const map = new Map<string, Word[]>();

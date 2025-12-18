@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { createEmptyCard, fsrs, Rating, type Card } from 'ts-fsrs';
 import type { Word, DrillMode } from '../types';
 import { API_BASE_URL } from '../config';
+import * as syncApi from '../services/syncApi';
 
 const f = fsrs();
 
@@ -31,34 +32,57 @@ function fromBackend(backend: BackendCardState): { wordId: number; card: Card } 
   };
 }
 
+function cardToJson(card: Card): Record<string, unknown> {
+  return {
+    ...card,
+    due: card.due.toISOString(),
+    last_review: card.last_review?.toISOString(),
+  };
+}
+
 function toBackend(wordId: number, card: Card): BackendCardState {
   return {
     word_id: wordId,
-    card: {
-      ...card,
-      due: card.due.toISOString(),
-      last_review: card.last_review?.toISOString(),
-    } as BackendCardState['card'],
+    card: cardToJson(card) as BackendCardState['card'],
   };
 }
 
 export function useFSRS(words: Word[], _mode: DrillMode = 'image') {
   const [cardStates, setCardStates] = useState<Map<number, Card>>(new Map());
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Load from backend on mount
   useEffect(() => {
     async function loadFromBackend() {
+      const authenticated = syncApi.isAuthenticated();
+      setIsAuthenticated(authenticated);
+
       try {
-        const response = await fetch(`${API_BASE_URL}/api/fsrs/word-cards`);
-        if (response.ok) {
-          const data = await response.json();
+        if (authenticated) {
+          // Use authenticated sync endpoint
+          const data = await syncApi.getSyncData();
           const map = new Map<number, Card>();
-          for (const cardData of data.cards) {
-            const { wordId, card } = fromBackend(cardData);
+          for (const cardData of data.word_cards) {
+            const { wordId, card } = fromBackend({
+              word_id: cardData.word_id,
+              card: cardData.card as BackendCardState['card'],
+            });
             map.set(wordId, card);
           }
           setCardStates(map);
+        } else {
+          // Fall back to public endpoint
+          const response = await fetch(`${API_BASE_URL}/api/fsrs/word-cards`);
+          if (response.ok) {
+            const data = await response.json();
+            const map = new Map<number, Card>();
+            for (const cardData of data.cards) {
+              const { wordId, card } = fromBackend(cardData);
+              map.set(wordId, card);
+            }
+            setCardStates(map);
+          }
         }
       } catch (e) {
         console.error('Failed to load word cards from backend:', e);
@@ -72,15 +96,21 @@ export function useFSRS(words: Word[], _mode: DrillMode = 'image') {
   // Save single card to backend
   const saveCardToBackend = useCallback(async (wordId: number, card: Card) => {
     try {
-      await fetch(`${API_BASE_URL}/api/fsrs/word-cards/${wordId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(toBackend(wordId, card)),
-      });
+      if (isAuthenticated) {
+        // Use authenticated sync endpoint
+        await syncApi.updateWordCard(wordId, cardToJson(card));
+      } else {
+        // Fall back to public endpoint
+        await fetch(`${API_BASE_URL}/api/fsrs/word-cards/${wordId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(toBackend(wordId, card)),
+        });
+      }
     } catch (e) {
       console.error('Failed to save word card to backend:', e);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const getCardForWord = useCallback((wordId: number): Card => {
     const existing = cardStates.get(wordId);

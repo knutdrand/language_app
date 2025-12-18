@@ -25,6 +25,7 @@ async_session_maker = sessionmaker(
 async def init_db():
     """Create all tables in the database."""
     from app.models.user import User, RefreshToken  # noqa: F401
+    from app.models.progress import UserWordCard, UserToneCard, UserProgress  # noqa: F401
 
     async with async_engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
