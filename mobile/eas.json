@@ -13,11 +13,17 @@
       "android": {
         "buildType": "apk",
         "credentialsSource": "remote"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://68.183.12.6:8080"
       }
     },
     "production": {
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://68.183.12.6:8080"
       }
     }
   },
