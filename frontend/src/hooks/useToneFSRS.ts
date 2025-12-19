@@ -439,6 +439,25 @@ export function useToneFSRS(words: Word[]) {
     const scoredSequences: { key: string; score: number }[] = [];
     const difficultyLevel = getCurrentDifficultyLevel(confusionState, cardStates);
 
+    // In 2-choice mode: randomly pick one of the two tones with 50% probability
+    if (difficultyLevel === '2-choice') {
+      const targetPair = getWeakestPair(confusionState);
+      // Randomly pick one of the two tones with equal probability
+      const selectedTone = Math.random() < 0.5 ? targetPair[0] : targetPair[1];
+      const selectedKey = String(selectedTone);
+
+      const wordsWithSequence = wordsBySequence.get(selectedKey);
+      if (!wordsWithSequence || wordsWithSequence.length === 0) {
+        return null;
+      }
+
+      const randomIndex = Math.floor(Math.random() * wordsWithSequence.length);
+      return {
+        word: wordsWithSequence[randomIndex],
+        sequenceKey: selectedKey,
+      };
+    }
+
     for (const key of allSequenceKeys) {
       const syllableCount = getSyllableCount(key);
 

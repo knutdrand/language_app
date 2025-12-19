@@ -451,17 +451,33 @@ export function useToneFSRS(words: Word[]) {
   const getNextWord = useCallback((): WordWithSequence | null => {
     if (isLoading) return null;
 
+    const difficultyLevel = getCurrentDifficultyLevel(confusionState, cardStates);
+
+    // In 2-choice mode: randomly pick one of the two tones with 50% probability
+    if (difficultyLevel === '2-choice') {
+      const targetPair = getWeakestPair(confusionState);
+      // Randomly pick one of the two tones with equal probability
+      const selectedTone = Math.random() < 0.5 ? targetPair[0] : targetPair[1];
+      const selectedKey = String(selectedTone);
+
+      const wordsWithSequence = wordsBySequence.get(selectedKey);
+      if (!wordsWithSequence || wordsWithSequence.length === 0) {
+        return null;
+      }
+
+      const randomIndex = Math.floor(Math.random() * wordsWithSequence.length);
+      return {
+        word: wordsWithSequence[randomIndex],
+        sequenceKey: selectedKey,
+      };
+    }
+
+    // For 4-choice and multi-syllable: use priority-based selection
     const now = new Date();
     const scoredSequences: { key: string; score: number }[] = [];
-    const difficultyLevel = getCurrentDifficultyLevel(confusionState, cardStates);
 
     for (const key of allSequenceKeys) {
       const syllableCount = getSyllableCount(key);
-
-      // In 2-choice mode, only use mono-syllable words
-      if (difficultyLevel === '2-choice' && syllableCount > 1) {
-        continue;
-      }
 
       // In 4-choice mode, only use mono-syllable words
       if (difficultyLevel === '4-choice' && syllableCount > 1) {
@@ -470,9 +486,6 @@ export function useToneFSRS(words: Word[]) {
 
       const state = cardStates.get(key);
       const card = state?.card || null;
-
-      // Don't skip non-due cards - always have drills available
-      // FSRS priority scoring will weight due cards higher via dueUrgency
 
       const accuracy = state && state.total > 0 ? state.correct / state.total : 0;
       const score = calculatePriorityScore(key, card, accuracy, now, cardStates, confusionState);
