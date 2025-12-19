@@ -188,3 +188,58 @@ export function shuffleArray<T>(array: T[]): T[] {
   }
   return result;
 }
+
+/**
+ * All possible tone pairs (15 combinations)
+ */
+export function getAllTonePairs(): [ToneId, ToneId][] {
+  const pairs: [ToneId, ToneId][] = [];
+  const allTones: ToneId[] = [1, 2, 3, 4, 5, 6];
+  for (let i = 0; i < allTones.length; i++) {
+    for (let j = i + 1; j < allTones.length; j++) {
+      pairs.push([allTones[i], allTones[j]]);
+    }
+  }
+  return pairs;
+}
+
+/**
+ * Get a single distractor for binary (2-choice) mode.
+ * If targetDistractor is provided, use that specific tone.
+ * Otherwise, pick a random tone different from correct.
+ */
+export function getSingleDistractor(
+  correctTone: ToneId,
+  targetDistractor?: ToneId
+): ToneId {
+  if (targetDistractor !== undefined && targetDistractor !== correctTone) {
+    return targetDistractor;
+  }
+
+  const allTones: ToneId[] = [1, 2, 3, 4, 5, 6];
+  const otherTones = allTones.filter(t => t !== correctTone);
+  return otherTones[Math.floor(Math.random() * otherTones.length)];
+}
+
+/**
+ * Get single distractor sequence for a multi-syllable word in 2-choice mode.
+ * Changes one random position to create a different sequence.
+ */
+export function getSingleDistractorSequence(
+  correctSequence: ToneId[],
+  targetPair?: [ToneId, ToneId]
+): ToneId[] {
+  if (correctSequence.length === 1) {
+    // Single syllable: just get single distractor
+    const distractor = targetPair
+      ? (targetPair[0] === correctSequence[0] ? targetPair[1] : targetPair[0])
+      : getSingleDistractor(correctSequence[0]);
+    return [distractor];
+  }
+
+  // Multi-syllable: change one position
+  const result = [...correctSequence];
+  const posToChange = Math.floor(Math.random() * result.length);
+  result[posToChange] = getSingleDistractor(correctSequence[posToChange]);
+  return result;
+}

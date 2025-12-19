@@ -28,12 +28,16 @@ export function ToneGrid({
   const [showResult, setShowResult] = useState(false);
 
   const options: ToneOption[] = useMemo(() => {
+    // Support 1 distractor (2-choice) or 3 distractors (4-choice)
+    const numDistractors = distractorSequences.length >= 3 ? 3 : distractorSequences.length;
     const allOptions = [
       { id: 0, sequence: correctSequence },
-      ...distractorSequences.slice(0, 3).map((seq, i) => ({ id: i + 1, sequence: seq })),
+      ...distractorSequences.slice(0, numDistractors).map((seq, i) => ({ id: i + 1, sequence: seq })),
     ];
     return shuffleArray(allOptions);
   }, [correctSequence, distractorSequences]);
+
+  const isTwoChoice = options.length === 2;
 
   const handleSelect = (option: ToneOption) => {
     if (disabled || showResult) return;
@@ -79,7 +83,8 @@ export function ToneGrid({
             className={`
               relative rounded-xl overflow-hidden
               border-4 transition-all duration-200
-              p-4 min-h-[120px] flex flex-col items-center justify-center
+              p-4 flex flex-col items-center justify-center
+              ${isTwoChoice ? 'min-h-[160px] p-6' : 'min-h-[120px]'}
               ${getButtonStyle(option)}
               ${!disabled && !showResult ? 'cursor-pointer active:scale-95' : 'cursor-default'}
             `}

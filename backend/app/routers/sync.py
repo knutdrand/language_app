@@ -95,6 +95,7 @@ async def get_sync_data(
             "total_reviews": progress.total_reviews,
             "total_correct": progress.total_correct,
         },
+        confusion_state=progress.confusion_state,
     )
 
 
@@ -168,6 +169,8 @@ async def update_sync_data(
             progress.last_review_date = sync_data.progress.get("last_review_date", get_today_string())
             progress.total_reviews = sync_data.progress.get("total_reviews", 0)
             progress.total_correct = sync_data.progress.get("total_correct", 0)
+            if sync_data.confusion_state is not None:
+                progress.confusion_state = sync_data.confusion_state
             progress.updated_at = now
         else:
             new_progress = UserProgress(
@@ -177,6 +180,7 @@ async def update_sync_data(
                 last_review_date=sync_data.progress.get("last_review_date", get_today_string()),
                 total_reviews=sync_data.progress.get("total_reviews", 0),
                 total_correct=sync_data.progress.get("total_correct", 0),
+                confusion_state=sync_data.confusion_state,
                 updated_at=now,
             )
             session.add(new_progress)

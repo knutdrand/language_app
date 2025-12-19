@@ -23,10 +23,15 @@ export interface ProgressData {
   total_correct: number;
 }
 
+export interface ConfusionState {
+  counts: number[][];
+}
+
 export interface SyncData {
   word_cards: WordCardSync[];
   tone_cards: ToneCardSync[];
   progress: ProgressData;
+  confusion_state: ConfusionState | null;
 }
 
 export async function isAuthenticated(): Promise<boolean> {
@@ -46,6 +51,7 @@ export async function updateSyncData(data: Partial<{
   word_cards: WordCardSync[];
   tone_cards: ToneCardSync[];
   progress: Partial<ProgressData>;
+  confusion_state: ConfusionState;
 }>): Promise<void> {
   const response = await authFetch(SYNC_BASE, {
     method: 'PUT',
@@ -92,4 +98,15 @@ export async function recordReview(correct: boolean): Promise<ProgressData> {
     throw new Error('Failed to record review');
   }
   return response.json();
+}
+
+export async function updateConfusionState(confusionState: ConfusionState): Promise<void> {
+  const response = await authFetch(SYNC_BASE, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ confusion_state: confusionState }),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update confusion state');
+  }
 }

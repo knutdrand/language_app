@@ -12,6 +12,7 @@ import {
   type ToneId,
   getToneSequence,
   getDistractorSequences,
+  getSingleDistractorSequence,
   formatToneSequence,
   formatToneSequenceDiacritics,
 } from '../../utils/tones';
@@ -26,7 +27,7 @@ export default function ToneDrillScreen() {
     initializeProgress();
   }, []);
 
-  const { getNextWord, recordReview, getDueCount, isLoading } = useToneFSRS(words);
+  const { getNextWord, recordReview, getDueCount, getDifficultyLevel, getTargetPair, isLoading } = useToneFSRS(words);
   const { recordReview: recordProgress, reviewsToday, correctToday } = useProgress();
   const { logToneAttempt } = useAttemptLog();
 
@@ -46,13 +47,27 @@ export default function ToneDrillScreen() {
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const loadNextWord = useCallback(() => {
+    const difficultyLevel = getDifficultyLevel();
+    const targetPair = getTargetPair();
+
     const next = getNextWord();
+
     if (next) {
       const seq = getToneSequence(next.word.vietnamese);
       setCurrentWord(next.word);
       setCurrentSequenceKey(next.sequenceKey);
       setCorrectSequence(seq);
-      setDistractorSequences(getDistractorSequences(seq));
+
+      // Set distractors based on difficulty level
+      if (difficultyLevel === '2-choice') {
+        // For 2-choice: use the weakest pair as the distractor
+        const distractor = getSingleDistractorSequence(seq, targetPair as [ToneId, ToneId]);
+        setDistractorSequences([distractor]);
+      } else {
+        // For 4-choice and multi-syllable: use 3 distractors
+        setDistractorSequences(getDistractorSequences(seq));
+      }
+
       setShowingFeedback(false);
       setLastResult(null);
       setKey((k) => k + 1);
@@ -61,7 +76,7 @@ export default function ToneDrillScreen() {
       setCurrentWord(null);
       setCurrentSequenceKey(null);
     }
-  }, [getNextWord]);
+  }, [getNextWord, getDifficultyLevel, getTargetPair]);
 
   // Load first word when loading completes
   useEffect(() => {
@@ -135,20 +150,7 @@ export default function ToneDrillScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
-          <Text style={styles.celebrationEmoji}>🎉</Text>
-          <Text style={styles.doneTitle}>All done for now!</Text>
-          <Text style={styles.doneSubtitle}>
-            You've reviewed all due tones. Come back later for more practice.
-          </Text>
-          <View style={styles.statsCard}>
-            <Text style={styles.statsLabel}>Today's stats (Tone Mode)</Text>
-            <Text style={styles.statsValue}>
-              {reviewsToday} reviews • {accuracy}% accuracy
-            </Text>
-          </View>
-          <TouchableOpacity style={styles.checkButton} onPress={loadNextWord}>
-            <Text style={styles.checkButtonText}>Check for more</Text>
-          </TouchableOpacity>
+          <Text style={styles.loadingText}>Loading...</Text>
         </View>
       </SafeAreaView>
     );
@@ -197,9 +199,6 @@ export default function ToneDrillScreen() {
           />
         </View>
 
-        {/* English meaning */}
-        <Text style={styles.englishMeaning}>{currentWord.english}</Text>
-
         {/* Instruction */}
         <Text style={styles.instruction}>Select the correct tone sequence:</Text>
 
@@ -236,49 +235,6 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 24,
     color: '#6B7280',
-  },
-  celebrationEmoji: {
-    fontSize: 64,
-  },
-  doneTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1F2937',
-    textAlign: 'center',
-  },
-  doneSubtitle: {
-    fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-  },
-  statsCard: {
-    marginTop: 16,
-    padding: 16,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 16,
-    alignItems: 'center',
-  },
-  statsLabel: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  statsValue: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1F2937',
-    marginTop: 4,
-  },
-  checkButton: {
-    marginTop: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: '#4F46E5',
-    borderRadius: 12,
-  },
-  checkButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
   },
   progressRow: {
     flexDirection: 'row',
@@ -319,11 +275,6 @@ const styles = StyleSheet.create({
   },
   audioSection: {
     marginVertical: 16,
-  },
-  englishMeaning: {
-    fontSize: 18,
-    color: '#6B7280',
-    textAlign: 'center',
   },
   instruction: {
     fontSize: 14,

@@ -9,6 +9,7 @@ import {
   type ToneId,
   getToneSequence,
   getDistractorSequences,
+  getSingleDistractorSequence,
   formatToneSequence,
   formatToneSequenceDiacritics,
 } from '../utils/tones';
@@ -20,7 +21,7 @@ interface ToneDrillProps {
 
 export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   // Use tone sequence-based FSRS tracking
-  const { getNextWord, recordReview, getDueCount, isLoading } = useToneFSRS(words);
+  const { getNextWord, recordReview, getDueCount, getDifficultyLevel, getTargetPair, isLoading } = useToneFSRS(words);
 
   const getSourceForWord = useCallback(
     (word: Word | null): Source | undefined => {
@@ -49,13 +50,26 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const loadNextWord = useCallback(() => {
+    const difficultyLevel = getDifficultyLevel();
+    const targetPair = getTargetPair();
+
     const next = getNextWord();
     if (next) {
       const seq = getToneSequence(next.word.vietnamese);
       setCurrentWord(next.word);
       setCurrentSequenceKey(next.sequenceKey);
       setCorrectSequence(seq);
-      setDistractorSequences(getDistractorSequences(seq));
+
+      // Set distractors based on difficulty level
+      if (difficultyLevel === '2-choice') {
+        // For 2-choice: use the weakest pair as the distractor
+        const distractor = getSingleDistractorSequence(seq, targetPair as [ToneId, ToneId]);
+        setDistractorSequences([distractor]);
+      } else {
+        // For 4-choice and multi-syllable: use 3 distractors
+        setDistractorSequences(getDistractorSequences(seq));
+      }
+
       setShowingFeedback(false);
       setLastResult(null);
       setKey((k) => k + 1);
@@ -64,7 +78,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       setCurrentWord(null);
       setCurrentSequenceKey(null);
     }
-  }, [getNextWord]);
+  }, [getNextWord, getDifficultyLevel, getTargetPair]);
 
   // Load first word when loading completes (only once)
   useEffect(() => {

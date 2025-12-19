@@ -1,21 +1,29 @@
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { createEmptyCard, fsrs, Rating, type Card, type FSRSParameters } from 'ts-fsrs';
 import type { Word } from '../types';
 import { getToneSequence, getToneSequenceKey } from '../utils/tones';
 import { getFrequencyWeight } from '../data/toneFrequencies';
 import { API_BASE_URL } from '../config';
+import * as mlApi from '../services/mlApi';
+import * as syncApi from '../services/syncApi';
+import type { ConfusionState, ToneT } from '../services/mlApi';
 
 /**
  * Mastery thresholds for progressive unlocking.
  *
  * Users must achieve these thresholds before unlocking longer sequences:
  * - 1-syllable: Always available
- * - 2-syllable: Unlocks when 1-syllable accuracy >= 70% with >= 10 attempts
- * - 3-syllable: Unlocks when 2-syllable accuracy >= 70% with >= 10 attempts
- * - 4+ syllable: Unlocks when 3-syllable accuracy >= 75% with >= 10 attempts
+ * - 2+ syllable: Unlocks when ALL 6 tones have >= 80% accuracy with >= 5 attempts each
  */
-const MASTERY_THRESHOLD = 0.70;  // 70% accuracy required
-const MIN_ATTEMPTS_FOR_MASTERY = 10;  // Need at least 10 attempts to prove mastery
+const MASTERY_THRESHOLD = 0.80;  // 80% accuracy required per tone
+const MIN_ATTEMPTS_PER_TONE = 5;  // Need at least 5 attempts per tone
+const ALL_TONES = ['1', '2', '3', '4', '5', '6'];  // All 6 Vietnamese tones
+
+// Progressive difficulty constants
+export type DifficultyLevel = '2-choice' | '4-choice' | 'multi-syllable';
+const PAIR_MASTERY_THRESHOLD = 0.80;
+const MIN_ATTEMPTS_PER_PAIR = 10;      // 10 attempts per direction (increased for reliability)
+const MIN_TOTAL_2CHOICE_ATTEMPTS = 100; // Minimum total attempts before advancing from 2-choice
 
 /**
  * Custom FSRS parameters optimized for skill training (shorter intervals).
@@ -106,20 +114,164 @@ function isSyllableLevelUnlocked(
 ): boolean {
   if (targetSyllables <= 1) return true;
 
-  const prevSyllables = targetSyllables - 1;
-  let totalCorrect = 0;
-  let totalAttempts = 0;
+  // For multi-syllable: require ALL 6 tones to have >= 80% accuracy
+  // This checks mono-syllable performance before unlocking 2+ syllables
+  for (const tone of ALL_TONES) {
+    const state = cardStates.get(tone);
 
-  cardStates.forEach((state) => {
-    if (getSyllableCount(state.sequenceKey) === prevSyllables) {
-      totalCorrect += state.correct;
-      totalAttempts += state.total;
+    // Must have enough attempts for this tone
+    if (!state || state.total < MIN_ATTEMPTS_PER_TONE) {
+      return false;
     }
-  });
 
-  if (totalAttempts < MIN_ATTEMPTS_FOR_MASTERY) return false;
-  const accuracy = totalCorrect / totalAttempts;
-  return accuracy >= MASTERY_THRESHOLD;
+    // Must have >= 80% accuracy for this tone
+    const accuracy = state.correct / state.total;
+    if (accuracy < MASTERY_THRESHOLD) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+/**
+ * Get accuracy for a specific tone pair from confusion matrix.
+ */
+function getPairAccuracy(
+  confusionState: ConfusionState | null,
+  a: number,
+  b: number
+): { accuracy: number; attempts: number } {
+  if (!confusionState) return { accuracy: 0, attempts: 0 };
+
+  const correctCount = confusionState.counts[a]?.[a] ?? 0;
+  const confusedCount = confusionState.counts[a]?.[b] ?? 0;
+  const attempts = correctCount + confusedCount;
+
+  if (attempts === 0) return { accuracy: 0, attempts: 0 };
+  return { accuracy: correctCount / attempts, attempts };
+}
+
+/**
+ * Get total attempts from confusion matrix (sum of all cells).
+ */
+function getTotalAttempts(confusionState: ConfusionState | null): number {
+  if (!confusionState) return 0;
+  let total = 0;
+  for (const row of confusionState.counts) {
+    for (const count of row) {
+      total += count;
+    }
+  }
+  return total;
+}
+
+/**
+ * Check if all 15 tone pairs are mastered (80% accuracy with 10+ attempts each direction).
+ * Requires minimum total attempts to prevent premature advancement from old 4-choice data.
+ */
+function areAllPairsMastered(confusionState: ConfusionState | null): boolean {
+  if (!confusionState) return false;
+
+  // Require minimum total attempts before considering advancement
+  const totalAttempts = getTotalAttempts(confusionState);
+  if (totalAttempts < MIN_TOTAL_2CHOICE_ATTEMPTS) {
+    return false;
+  }
+
+  for (let a = 0; a < 6; a++) {
+    for (let b = a + 1; b < 6; b++) {
+      // Check a vs b direction
+      const { accuracy: accAB, attempts: attAB } = getPairAccuracy(confusionState, a, b);
+      if (attAB < MIN_ATTEMPTS_PER_PAIR || accAB < PAIR_MASTERY_THRESHOLD) {
+        return false;
+      }
+
+      // Check b vs a direction
+      const { accuracy: accBA, attempts: attBA } = getPairAccuracy(confusionState, b, a);
+      if (attBA < MIN_ATTEMPTS_PER_PAIR || accBA < PAIR_MASTERY_THRESHOLD) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/**
+ * Find the weakest tone pair for targeted practice.
+ */
+function getWeakestPair(confusionState: ConfusionState | null): [number, number] {
+  if (!confusionState) return [1, 2];
+
+  let weakest: [number, number] = [1, 2];
+  let lowestScore = Infinity;
+
+  for (let a = 0; a < 6; a++) {
+    for (let b = a + 1; b < 6; b++) {
+      const { accuracy: accAB, attempts: attAB } = getPairAccuracy(confusionState, a, b);
+      const { accuracy: accBA, attempts: attBA } = getPairAccuracy(confusionState, b, a);
+
+      // Score combines accuracy and attempt count (prioritize untested pairs)
+      const attemptWeight = Math.min(attAB, attBA, MIN_ATTEMPTS_PER_PAIR) / MIN_ATTEMPTS_PER_PAIR;
+      const avgAccuracy = (accAB + accBA) / 2;
+      const score = attemptWeight * avgAccuracy;
+
+      if (score < lowestScore) {
+        lowestScore = score;
+        weakest = [a + 1, b + 1];
+      }
+    }
+  }
+  return weakest;
+}
+
+/**
+ * Determine current difficulty level based on mastery.
+ */
+function getCurrentDifficultyLevel(
+  confusionState: ConfusionState | null,
+  cardStates: Map<string, ToneCardState>
+): DifficultyLevel {
+  if (!areAllPairsMastered(confusionState)) {
+    return '2-choice';
+  }
+
+  if (!isSyllableLevelUnlocked(2, cardStates)) {
+    return '4-choice';
+  }
+
+  return 'multi-syllable';
+}
+
+/**
+ * Calculate confusion-based difficulty factor from confusion state.
+ * Returns a value >= 1.0, where higher means more confused.
+ */
+function getConfusionFactor(
+  sequenceKey: string,
+  confusionState: ConfusionState | null
+): number {
+  if (!confusionState) return 1.0;
+
+  // Parse sequence key to get individual tones
+  const toneNumbers = sequenceKey.split('-').map(Number);
+
+  // Calculate average confusion for all tones in the sequence
+  let totalConfusion = 0;
+  for (const toneNum of toneNumbers) {
+    const toneIdx = toneNum - 1;
+    if (toneIdx >= 0 && toneIdx < confusionState.counts.length) {
+      const row = confusionState.counts[toneIdx];
+      const sum = row.reduce((a, b) => a + b, 0);
+      const correctProb = row[toneIdx] / sum;
+      // Confusion = 1 - P(correct), scaled to [1.0, 2.0]
+      totalConfusion += 1 + (1 - correctProb);
+    } else {
+      totalConfusion += 1.0;
+    }
+  }
+
+  return totalConfusion / toneNumbers.length;
 }
 
 /**
@@ -130,7 +282,8 @@ function calculatePriorityScore(
   card: Card | null,
   accuracy: number,
   now: Date,
-  cardStates: Map<string, ToneCardState>
+  cardStates: Map<string, ToneCardState>,
+  confusionState: ConfusionState | null
 ): number {
   const syllableCount = getSyllableCount(sequenceKey);
 
@@ -144,23 +297,19 @@ function calculatePriorityScore(
                           syllableCount === 2 ? 0.5 :
                           syllableCount === 3 ? 0.25 : 0.1;
 
-  let dueUrgency = 1;
-  if (card) {
-    const msOverdue = now.getTime() - card.due.getTime();
-    if (msOverdue > 0) {
-      const hoursOverdue = msOverdue / (1000 * 60 * 60);
-      dueUrgency = 1 + Math.min(hoursOverdue / 24, 5);
-    } else {
-      dueUrgency = 0.05;
-    }
-  } else {
-    dueUrgency = 1.0;
-  }
+  // ML-based priority: use confusion model to determine difficulty
+  // Higher confusion (lower accuracy) = higher priority
+  const confusionFactor = getConfusionFactor(sequenceKey, confusionState);
 
-  const proficiency = accuracy > 0 ? accuracy : 0.5;
-  const proficiencyFactor = 1.5 - proficiency;
+  // Error probability from confusion model (1.0 = always wrong, 0.0 = always right)
+  // confusionFactor is in range [1.0, 2.0], so errorProb is [0.0, 1.0]
+  const errorProb = confusionFactor - 1.0;
 
-  return frequencyWeight * syllablePenalty * dueUrgency * proficiencyFactor;
+  // Priority is driven by confusion: higher error probability = higher priority
+  // Base priority 0.5 + error probability boost up to 1.0
+  const confusionPriority = 0.5 + errorProb;
+
+  return frequencyWeight * syllablePenalty * confusionPriority;
 }
 
 /**
@@ -168,21 +317,69 @@ function calculatePriorityScore(
  */
 export function useToneFSRS(words: Word[]) {
   const [cardStates, setCardStates] = useState<Map<string, ToneCardState>>(new Map());
+  const [confusionState, setConfusionState] = useState<ConfusionState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const confusionStateRef = useRef<ConfusionState | null>(null);
 
   // Load from backend on mount
   useEffect(() => {
     async function loadFromBackend() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/fsrs/tone-cards`);
-        if (response.ok) {
-          const data = await response.json();
+        const authenticated = syncApi.isAuthenticated();
+        setIsAuthenticated(authenticated);
+
+        if (authenticated) {
+          // Use authenticated sync endpoint
+          const data = await syncApi.getSyncData();
           const map = new Map<string, ToneCardState>();
-          for (const card of data.cards) {
-            const state = fromBackend(card);
+          for (const toneCard of data.tone_cards) {
+            const state: ToneCardState = {
+              sequenceKey: toneCard.sequence_key,
+              card: {
+                ...(toneCard.card as BackendCardState['card']),
+                due: new Date((toneCard.card as BackendCardState['card']).due),
+                last_review: (toneCard.card as BackendCardState['card']).last_review
+                  ? new Date((toneCard.card as BackendCardState['card']).last_review!)
+                  : undefined,
+              } as Card,
+              correct: toneCard.correct,
+              total: toneCard.total,
+            };
             map.set(state.sequenceKey, state);
           }
           setCardStates(map);
+
+          // Load confusion state from sync API if available
+          if (data.confusion_state) {
+            setConfusionState(data.confusion_state);
+            confusionStateRef.current = data.confusion_state;
+            // Also save to local storage as cache
+            mlApi.saveConfusionState(data.confusion_state);
+          }
+        } else {
+          // Fall back to public endpoint
+          const response = await fetch(`${API_BASE_URL}/api/fsrs/tone-cards`);
+          if (response.ok) {
+            const data = await response.json();
+            const map = new Map<string, ToneCardState>();
+            for (const card of data.cards) {
+              const state = fromBackend(card);
+              map.set(state.sequenceKey, state);
+            }
+            setCardStates(map);
+          }
+        }
+
+        // Load confusion state from localStorage or initialize from backend (fallback)
+        if (!confusionStateRef.current) {
+          let loadedConfusionState = mlApi.loadConfusionState();
+          if (!loadedConfusionState) {
+            loadedConfusionState = await mlApi.getInitialState();
+            mlApi.saveConfusionState(loadedConfusionState);
+          }
+          setConfusionState(loadedConfusionState);
+          confusionStateRef.current = loadedConfusionState;
         }
       } catch (e) {
         console.error('Failed to load tone cards from backend:', e);
@@ -240,17 +437,29 @@ export function useToneFSRS(words: Word[]) {
 
     const now = new Date();
     const scoredSequences: { key: string; score: number }[] = [];
+    const difficultyLevel = getCurrentDifficultyLevel(confusionState, cardStates);
 
     for (const key of allSequenceKeys) {
-      const state = cardStates.get(key);
-      const card = state?.card || null;
+      const syllableCount = getSyllableCount(key);
 
-      if (card && card.due > now) {
+      // In 2-choice mode, only use mono-syllable words
+      if (difficultyLevel === '2-choice' && syllableCount > 1) {
         continue;
       }
 
+      // In 4-choice mode, only use mono-syllable words
+      if (difficultyLevel === '4-choice' && syllableCount > 1) {
+        continue;
+      }
+
+      const state = cardStates.get(key);
+      const card = state?.card || null;
+
+      // Don't skip non-due cards - always have drills available
+      // FSRS priority scoring will weight due cards higher via dueUrgency
+
       const accuracy = state && state.total > 0 ? state.correct / state.total : 0;
-      const score = calculatePriorityScore(key, card, accuracy, now, cardStates);
+      const score = calculatePriorityScore(key, card, accuracy, now, cardStates, confusionState);
 
       if (score > 0) {
         scoredSequences.push({ key, score });
@@ -286,9 +495,9 @@ export function useToneFSRS(words: Word[]) {
       word: wordsWithSequence[randomIndex],
       sequenceKey: selectedKey,
     };
-  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading]);
+  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading, confusionState]);
 
-  const recordReview = useCallback((sequenceKey: string, correct: boolean): void => {
+  const recordReview = useCallback((sequenceKey: string, correct: boolean, chosenSequenceKey?: string): void => {
     const state = getCardForSequence(sequenceKey);
     const rating = correct ? Rating.Good : Rating.Again;
     const result = f.repeat(state.card, new Date());
@@ -310,7 +519,36 @@ export function useToneFSRS(words: Word[]) {
 
     // Save to backend
     saveCardToBackend(updatedState);
-  }, [getCardForSequence, saveCardToBackend]);
+
+    // Update confusion state for each tone in the sequence
+    if (confusionStateRef.current) {
+      const correctTones = sequenceKey.split('-').map(Number);
+      const chosenTones = (chosenSequenceKey || sequenceKey).split('-').map(Number);
+      const newCounts = confusionStateRef.current.counts.map((row) => [...row]);
+
+      // Update confusion matrix: for each position, record what was chosen vs what was correct
+      const minLen = Math.min(correctTones.length, chosenTones.length);
+      for (let i = 0; i < minLen; i++) {
+        const correctIdx = correctTones[i] - 1;
+        const chosenIdx = chosenTones[i] - 1;
+        if (correctIdx >= 0 && correctIdx < 6 && chosenIdx >= 0 && chosenIdx < 6) {
+          newCounts[correctIdx][chosenIdx] += 1;
+        }
+      }
+
+      const newConfusionState = { counts: newCounts };
+      confusionStateRef.current = newConfusionState;
+      setConfusionState(newConfusionState);
+      mlApi.saveConfusionState(newConfusionState);
+
+      // Sync to backend if authenticated
+      if (isAuthenticated) {
+        syncApi.updateConfusionState(newConfusionState).catch((e) => {
+          console.error('Failed to sync confusion state to backend:', e);
+        });
+      }
+    }
+  }, [getCardForSequence, saveCardToBackend, isAuthenticated]);
 
   const getDueCount = useCallback((): number => {
     if (isLoading) return 0;
@@ -351,6 +589,14 @@ export function useToneFSRS(words: Word[]) {
     return totalCorrect / totalReviews;
   }, [cardStates]);
 
+  const getDifficultyLevel = useCallback((): DifficultyLevel => {
+    return getCurrentDifficultyLevel(confusionState, cardStates);
+  }, [confusionState, cardStates]);
+
+  const getTargetPair = useCallback((): [number, number] => {
+    return getWeakestPair(confusionState);
+  }, [confusionState]);
+
   return {
     getNextWord,
     recordReview,
@@ -358,6 +604,8 @@ export function useToneFSRS(words: Word[]) {
     getCardForSequence,
     getSequenceAccuracy,
     getOverallAccuracy,
+    getDifficultyLevel,
+    getTargetPair,
     isLoading,
   };
 }

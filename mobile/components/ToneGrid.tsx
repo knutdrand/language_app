@@ -29,12 +29,16 @@ export function ToneGrid({
   const [showResult, setShowResult] = useState(false);
 
   const options: ToneOption[] = useMemo(() => {
+    // Support 1 distractor (2-choice) or 3 distractors (4-choice)
+    const numDistractors = distractorSequences.length >= 3 ? 3 : distractorSequences.length;
     const allOptions = [
       { id: 0, sequence: correctSequence },
-      ...distractorSequences.slice(0, 3).map((seq, i) => ({ id: i + 1, sequence: seq })),
+      ...distractorSequences.slice(0, numDistractors).map((seq, i) => ({ id: i + 1, sequence: seq })),
     ];
     return shuffleArray(allOptions);
   }, [correctSequence, distractorSequences]);
+
+  const isTwoChoice = options.length === 2;
 
   const handleSelect = (option: ToneOption) => {
     if (disabled || showResult) return;
@@ -77,7 +81,11 @@ export function ToneGrid({
             key={option.id}
             onPress={() => handleSelect(option)}
             disabled={disabled || showResult}
-            style={[styles.option, getButtonStyle(option)]}
+            style={[
+              styles.option,
+              isTwoChoice && styles.optionLarge,
+              getButtonStyle(option),
+            ]}
             activeOpacity={0.8}
           >
             <Text style={styles.symbols}>
@@ -120,6 +128,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
+  },
+  optionLarge: {
+    width: '45%',
+    minHeight: 160,
+    padding: 24,
   },
   optionDefault: {
     borderColor: '#E5E7EB',

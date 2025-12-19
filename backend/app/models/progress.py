@@ -45,7 +45,11 @@ class UserProgress(SQLModel, table=True):
     last_review_date: str = Field(default="")
     total_reviews: int = Field(default=0)
     total_correct: int = Field(default=0)
+    confusion_state: Optional[dict] = Field(default=None, sa_column=Column(JSON))
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 # Request/Response schemas
@@ -68,6 +72,7 @@ class SyncRequest(SQLModel):
     word_cards: list[WordCardSync] = []
     tone_cards: list[ToneCardSync] = []
     progress: Optional[dict] = None
+    confusion_state: Optional[dict] = None
 
 
 class SyncResponse(SQLModel):
@@ -75,3 +80,4 @@ class SyncResponse(SQLModel):
     word_cards: list[WordCardSync]
     tone_cards: list[ToneCardSync]
     progress: dict
+    confusion_state: Optional[dict] = None
