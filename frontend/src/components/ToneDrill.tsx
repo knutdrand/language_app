@@ -222,37 +222,38 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       {/* Progress bar */}
       <div className="w-full flex items-center justify-between text-sm text-gray-500">
         <span>{dueCount} cards due</span>
-        <div className="relative">
+        <div className="flex items-center gap-2">
+          <span>{reviewsToday} reviewed • {accuracy}%</span>
           <button
-            onMouseEnter={() => setShowTooltip(true)}
-            onMouseLeave={() => setShowTooltip(false)}
-            className="text-indigo-600 hover:text-indigo-800 cursor-help"
+            onClick={() => setShowTooltip(!showTooltip)}
+            className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"
           >
-            {reviewsToday} reviewed • {accuracy}% accuracy
+            {showTooltip ? 'Hide' : 'Stats'}
           </button>
-          {/* All pairs tooltip */}
-          {showTooltip && (
-            <div className="absolute right-0 top-6 z-50 bg-white shadow-lg rounded-lg p-3 border border-gray-200 w-64">
-              <p className="text-xs font-semibold text-gray-700 mb-2">Pair Success Probabilities</p>
-              <div className="grid grid-cols-2 gap-1 text-xs">
-                {getAllPairProbabilities().map(({ pair, probability }) => {
-                  const pct = Math.round(probability * 100);
-                  const colorClass =
-                    pct >= 80 ? 'text-green-600' :
-                    pct >= 60 ? 'text-yellow-600' :
-                    'text-red-600';
-                  return (
-                    <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
-                      <span className="text-gray-600">{TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:</span>
-                      <span className={colorClass}>{pct}%</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Collapsible pair probabilities */}
+      {showTooltip && (
+        <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
+          <p className="text-xs font-semibold text-gray-700 mb-2">Pair Success Probabilities</p>
+          <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
+            {getAllPairProbabilities().map(({ pair, probability }) => {
+              const pct = Math.round(probability * 100);
+              const colorClass =
+                pct >= 80 ? 'text-green-600' :
+                pct >= 60 ? 'text-yellow-600' :
+                'text-red-600';
+              return (
+                <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
+                  <span className="text-gray-600">{TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:</span>
+                  <span className={colorClass}>{pct}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Feedback banner */}
       {lastResult && (

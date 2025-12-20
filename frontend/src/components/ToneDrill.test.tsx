@@ -117,12 +117,13 @@ describe('ToneDrill Synchronization', () => {
       expect(screen.getByText('cat')).toBeInTheDocument();
     });
 
-    // Get all buttons excluding Play/Check/accuracy tooltip
+    // Get all buttons excluding Play/Check/Stats
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
              !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('accuracy')
+             !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
     );
 
     expect(toneButtons.length).toBe(4);
@@ -173,7 +174,8 @@ describe('ToneDrill Synchronization', () => {
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
              !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('accuracy')
+             !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
     );
 
     // Click one tone button
@@ -184,7 +186,8 @@ describe('ToneDrill Synchronization', () => {
       const updatedButtons = screen.getAllByRole('button').filter(
         btn => !btn.textContent?.includes('Play') &&
                !btn.textContent?.includes('Check') &&
-               !btn.textContent?.includes('accuracy')
+               !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
       );
       updatedButtons.forEach(btn => {
         expect(btn).toBeDisabled();
@@ -287,7 +290,8 @@ describe('AudioButton', () => {
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
              !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('accuracy')
+             !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
     );
     expect(toneButtons.length).toBe(4);
   });
@@ -352,7 +356,8 @@ describe('Word Transition Synchronization', () => {
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
              !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('accuracy')
+             !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
     );
     await user.click(toneButtons[0]);
 
@@ -367,7 +372,8 @@ describe('Word Transition Synchronization', () => {
       const updatedButtons = screen.getAllByRole('button').filter(
         btn => !btn.textContent?.includes('Play') &&
                !btn.textContent?.includes('Check') &&
-               !btn.textContent?.includes('accuracy')
+               !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
       );
       expect(updatedButtons.length).toBe(4);
     });
@@ -395,7 +401,8 @@ describe('Word Transition Synchronization', () => {
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
              !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('accuracy')
+             !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
     );
     await user.click(toneButtons[0]);
 
@@ -427,7 +434,8 @@ describe('Word Transition Synchronization', () => {
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
              !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('accuracy')
+             !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
     );
     await user.click(toneButtons[0]);
 
@@ -441,7 +449,8 @@ describe('Word Transition Synchronization', () => {
       const newToneButtons = screen.getAllByRole('button').filter(
         btn => !btn.textContent?.includes('Play') &&
                !btn.textContent?.includes('Check') &&
-               !btn.textContent?.includes('accuracy')
+               !btn.textContent?.includes('Stats') &&
+             !btn.textContent?.includes('Hide')
       );
       // At least one button should be enabled for the new word
       const enabledButtons = newToneButtons.filter(btn => !btn.hasAttribute('disabled'));
