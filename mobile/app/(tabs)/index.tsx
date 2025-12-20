@@ -150,7 +150,20 @@ export default function ToneDrillScreen() {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
-          <Text style={styles.loadingText}>Loading...</Text>
+          <Text style={styles.doneEmoji}>🎉</Text>
+          <Text style={styles.doneTitle}>All done for now!</Text>
+          <Text style={styles.doneSubtitle}>
+            You've reviewed all due tones. Come back later for more practice.
+          </Text>
+          <View style={styles.statsBox}>
+            <Text style={styles.statsLabel}>Today's stats (Tone Mode)</Text>
+            <Text style={styles.statsValue}>
+              {reviewsToday} reviews • {accuracy}% accuracy
+            </Text>
+          </View>
+          <TouchableOpacity style={styles.checkMoreButton} onPress={loadNextWord}>
+            <Text style={styles.checkMoreButtonText}>Check for more</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -280,5 +293,50 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#9CA3AF',
     marginBottom: 8,
+  },
+  doneEmoji: {
+    fontSize: 64,
+    marginBottom: 8,
+  },
+  doneTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1F2937',
+    textAlign: 'center',
+  },
+  doneSubtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
+    paddingHorizontal: 16,
+  },
+  statsBox: {
+    marginTop: 16,
+    padding: 16,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  statsLabel: {
+    fontSize: 12,
+    color: '#9CA3AF',
+  },
+  statsValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1F2937',
+    marginTop: 4,
+  },
+  checkMoreButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: '#6366F1',
+    borderRadius: 12,
+  },
+  checkMoreButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

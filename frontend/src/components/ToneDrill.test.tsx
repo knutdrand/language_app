@@ -74,6 +74,10 @@ describe('ToneDrill Synchronization', () => {
       getCardForSequence: vi.fn(),
       getSequenceAccuracy: vi.fn(),
       getOverallAccuracy: vi.fn(),
+      getDifficultyLevel: vi.fn(() => '4-choice' as const),
+      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
+      getPairSuccessProbability: vi.fn(() => 0.5),
+      getAllPairProbabilities: vi.fn(() => []),
       isLoading: mockIsLoading,
     });
 
@@ -113,10 +117,12 @@ describe('ToneDrill Synchronization', () => {
       expect(screen.getByText('cat')).toBeInTheDocument();
     });
 
-    // Get all buttons excluding Play/Check
+    // Get all buttons excluding Play/Check/accuracy tooltip
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+      btn => !btn.textContent?.includes('Play') &&
+             !btn.textContent?.includes('Check') &&
+             !btn.textContent?.includes('accuracy')
     );
 
     expect(toneButtons.length).toBe(4);
@@ -140,6 +146,10 @@ describe('ToneDrill Synchronization', () => {
       getCardForSequence: vi.fn(),
       getSequenceAccuracy: vi.fn(),
       getOverallAccuracy: vi.fn(),
+      getDifficultyLevel: vi.fn(() => '4-choice' as const),
+      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
+      getPairSuccessProbability: vi.fn(() => 0.5),
+      getAllPairProbabilities: vi.fn(() => []),
       isLoading: false,
     });
 
@@ -161,7 +171,9 @@ describe('ToneDrill Synchronization', () => {
 
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+      btn => !btn.textContent?.includes('Play') &&
+             !btn.textContent?.includes('Check') &&
+             !btn.textContent?.includes('accuracy')
     );
 
     // Click one tone button
@@ -170,7 +182,9 @@ describe('ToneDrill Synchronization', () => {
     // After clicking, buttons should be disabled
     await waitFor(() => {
       const updatedButtons = screen.getAllByRole('button').filter(
-        btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+        btn => !btn.textContent?.includes('Play') &&
+               !btn.textContent?.includes('Check') &&
+               !btn.textContent?.includes('accuracy')
       );
       updatedButtons.forEach(btn => {
         expect(btn).toBeDisabled();
@@ -196,6 +210,10 @@ describe('AudioButton', () => {
       getCardForSequence: vi.fn(),
       getSequenceAccuracy: vi.fn(),
       getOverallAccuracy: vi.fn(),
+      getDifficultyLevel: vi.fn(() => '4-choice' as const),
+      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
+      getPairSuccessProbability: vi.fn(() => 0.5),
+      getAllPairProbabilities: vi.fn(() => []),
       isLoading: false,
     });
 
@@ -267,7 +285,9 @@ describe('AudioButton', () => {
     // Should still have 4 tone buttons
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+      btn => !btn.textContent?.includes('Play') &&
+             !btn.textContent?.includes('Check') &&
+             !btn.textContent?.includes('accuracy')
     );
     expect(toneButtons.length).toBe(4);
   });
@@ -294,6 +314,10 @@ describe('Word Transition Synchronization', () => {
       getCardForSequence: vi.fn(),
       getSequenceAccuracy: vi.fn(),
       getOverallAccuracy: vi.fn(),
+      getDifficultyLevel: vi.fn(() => '4-choice' as const),
+      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
+      getPairSuccessProbability: vi.fn(() => 0.5),
+      getAllPairProbabilities: vi.fn(() => []),
       isLoading: false,
     });
 
@@ -326,7 +350,9 @@ describe('Word Transition Synchronization', () => {
     // Click a tone button to answer
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+      btn => !btn.textContent?.includes('Play') &&
+             !btn.textContent?.includes('Check') &&
+             !btn.textContent?.includes('accuracy')
     );
     await user.click(toneButtons[0]);
 
@@ -339,7 +365,9 @@ describe('Word Transition Synchronization', () => {
     // Verify the UI is still in sync - should have 4 tone buttons again
     await waitFor(() => {
       const updatedButtons = screen.getAllByRole('button').filter(
-        btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+        btn => !btn.textContent?.includes('Play') &&
+               !btn.textContent?.includes('Check') &&
+               !btn.textContent?.includes('accuracy')
       );
       expect(updatedButtons.length).toBe(4);
     });
@@ -365,7 +393,9 @@ describe('Word Transition Synchronization', () => {
     // Answer the question
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+      btn => !btn.textContent?.includes('Play') &&
+             !btn.textContent?.includes('Check') &&
+             !btn.textContent?.includes('accuracy')
     );
     await user.click(toneButtons[0]);
 
@@ -395,7 +425,9 @@ describe('Word Transition Synchronization', () => {
     // Answer
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+      btn => !btn.textContent?.includes('Play') &&
+             !btn.textContent?.includes('Check') &&
+             !btn.textContent?.includes('accuracy')
     );
     await user.click(toneButtons[0]);
 
@@ -407,7 +439,9 @@ describe('Word Transition Synchronization', () => {
     // New word's tone buttons should be enabled (not disabled)
     await waitFor(() => {
       const newToneButtons = screen.getAllByRole('button').filter(
-        btn => !btn.textContent?.includes('Play') && !btn.textContent?.includes('Check')
+        btn => !btn.textContent?.includes('Play') &&
+               !btn.textContent?.includes('Check') &&
+               !btn.textContent?.includes('accuracy')
       );
       // At least one button should be enabled for the new word
       const enabledButtons = newToneButtons.filter(btn => !btn.hasAttribute('disabled'));

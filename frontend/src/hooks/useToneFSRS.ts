@@ -6,7 +6,7 @@ import { getFrequencyWeight } from '../data/toneFrequencies';
 import { API_BASE_URL } from '../config';
 import * as mlApi from '../services/mlApi';
 import * as syncApi from '../services/syncApi';
-import type { ConfusionState, ToneT } from '../services/mlApi';
+import type { ConfusionState } from '../services/mlApi';
 
 /**
  * Mastery thresholds for progressive unlocking.
@@ -22,6 +22,7 @@ const ALL_TONES = ['1', '2', '3', '4', '5', '6'];  // All 6 Vietnamese tones
 // Progressive difficulty constants
 export type DifficultyLevel = '2-choice' | '4-choice' | 'multi-syllable';
 const PAIR_MASTERY_THRESHOLD = 0.80;
+const FOUR_CHOICE_MASTERY_THRESHOLD = 0.80;
 const MIN_ATTEMPTS_PER_PAIR = 10;      // 10 attempts per direction (increased for reliability)
 const MIN_TOTAL_2CHOICE_ATTEMPTS = 100; // Minimum total attempts before advancing from 2-choice
 
@@ -68,6 +69,8 @@ interface BackendCardState {
 interface WordWithSequence {
   word: Word;
   sequenceKey: string;
+  /** Selected alternatives (0-indexed tone numbers) - available for 2-choice and 4-choice */
+  selectedAlternatives?: number[];
 }
 
 // Convert backend format to frontend format
@@ -167,8 +170,8 @@ function getTotalAttempts(confusionState: ConfusionState | null): number {
 }
 
 /**
- * Check if all 15 tone pairs are mastered (80% accuracy with 10+ attempts each direction).
- * Requires minimum total attempts to prevent premature advancement from old 4-choice data.
+ * Check if all 15 tone pairs are mastered (>80% correct probability).
+ * Requires minimum total attempts to prevent premature advancement.
  */
 function areAllPairsMastered(confusionState: ConfusionState | null): boolean {
   if (!confusionState) return false;
@@ -179,19 +182,12 @@ function areAllPairsMastered(confusionState: ConfusionState | null): boolean {
     return false;
   }
 
-  for (let a = 0; a < 6; a++) {
-    for (let b = a + 1; b < 6; b++) {
-      // Check a vs b direction
-      const { accuracy: accAB, attempts: attAB } = getPairAccuracy(confusionState, a, b);
-      if (attAB < MIN_ATTEMPTS_PER_PAIR || accAB < PAIR_MASTERY_THRESHOLD) {
-        return false;
-      }
-
-      // Check b vs a direction
-      const { accuracy: accBA, attempts: attBA } = getPairAccuracy(confusionState, b, a);
-      if (attBA < MIN_ATTEMPTS_PER_PAIR || accBA < PAIR_MASTERY_THRESHOLD) {
-        return false;
-      }
+  // Check all 15 pairs using probability-based mastery
+  const allPairs = getAllPairs();
+  for (const [a, b] of allPairs) {
+    const correctProb = getPairCorrectProbability(confusionState, a, b);
+    if (correctProb < PAIR_MASTERY_THRESHOLD) {
+      return false;
     }
   }
   return true;
@@ -226,17 +222,133 @@ function getWeakestPair(confusionState: ConfusionState | null): [number, number]
 }
 
 /**
+ * Calculate P(error) for a 2-choice drill with given alternatives.
+ * P(error | alternatives={a,b}) = 0.5 * P(error | a played) + 0.5 * P(error | b played)
+ */
+function getPairErrorProbability(confusionState: ConfusionState | null, a: number, b: number): number {
+  if (!confusionState) return 0.5;
+
+  // P(error | a played, choices={a,b}) = P(choose b | a played)
+  const countsAA = confusionState.counts[a]?.[a] ?? 0;
+  const countsAB = confusionState.counts[a]?.[b] ?? 0;
+  const totalA = countsAA + countsAB;
+  const errorGivenA = totalA > 0 ? countsAB / totalA : 0.5;
+
+  // P(error | b played, choices={a,b}) = P(choose a | b played)
+  const countsBB = confusionState.counts[b]?.[b] ?? 0;
+  const countsBA = confusionState.counts[b]?.[a] ?? 0;
+  const totalB = countsBB + countsBA;
+  const errorGivenB = totalB > 0 ? countsBA / totalB : 0.5;
+
+  return 0.5 * errorGivenA + 0.5 * errorGivenB;
+}
+
+/**
+ * Calculate P(correct) for a 2-choice drill with given alternatives.
+ */
+function getPairCorrectProbability(confusionState: ConfusionState | null, a: number, b: number): number {
+  return 1 - getPairErrorProbability(confusionState, a, b);
+}
+
+/**
+ * Get all 15 possible pairs of tones (C(6,2) = 15).
+ */
+function getAllPairs(): [number, number][] {
+  const pairs: [number, number][] = [];
+  for (let a = 0; a < 6; a++) {
+    for (let b = a + 1; b < 6; b++) {
+      pairs.push([a, b]);
+    }
+  }
+  return pairs;
+}
+
+/**
+ * Calculate P(error) for a 4-choice drill with given alternatives.
+ * P(error | alternatives) = (1/4) * sum over t in alternatives of P(error | t played)
+ */
+function getFourChoiceErrorProbability(confusionState: ConfusionState | null, alternatives: number[]): number {
+  if (!confusionState || alternatives.length !== 4) return 0.75;
+
+  let totalError = 0;
+  for (const tone of alternatives) {
+    // P(error | tone played) = 1 - P(correct | tone played)
+    // P(correct | tone played) = counts[tone][tone] / sum over alt in alternatives of counts[tone][alt]
+    let sumCounts = 0;
+    for (const alt of alternatives) {
+      sumCounts += confusionState.counts[tone]?.[alt] ?? 0;
+    }
+    const correctCount = confusionState.counts[tone]?.[tone] ?? 0;
+    const correctProb = sumCounts > 0 ? correctCount / sumCounts : 0.25;
+    totalError += (1 - correctProb);
+  }
+  return totalError / 4;
+}
+
+/**
+ * Calculate P(correct) for a 4-choice drill with given alternatives.
+ */
+function getFourChoiceCorrectProbability(confusionState: ConfusionState | null, alternatives: number[]): number {
+  return 1 - getFourChoiceErrorProbability(confusionState, alternatives);
+}
+
+/**
+ * Get all 15 possible 4-choice sets (C(6,4) = 15, equivalently C(6,2) = 15 ways to exclude 2).
+ */
+function getAllFourChoiceSets(): number[][] {
+  const sets: number[][] = [];
+  for (let exclude1 = 0; exclude1 < 6; exclude1++) {
+    for (let exclude2 = exclude1 + 1; exclude2 < 6; exclude2++) {
+      const set = [0, 1, 2, 3, 4, 5].filter(t => t !== exclude1 && t !== exclude2);
+      sets.push(set);
+    }
+  }
+  return sets;
+}
+
+/**
+ * Sample an index from an array of weights proportional to their values.
+ */
+function weightedSample(weights: number[]): number {
+  const total = weights.reduce((a, b) => a + b, 0);
+  if (total === 0) return Math.floor(Math.random() * weights.length);
+
+  let random = Math.random() * total;
+  for (let i = 0; i < weights.length; i++) {
+    random -= weights[i];
+    if (random <= 0) return i;
+  }
+  return weights.length - 1;
+}
+
+/**
+ * Check if all 15 four-choice sets are mastered (>80% correct probability).
+ */
+function areAllFourChoiceSetsMastered(confusionState: ConfusionState | null): boolean {
+  if (!confusionState) return false;
+
+  const allSets = getAllFourChoiceSets();
+  for (const set of allSets) {
+    const correctProb = getFourChoiceCorrectProbability(confusionState, set);
+    if (correctProb < FOUR_CHOICE_MASTERY_THRESHOLD) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * Determine current difficulty level based on mastery.
  */
 function getCurrentDifficultyLevel(
   confusionState: ConfusionState | null,
-  cardStates: Map<string, ToneCardState>
+  _cardStates: Map<string, ToneCardState>
 ): DifficultyLevel {
   if (!areAllPairsMastered(confusionState)) {
     return '2-choice';
   }
 
-  if (!isSyllableLevelUnlocked(2, cardStates)) {
+  if (!areAllFourChoiceSetsMastered(confusionState)) {
     return '4-choice';
   }
 
@@ -279,9 +391,9 @@ function getConfusionFactor(
  */
 function calculatePriorityScore(
   sequenceKey: string,
-  card: Card | null,
-  accuracy: number,
-  now: Date,
+  _card: Card | null,
+  _accuracy: number,
+  _now: Date,
   cardStates: Map<string, ToneCardState>,
   confusionState: ConfusionState | null
 ): number {
@@ -432,45 +544,152 @@ export function useToneFSRS(words: Word[]) {
     };
   }, [cardStates]);
 
+  // Helper to get any mono-syllabic word (fallback)
+  const getAnyMonoSyllabicWord = useCallback((): WordWithSequence | null => {
+    // Try all 6 tones in random order
+    const shuffledTones = [1, 2, 3, 4, 5, 6].sort(() => Math.random() - 0.5);
+    for (const tone of shuffledTones) {
+      const key = String(tone);
+      const words = wordsBySequence.get(key);
+      if (words && words.length > 0) {
+        const randomIndex = Math.floor(Math.random() * words.length);
+        // Default to a 2-choice with an adjacent tone
+        const otherTone = tone < 6 ? tone + 1 : tone - 1;
+        return {
+          word: words[randomIndex],
+          sequenceKey: key,
+          selectedAlternatives: [tone - 1, otherTone - 1],  // 0-indexed
+        };
+      }
+    }
+    return null;
+  }, [wordsBySequence]);
+
+  // Helper to get any word at all (last resort fallback)
+  const getAnyWord = useCallback((): WordWithSequence | null => {
+    for (const [key, wordList] of wordsBySequence.entries()) {
+      if (wordList && wordList.length > 0) {
+        const randomIndex = Math.floor(Math.random() * wordList.length);
+        return {
+          word: wordList[randomIndex],
+          sequenceKey: key,
+        };
+      }
+    }
+    return null;
+  }, [wordsBySequence]);
+
   const getNextWord = useCallback((): WordWithSequence | null => {
     if (isLoading) return null;
 
     const now = new Date();
-    const scoredSequences: { key: string; score: number }[] = [];
     const difficultyLevel = getCurrentDifficultyLevel(confusionState, cardStates);
 
-    // In 2-choice mode: randomly pick one of the two tones with 50% probability
+    // Two-step sampling for 2-choice mode:
+    // Step 1: Sample pair by error probability (higher error = more likely)
+    // Step 2: Sample tone uniformly from the selected pair, find a word containing that tone
     if (difficultyLevel === '2-choice') {
-      const targetPair = getWeakestPair(confusionState);
-      // Randomly pick one of the two tones with equal probability
-      const selectedTone = Math.random() < 0.5 ? targetPair[0] : targetPair[1];
-      const selectedKey = String(selectedTone);
+      const allPairs = getAllPairs();
+      const errorProbs = allPairs.map(([a, b]) => getPairErrorProbability(confusionState, a, b));
+      const selectedPairIdx = weightedSample(errorProbs);
+      const selectedPair = allPairs[selectedPairIdx];
 
-      const wordsWithSequence = wordsBySequence.get(selectedKey);
+      // Sample tone uniformly from the pair
+      const selectedToneIdx = Math.random() < 0.5 ? 0 : 1;
+      const selectedTone = selectedPair[selectedToneIdx];
+
+      // Find all sequence keys that start with this tone (mono-syllabic)
+      const matchingKeys = allSequenceKeys.filter(key => {
+        const tones = key.split('-').map(Number);
+        return tones.length === 1 && tones[0] === selectedTone + 1;
+      });
+
+      // If no mono-syllabic words with this tone, try the other tone in the pair
+      let selectedKey: string;
+      let wordsWithSequence: Word[] | undefined;
+
+      if (matchingKeys.length > 0) {
+        selectedKey = matchingKeys[Math.floor(Math.random() * matchingKeys.length)];
+        wordsWithSequence = wordsBySequence.get(selectedKey);
+      }
+
       if (!wordsWithSequence || wordsWithSequence.length === 0) {
-        return null;
+        // Try the other tone
+        const otherTone = selectedPair[1 - selectedToneIdx];
+        const otherMatchingKeys = allSequenceKeys.filter(key => {
+          const tones = key.split('-').map(Number);
+          return tones.length === 1 && tones[0] === otherTone + 1;
+        });
+
+        if (otherMatchingKeys.length > 0) {
+          selectedKey = otherMatchingKeys[Math.floor(Math.random() * otherMatchingKeys.length)];
+          wordsWithSequence = wordsBySequence.get(selectedKey);
+        }
+      }
+
+      if (!wordsWithSequence || wordsWithSequence.length === 0) {
+        // No mono-syllabic words available for this pair, use fallback
+        return getAnyMonoSyllabicWord() || getAnyWord();
       }
 
       const randomIndex = Math.floor(Math.random() * wordsWithSequence.length);
       return {
         word: wordsWithSequence[randomIndex],
-        sequenceKey: selectedKey,
+        sequenceKey: selectedKey!,
+        selectedAlternatives: selectedPair,
       };
     }
 
+    // Two-step sampling for 4-choice mode:
+    // Step 1: Sample 4-choice set by error probability (higher error = more likely)
+    // Step 2: Sample tone uniformly from the selected set, find a word containing that tone
+    if (difficultyLevel === '4-choice') {
+      const allSets = getAllFourChoiceSets();
+      const errorProbs = allSets.map(set => getFourChoiceErrorProbability(confusionState, set));
+      const selectedSetIdx = weightedSample(errorProbs);
+      const selectedSet = allSets[selectedSetIdx];
+
+      // Shuffle the set to try tones in random order
+      const shuffledIndices = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+
+      let selectedKey: string | undefined;
+      let wordsWithSequence: Word[] | undefined;
+
+      // Try each tone in the set until we find one with mono-syllabic words
+      for (const idx of shuffledIndices) {
+        const tone = selectedSet[idx];
+        const matchingKeys = allSequenceKeys.filter(key => {
+          const tones = key.split('-').map(Number);
+          return tones.length === 1 && tones[0] === tone + 1;
+        });
+
+        if (matchingKeys.length > 0) {
+          selectedKey = matchingKeys[Math.floor(Math.random() * matchingKeys.length)];
+          wordsWithSequence = wordsBySequence.get(selectedKey);
+          if (wordsWithSequence && wordsWithSequence.length > 0) {
+            break;
+          }
+        }
+      }
+
+      if (!wordsWithSequence || wordsWithSequence.length === 0) {
+        // No mono-syllabic words available for this set, use fallback
+        return getAnyMonoSyllabicWord() || getAnyWord();
+      }
+
+      const randomIndex = Math.floor(Math.random() * wordsWithSequence.length);
+      return {
+        word: wordsWithSequence[randomIndex],
+        sequenceKey: selectedKey!,
+        selectedAlternatives: selectedSet,
+      };
+    }
+
+    // Multi-syllable mode: use existing priority-based selection
+    const scoredSequences: { key: string; score: number }[] = [];
+
     for (const key of allSequenceKeys) {
-      const syllableCount = getSyllableCount(key);
-
-      // In 2-choice mode, only use mono-syllable words
-      if (difficultyLevel === '2-choice' && syllableCount > 1) {
-        continue;
-      }
-
-      // In 4-choice mode, only use mono-syllable words
-      if (difficultyLevel === '4-choice' && syllableCount > 1) {
-        continue;
-      }
-
+      // In multi-syllable mode, use all words
       const state = cardStates.get(key);
       const card = state?.card || null;
 
@@ -486,7 +705,8 @@ export function useToneFSRS(words: Word[]) {
     }
 
     if (scoredSequences.length === 0) {
-      return null;
+      // No scored sequences, use fallback
+      return getAnyWord();
     }
 
     scoredSequences.sort((a, b) => b.score - a.score);
@@ -506,7 +726,8 @@ export function useToneFSRS(words: Word[]) {
 
     const wordsWithSequence = wordsBySequence.get(selectedKey);
     if (!wordsWithSequence || wordsWithSequence.length === 0) {
-      return null;
+      // Selected key has no words, use fallback
+      return getAnyWord();
     }
 
     const randomIndex = Math.floor(Math.random() * wordsWithSequence.length);
@@ -514,7 +735,7 @@ export function useToneFSRS(words: Word[]) {
       word: wordsWithSequence[randomIndex],
       sequenceKey: selectedKey,
     };
-  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading, confusionState]);
+  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading, confusionState, getAnyMonoSyllabicWord, getAnyWord]);
 
   const recordReview = useCallback((sequenceKey: string, correct: boolean, chosenSequenceKey?: string): void => {
     const state = getCardForSequence(sequenceKey);
@@ -616,6 +837,26 @@ export function useToneFSRS(words: Word[]) {
     return getWeakestPair(confusionState);
   }, [confusionState]);
 
+  /**
+   * Get success probability for a specific undirected tone pair.
+   * Returns a value between 0 and 1.
+   */
+  const getPairSuccessProbability = useCallback((a: number, b: number): number => {
+    return getPairCorrectProbability(confusionState, a, b);
+  }, [confusionState]);
+
+  /**
+   * Get success probabilities for all 15 undirected tone pairs.
+   * Returns an array of { pair: [a, b], probability: number }
+   */
+  const getAllPairProbabilities = useCallback((): Array<{ pair: [number, number]; probability: number }> => {
+    const pairs = getAllPairs();
+    return pairs.map(([a, b]) => ({
+      pair: [a, b] as [number, number],
+      probability: getPairCorrectProbability(confusionState, a, b),
+    }));
+  }, [confusionState]);
+
   return {
     getNextWord,
     recordReview,
@@ -625,6 +866,8 @@ export function useToneFSRS(words: Word[]) {
     getOverallAccuracy,
     getDifficultyLevel,
     getTargetPair,
+    getPairSuccessProbability,
+    getAllPairProbabilities,
     isLoading,
   };
 }

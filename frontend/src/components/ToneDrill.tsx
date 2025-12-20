@@ -12,6 +12,7 @@ import {
   getSingleDistractorSequence,
   formatToneSequence,
   formatToneSequenceDiacritics,
+  getToneById,
 } from '../utils/tones';
 
 interface ToneDrillProps {
@@ -19,9 +20,21 @@ interface ToneDrillProps {
   sources?: Source[];
 }
 
+// Tone names for display
+const TONE_NAMES = ['Level', 'Falling', 'Rising', 'Dipping', 'Creaky', 'Heavy'];
+
 export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
   // Use tone sequence-based FSRS tracking
-  const { getNextWord, recordReview, getDueCount, getDifficultyLevel, getTargetPair, isLoading } = useToneFSRS(words);
+  const {
+    getNextWord,
+    recordReview,
+    getDueCount,
+    getDifficultyLevel,
+    getTargetPair,
+    getPairSuccessProbability,
+    getAllPairProbabilities,
+    isLoading
+  } = useToneFSRS(words);
 
   const getSourceForWord = useCallback(
     (word: Word | null): Source | undefined => {
@@ -43,8 +56,14 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
     correct: boolean;
     word: Word;
     correctSeq: ToneId[];
+    pair: [number, number] | null;
+    probBefore: number | null;
+    probAfter: number | null;
   } | null>(null);
   const [key, setKey] = useState(0);
+  const [currentPair, setCurrentPair] = useState<[number, number] | null>(null);
+  const [pairProbBefore, setPairProbBefore] = useState<number | null>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
   const attemptStartTime = useRef<number | null>(null);
   const hasLoadedInitial = useRef(false);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -65,9 +84,20 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
         // For 2-choice: use the weakest pair as the distractor
         const distractor = getSingleDistractorSequence(seq, targetPair as [ToneId, ToneId]);
         setDistractorSequences([distractor]);
+
+        // Track the pair being drilled (0-indexed)
+        const correctTone = seq[0] - 1;
+        const distractorTone = distractor[0] - 1;
+        const pair: [number, number] = correctTone < distractorTone
+          ? [correctTone, distractorTone]
+          : [distractorTone, correctTone];
+        setCurrentPair(pair);
+        setPairProbBefore(getPairSuccessProbability(pair[0], pair[1]));
       } else {
         // For 4-choice and multi-syllable: use 3 distractors
         setDistractorSequences(getDistractorSequences(seq));
+        setCurrentPair(null);
+        setPairProbBefore(null);
       }
 
       setShowingFeedback(false);
@@ -78,7 +108,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       setCurrentWord(null);
       setCurrentSequenceKey(null);
     }
-  }, [getNextWord, getDifficultyLevel, getTargetPair]);
+  }, [getNextWord, getDifficultyLevel, getTargetPair, getPairSuccessProbability]);
 
   // Load first word when loading completes (only once)
   useEffect(() => {
@@ -121,12 +151,22 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
         responseTimeMs,
       });
 
-      setLastResult({ correct: isCorrect, word: currentWord, correctSeq: correctSequence });
-      setShowingFeedback(true);
-
       // Record with FSRS (by sequence key) and progress
       recordReview(currentSequenceKey, isCorrect);
       recordProgress(isCorrect);
+
+      // Get the updated probability after recording the review
+      const probAfter = currentPair ? getPairSuccessProbability(currentPair[0], currentPair[1]) : null;
+
+      setLastResult({
+        correct: isCorrect,
+        word: currentWord,
+        correctSeq: correctSequence,
+        pair: currentPair,
+        probBefore: pairProbBefore,
+        probAfter,
+      });
+      setShowingFeedback(true);
 
       // Clear any existing timer
       if (advanceTimerRef.current) {
@@ -139,7 +179,7 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
         loadNextWord();
       }, 1500);
     },
-    [currentWord, currentSequenceKey, correctSequence, distractorSequences, showingFeedback, recordReview, recordProgress, loadNextWord, logToneAttempt]
+    [currentWord, currentSequenceKey, correctSequence, distractorSequences, showingFeedback, recordReview, recordProgress, loadNextWord, logToneAttempt, currentPair, pairProbBefore, getPairSuccessProbability]
   );
 
   const dueCount = useMemo(() => getDueCount(), [getDueCount, key]);
@@ -182,9 +222,36 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       {/* Progress bar */}
       <div className="w-full flex items-center justify-between text-sm text-gray-500">
         <span>{dueCount} cards due</span>
-        <span>
-          {reviewsToday} reviewed • {accuracy}% accuracy
-        </span>
+        <div className="relative">
+          <button
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            className="text-indigo-600 hover:text-indigo-800 cursor-help"
+          >
+            {reviewsToday} reviewed • {accuracy}% accuracy
+          </button>
+          {/* All pairs tooltip */}
+          {showTooltip && (
+            <div className="absolute right-0 top-6 z-50 bg-white shadow-lg rounded-lg p-3 border border-gray-200 w-64">
+              <p className="text-xs font-semibold text-gray-700 mb-2">Pair Success Probabilities</p>
+              <div className="grid grid-cols-2 gap-1 text-xs">
+                {getAllPairProbabilities().map(({ pair, probability }) => {
+                  const pct = Math.round(probability * 100);
+                  const colorClass =
+                    pct >= 80 ? 'text-green-600' :
+                    pct >= 60 ? 'text-yellow-600' :
+                    'text-red-600';
+                  return (
+                    <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
+                      <span className="text-gray-600">{TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:</span>
+                      <span className={colorClass}>{pct}%</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Feedback banner */}
@@ -203,6 +270,16 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
           <p className="text-sm mt-1 opacity-80">
             {lastResult.word.vietnamese} ({formatToneSequenceDiacritics(lastResult.correctSeq)})
           </p>
+          {/* Pair probability update for 2-choice mode */}
+          {lastResult.pair !== null && lastResult.probBefore !== null && lastResult.probAfter !== null && (
+            <p className="text-xs mt-2 font-medium">
+              {TONE_NAMES[lastResult.pair[0]]}/{TONE_NAMES[lastResult.pair[1]]}:{' '}
+              {Math.round(lastResult.probBefore * 100)}% →{' '}
+              <span className={lastResult.probAfter > lastResult.probBefore ? 'text-green-700' : 'text-red-700'}>
+                {Math.round(lastResult.probAfter * 100)}%
+              </span>
+            </p>
+          )}
         </div>
       )}
 
