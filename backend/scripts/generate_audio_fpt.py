@@ -50,7 +50,14 @@ def get_audio_filename(word_id: int, text: str, ext: str = "mp3") -> str:
 
 
 def generate_audio_fpt(text: str, api_key: str, voice: str = DEFAULT_VOICE) -> dict:
-    """Call FPT.AI TTS API to generate audio."""
+    """Call FPT.AI TTS API to generate audio.
+
+    Note: FPT.AI requires minimum 3 characters. For short words,
+    we pad with a period which doesn't affect pronunciation.
+    """
+    # FPT.AI requires minimum 3 characters - pad short words with period
+    api_text = text if len(text) >= 3 else text + "."
+
     headers = {
         "api-key": api_key,
         "voice": voice,
@@ -58,7 +65,7 @@ def generate_audio_fpt(text: str, api_key: str, voice: str = DEFAULT_VOICE) -> d
     response = requests.post(
         FPT_TTS_ENDPOINT,
         headers=headers,
-        data=text.encode("utf-8"),
+        data=api_text.encode("utf-8"),
     )
     if response.status_code != 200:
         return {"error": f"API error: {response.status_code} - {response.text}"}

@@ -316,7 +316,7 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
 // Stats panel component
 interface StatsPanelProps {
   difficultyLevel: DifficultyLevel;
-  pairProbabilities: { pair: number[]; probability: number; attempts: number }[];
+  pairProbabilities: { pair: number[]; probability: number; correct: number; total: number }[];
   fourChoiceProbabilities: { set: number[]; probability: number }[];
 }
 
@@ -326,7 +326,7 @@ function StatsPanel({
   fourChoiceProbabilities,
 }: StatsPanelProps) {
   if (difficultyLevel === '2-choice') {
-    const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.attempts, 0);
+    const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.total, 0);
     return (
       <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
         <div className="flex justify-between items-center mb-2">
@@ -337,7 +337,7 @@ function StatsPanel({
           </p>
         </div>
         <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
-          {pairProbabilities.map(({ pair, probability, attempts }) => {
+          {pairProbabilities.map(({ pair, probability, correct, total }) => {
             const pct = Math.round(probability * 100);
             const colorClass =
               pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
@@ -347,7 +347,7 @@ function StatsPanel({
                   {TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:
                 </span>
                 <span className={colorClass}>
-                  {pct}% <span className="text-gray-400">({attempts})</span>
+                  {pct}% <span className="text-gray-400">({correct}/{total})</span>
                 </span>
               </div>
             );

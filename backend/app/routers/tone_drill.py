@@ -45,7 +45,8 @@ class ToneDrill(BaseModel):
 class PairProbability(BaseModel):
     pair: list[int]  # 0-indexed
     probability: float
-    attempts: int
+    correct: int
+    total: int
 
 
 class FourChoiceProbability(BaseModel):

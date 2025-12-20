@@ -863,6 +863,18 @@ export function useToneFSRS(words: Word[]) {
     });
   }, [confusionState]);
 
+  /**
+   * Get success probabilities for all 15 four-choice sets.
+   * Returns an array of { set: number[], probability: number }
+   */
+  const getAllFourChoiceProbabilities = useCallback((): Array<{ set: number[]; probability: number }> => {
+    const allSets = getAllFourChoiceSets();
+    return allSets.map(set => ({
+      set,
+      probability: getFourChoiceCorrectProbability(confusionState, set),
+    }));
+  }, [confusionState]);
+
   return {
     getNextWord,
     recordReview,
@@ -874,6 +886,7 @@ export function useToneFSRS(words: Word[]) {
     getTargetPair,
     getPairSuccessProbability,
     getAllPairProbabilities,
+    getAllFourChoiceProbabilities,
     isLoading,
   };
 }

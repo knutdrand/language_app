@@ -39,6 +39,10 @@ PAIR_MASTERY_THRESHOLD = 0.80
 FOUR_CHOICE_MASTERY_THRESHOLD = 0.80
 MIN_TOTAL_2CHOICE_ATTEMPTS = 100
 
+# Pseudocounts for probability smoothing (Bayesian prior)
+# Adds 5 "virtual" correct trials per alternative to avoid extreme probabilities
+PSEUDOCOUNT = 5
+
 DifficultyLevel = Literal["2-choice", "4-choice", "multi-syllable"]
 
 
@@ -147,23 +151,24 @@ class ToneDrillService:
         """
         Calculate P(error) for a 2-choice drill with given alternatives (0-indexed).
         P(error | alternatives={a,b}) = 0.5 * P(error | a played) + 0.5 * P(error | b played)
-        """
-        if not confusion_state:
-            return 0.5
 
-        counts = confusion_state.counts
+        Uses pseudocounts (Bayesian smoothing) to avoid extreme probabilities.
+        Each alternative gets PSEUDOCOUNT virtual correct trials.
+        """
+        counts = confusion_state.counts if confusion_state else [[0] * 6 for _ in range(6)]
 
         # P(error | a played, choices={a,b}) = P(choose b | a played)
+        # With pseudocounts: (errors + PSEUDOCOUNT) / (total + 2*PSEUDOCOUNT)
         counts_aa = counts[a][a] if a < len(counts) and a < len(counts[a]) else 0
         counts_ab = counts[a][b] if a < len(counts) and b < len(counts[a]) else 0
         total_a = counts_aa + counts_ab
-        error_given_a = counts_ab / total_a if total_a > 0 else 0.5
+        error_given_a = (counts_ab + PSEUDOCOUNT) / (total_a + 2 * PSEUDOCOUNT)
 
         # P(error | b played, choices={a,b}) = P(choose a | b played)
         counts_bb = counts[b][b] if b < len(counts) and b < len(counts[b]) else 0
         counts_ba = counts[b][a] if b < len(counts) and a < len(counts[b]) else 0
         total_b = counts_bb + counts_ba
-        error_given_b = counts_ba / total_b if total_b > 0 else 0.5
+        error_given_b = (counts_ba + PSEUDOCOUNT) / (total_b + 2 * PSEUDOCOUNT)
 
         return 0.5 * error_given_a + 0.5 * error_given_b
 
@@ -177,18 +182,22 @@ class ToneDrillService:
         """
         Calculate P(error) for a 4-choice drill with given alternatives (0-indexed).
         P(error | alternatives) = (1/4) * sum over t in alternatives of P(error | t played)
+
+        Uses pseudocounts (Bayesian smoothing) to avoid extreme probabilities.
+        Each alternative gets PSEUDOCOUNT virtual correct trials.
         """
-        if not confusion_state or len(alternatives) != 4:
+        if len(alternatives) != 4:
             return 0.75
 
-        counts = confusion_state.counts
+        counts = confusion_state.counts if confusion_state else [[0] * 6 for _ in range(6)]
         total_error = 0.0
 
         for tone in alternatives:
             # P(error | tone played) = 1 - P(correct | tone played)
+            # With pseudocounts: (correct + PSEUDOCOUNT) / (total + 4*PSEUDOCOUNT)
             sum_counts = sum(counts[tone][alt] for alt in alternatives if tone < len(counts) and alt < len(counts[tone]))
             correct_count = counts[tone][tone] if tone < len(counts) and tone < len(counts[tone]) else 0
-            correct_prob = correct_count / sum_counts if sum_counts > 0 else 0.25
+            correct_prob = (correct_count + PSEUDOCOUNT) / (sum_counts + 4 * PSEUDOCOUNT)
             total_error += (1 - correct_prob)
 
         return total_error / 4
@@ -507,17 +516,20 @@ class ToneDrillService:
         result = []
         for a, b in pairs:
             prob = self.get_pair_correct_probability(confusion_state, a, b)
-            # Calculate attempts for both directions
-            attempts = 0
+            # Calculate correct and total attempts for both directions
+            correct = 0
+            total = 0
             if confusion_state:
-                attempts = (
+                correct = confusion_state.counts[a][a] + confusion_state.counts[b][b]
+                total = (
                     confusion_state.counts[a][a] + confusion_state.counts[a][b] +
                     confusion_state.counts[b][b] + confusion_state.counts[b][a]
                 )
             result.append({
                 "pair": [a, b],  # 0-indexed
                 "probability": prob,
-                "attempts": attempts,
+                "correct": correct,
+                "total": total,
             })
         return result
 

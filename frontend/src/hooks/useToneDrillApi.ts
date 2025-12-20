@@ -18,7 +18,8 @@ export interface ToneDrill {
 export interface PairProbability {
   pair: number[];  // 0-indexed
   probability: number;
-  attempts: number;
+  correct: number;
+  total: number;
 }
 
 export interface FourChoiceProbability {
