@@ -847,14 +847,20 @@ export function useToneFSRS(words: Word[]) {
 
   /**
    * Get success probabilities for all 15 undirected tone pairs.
-   * Returns an array of { pair: [a, b], probability: number }
+   * Returns an array of { pair: [a, b], probability: number, attempts: number }
    */
-  const getAllPairProbabilities = useCallback((): Array<{ pair: [number, number]; probability: number }> => {
+  const getAllPairProbabilities = useCallback((): Array<{ pair: [number, number]; probability: number; attempts: number }> => {
     const pairs = getAllPairs();
-    return pairs.map(([a, b]) => ({
-      pair: [a, b] as [number, number],
-      probability: getPairCorrectProbability(confusionState, a, b),
-    }));
+    return pairs.map(([a, b]) => {
+      // Get attempts for both directions
+      const { attempts: attAB } = getPairAccuracy(confusionState, a, b);
+      const { attempts: attBA } = getPairAccuracy(confusionState, b, a);
+      return {
+        pair: [a, b] as [number, number],
+        probability: getPairCorrectProbability(confusionState, a, b),
+        attempts: attAB + attBA,
+      };
+    });
   }, [confusionState]);
 
   return {

@@ -234,26 +234,36 @@ export function ToneDrill({ words, sources = [] }: ToneDrillProps) {
       </div>
 
       {/* Collapsible pair probabilities */}
-      {showTooltip && (
-        <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
-          <p className="text-xs font-semibold text-gray-700 mb-2">Pair Success Probabilities</p>
-          <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
-            {getAllPairProbabilities().map(({ pair, probability }) => {
-              const pct = Math.round(probability * 100);
-              const colorClass =
-                pct >= 80 ? 'text-green-600' :
-                pct >= 60 ? 'text-yellow-600' :
-                'text-red-600';
-              return (
-                <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
-                  <span className="text-gray-600">{TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:</span>
-                  <span className={colorClass}>{pct}%</span>
-                </div>
-              );
-            })}
+      {showTooltip && (() => {
+        const pairData = getAllPairProbabilities();
+        const totalAttempts = pairData.reduce((sum, p) => sum + p.attempts, 0);
+        return (
+          <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-xs font-semibold text-gray-700">Pair Success Probabilities</p>
+              <p className="text-xs text-gray-500">
+                Total: {totalAttempts}/100
+                {totalAttempts >= 100 ? ' ✓' : ''}
+              </p>
+            </div>
+            <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
+              {pairData.map(({ pair, probability, attempts }) => {
+                const pct = Math.round(probability * 100);
+                const colorClass =
+                  pct >= 80 ? 'text-green-600' :
+                  pct >= 60 ? 'text-yellow-600' :
+                  'text-red-600';
+                return (
+                  <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
+                    <span className="text-gray-600">{TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:</span>
+                    <span className={colorClass}>{pct}% <span className="text-gray-400">({attempts})</span></span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Feedback banner */}
       {lastResult && (
