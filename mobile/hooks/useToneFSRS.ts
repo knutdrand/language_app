@@ -508,6 +508,15 @@ export function useToneFSRS(words: Word[]) {
             confusionStateRef.current = data.confusion_state;
             // Also save to local storage as cache
             await mlApi.saveConfusionState(data.confusion_state);
+          } else {
+            // No confusion state from sync API, load from local storage
+            let loadedConfusionState = await mlApi.loadConfusionState();
+            if (!loadedConfusionState) {
+              loadedConfusionState = await mlApi.getInitialState();
+              await mlApi.saveConfusionState(loadedConfusionState);
+            }
+            setConfusionState(loadedConfusionState);
+            confusionStateRef.current = loadedConfusionState;
           }
         } else {
           // Fall back to public endpoint
@@ -522,15 +531,15 @@ export function useToneFSRS(words: Word[]) {
             }
             setCardStates(map);
           }
+          // Load confusion state from AsyncStorage or initialize from backend
+          let loadedConfusionState = await mlApi.loadConfusionState();
+          if (!loadedConfusionState) {
+            loadedConfusionState = await mlApi.getInitialState();
+            await mlApi.saveConfusionState(loadedConfusionState);
+          }
+          setConfusionState(loadedConfusionState);
+          confusionStateRef.current = loadedConfusionState;
         }
-        // Load confusion state from AsyncStorage or initialize from backend
-        let loadedConfusionState = await mlApi.loadConfusionState();
-        if (!loadedConfusionState) {
-          loadedConfusionState = await mlApi.getInitialState();
-          await mlApi.saveConfusionState(loadedConfusionState);
-        }
-        setConfusionState(loadedConfusionState);
-        confusionStateRef.current = loadedConfusionState;
       } catch (e) {
         console.error('Failed to load tone cards from backend:', e);
       } finally {
@@ -626,10 +635,147 @@ export function useToneFSRS(words: Word[]) {
     return null;
   }, [wordsBySequence]);
 
+  // Helper: Sample a 4-choice drill
+  const sample4Choice = useCallback((): WordWithSequence | null => {
+    const allSets = getAllFourChoiceSets();
+    const errorProbs = allSets.map(set => getFourChoiceErrorProbability(confusionState, set));
+
+    const selectedSetIdx = weightedSample(errorProbs);
+    const selectedSet = allSets[selectedSetIdx];
+
+    const shuffledIndices = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+
+    let selectedKey: string | undefined;
+    let wordsWithSequence: Word[] | undefined;
+
+    for (const idx of shuffledIndices) {
+      const tone = selectedSet[idx] + 1;
+      const key = String(tone);
+      const words = wordsBySequence.get(key);
+      if (words && words.length > 0) {
+        selectedKey = key;
+        wordsWithSequence = words;
+        break;
+      }
+    }
+
+    if (!selectedKey || !wordsWithSequence || wordsWithSequence.length === 0) {
+      return getAnyMonoSyllabicWord() || getAnyWord();
+    }
+
+    const randomIndex = Math.floor(Math.random() * wordsWithSequence.length);
+    return {
+      word: wordsWithSequence[randomIndex],
+      sequenceKey: selectedKey,
+      selectedAlternatives: selectedSet,
+    };
+  }, [confusionState, wordsBySequence, getAnyMonoSyllabicWord, getAnyWord]);
+
+  // Helper: Sample a 2-syllable drill with per-position pair alternatives (2x2=4)
+  const sample2Syllable = useCallback((): WordWithSequence | null => {
+    // Get all 2-syllable sequence keys
+    const twoSyllableKeys = allSequenceKeys.filter(k => k.split('-').length === 2);
+
+    if (twoSyllableKeys.length === 0) {
+      return getAnyWord();
+    }
+
+    // Step 1: Sample first position pair (weighted by error prob)
+    const allPairs = getAllPairs();
+    const errorProbs1 = allPairs.map(([a, b]) => getPairErrorProbability(confusionState, a, b));
+    const pair1Idx = weightedSample(errorProbs1);
+    let pair1 = allPairs[pair1Idx];  // 0-indexed
+
+    // Step 2: Sample second position pair
+    const errorProbs2 = allPairs.map(([a, b]) => getPairErrorProbability(confusionState, a, b));
+    const pair2Idx = weightedSample(errorProbs2);
+    let pair2 = allPairs[pair2Idx];  // 0-indexed
+
+    // Step 3: Sample target tone from each pair
+    let tone1 = pair1[Math.random() < 0.5 ? 0 : 1];
+    let tone2 = pair2[Math.random() < 0.5 ? 0 : 1];
+    let targetKey = `${tone1 + 1}-${tone2 + 1}`;  // 1-indexed
+
+    // Step 4: Find word with this sequence (or closest match)
+    let words = wordsBySequence.get(targetKey);
+
+    if (!words || words.length === 0) {
+      // Try any 2-syllable word with tones from the pairs
+      outer: for (const t1 of pair1) {
+        for (const t2 of pair2) {
+          const key = `${t1 + 1}-${t2 + 1}`;
+          const foundWords = wordsBySequence.get(key);
+          if (foundWords && foundWords.length > 0) {
+            targetKey = key;
+            words = foundWords;
+            tone1 = t1;
+            tone2 = t2;
+            break outer;
+          }
+        }
+      }
+    }
+
+    if (!words || words.length === 0) {
+      // Fallback: any 2-syllable word, use its tones to form pairs
+      for (const key of twoSyllableKeys) {
+        const foundWords = wordsBySequence.get(key);
+        if (foundWords && foundWords.length > 0) {
+          targetKey = key;
+          words = foundWords;
+          const tones = key.split('-').map(t => parseInt(t) - 1);  // 0-indexed
+          tone1 = tones[0];
+          tone2 = tones[1];
+          // Form pairs around these tones
+          pair1 = [tone1, (tone1 + 1) % 6];
+          pair2 = [tone2, (tone2 + 1) % 6];
+          break;
+        }
+      }
+    }
+
+    if (!words || words.length === 0) {
+      return getAnyWord();
+    }
+
+    const word = words[Math.floor(Math.random() * words.length)];
+    const correctSequence = targetKey.split('-').map(t => parseInt(t));  // 1-indexed
+
+    // Step 5: Build 4 alternatives (2x2 combinations)
+    // Return as flat array of 0-indexed tones for the grid to interpret
+    // The alternatives will be 2-syllable sequences
+    const alternatives = [
+      [pair1[0], pair2[0]],
+      [pair1[0], pair2[1]],
+      [pair1[1], pair2[0]],
+      [pair1[1], pair2[1]],
+    ];
+    // Shuffle
+    alternatives.sort(() => Math.random() - 0.5);
+
+    return {
+      word,
+      sequenceKey: targetKey,
+      // Store alternatives as 0-indexed tone pairs for the grid
+      // The grid will need to handle 2-syllable alternatives
+      selectedAlternatives: alternatives.flat(),  // Flatten for now, grid handles it
+    };
+  }, [allSequenceKeys, confusionState, wordsBySequence, getAnyWord]);
+
   const getNextWord = useCallback((): WordWithSequence | null => {
     if (isLoading) return null;
 
     const difficultyLevel = getCurrentDifficultyLevel(confusionState, cardStates);
+
+    // 20% preview of next level (unless already at max level)
+    if (Math.random() < 0.2) {
+      if (difficultyLevel === '2-choice') {
+        return sample4Choice();
+      } else if (difficultyLevel === '4-choice') {
+        return sample2Syllable();
+      }
+      // multi-syllable is max level, no preview
+    }
 
     // TWO-STEP SAMPLING for 2-choice mode:
     // Step 1: Sample pair proportional to error probability
@@ -767,7 +913,7 @@ export function useToneFSRS(words: Word[]) {
       word: wordsWithSequence[randomIndex],
       sequenceKey: selectedKey,
     };
-  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading, confusionState, getAnyMonoSyllabicWord, getAnyWord]);
+  }, [allSequenceKeys, cardStates, wordsBySequence, isLoading, confusionState, getAnyMonoSyllabicWord, getAnyWord, sample4Choice, sample2Syllable]);
 
   const recordReview = useCallback((sequenceKey: string, correct: boolean, chosenSequenceKey?: string): void => {
     const state = getCardForSequence(sequenceKey);

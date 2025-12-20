@@ -279,8 +279,18 @@ class ToneDrillService:
         """
         Sample the next drill based on current difficulty level.
         Returns dict with word, sequence_key, correct_sequence, alternatives.
+
+        20% of the time, preview the next difficulty level.
         """
         difficulty = self.get_difficulty_level(confusion_state)
+
+        # 20% preview of next level (unless already at max level)
+        if random.random() < 0.2:
+            if difficulty == "2-choice":
+                return self._sample_4_choice(confusion_state)
+            elif difficulty == "4-choice":
+                return self._sample_2_syllable(confusion_state)
+            # multi-syllable is max level, no preview
 
         if difficulty == "2-choice":
             return self._sample_2_choice(confusion_state)
@@ -380,6 +390,83 @@ class ToneDrillService:
         return {
             "word": word,
             "sequence_key": sequence_key,
+            "correct_sequence": correct_sequence,
+            "alternatives": alternatives,
+        }
+
+    def _sample_2_syllable(self, confusion_state: Optional[ConfusionState]) -> Optional[dict]:
+        """Sample a 2-syllable drill with per-position pair alternatives (2x2=4)."""
+        # Get all 2-syllable sequence keys
+        two_syllable_keys = [k for k in self.get_all_sequence_keys()
+                             if len(k.split('-')) == 2]
+
+        if not two_syllable_keys:
+            return self._sample_multi_syllable(confusion_state)  # Fallback
+
+        # Step 1: Sample first position pair (weighted by error prob)
+        all_pairs = self.get_all_pairs()
+        error_probs_1 = [self.get_pair_error_probability(confusion_state, a, b)
+                         for a, b in all_pairs]
+        pair1_idx = self.weighted_sample(error_probs_1)
+        pair1 = all_pairs[pair1_idx]  # 0-indexed
+
+        # Step 2: Sample second position pair
+        error_probs_2 = [self.get_pair_error_probability(confusion_state, a, b)
+                         for a, b in all_pairs]
+        pair2_idx = self.weighted_sample(error_probs_2)
+        pair2 = all_pairs[pair2_idx]  # 0-indexed
+
+        # Step 3: Sample target tone from each pair
+        tone1 = pair1[0 if random.random() < 0.5 else 1]
+        tone2 = pair2[0 if random.random() < 0.5 else 1]
+        target_key = f"{tone1 + 1}-{tone2 + 1}"  # 1-indexed
+
+        # Step 4: Find word with this sequence (or closest match)
+        words = self._words_by_sequence.get(target_key, [])
+        if not words:
+            # Try any 2-syllable word with tones from the pairs
+            for t1 in pair1:
+                for t2 in pair2:
+                    key = f"{t1 + 1}-{t2 + 1}"
+                    words = self._words_by_sequence.get(key, [])
+                    if words:
+                        target_key = key
+                        tone1, tone2 = t1, t2
+                        break
+                if words:
+                    break
+
+        if not words:
+            # Fallback: any 2-syllable word, use its tones to form pairs
+            for key in two_syllable_keys:
+                words = self._words_by_sequence.get(key, [])
+                if words:
+                    target_key = key
+                    tones = [int(t) - 1 for t in key.split('-')]  # 0-indexed
+                    tone1, tone2 = tones[0], tones[1]
+                    # Form pairs around these tones
+                    pair1 = (tone1, (tone1 + 1) % 6)
+                    pair2 = (tone2, (tone2 + 1) % 6)
+                    break
+
+        if not words:
+            return self._sample_multi_syllable(confusion_state)
+
+        word = random.choice(words)
+        correct_sequence = [int(t) for t in target_key.split('-')]  # 1-indexed
+
+        # Step 5: Build 4 alternatives (2x2 combinations, 1-indexed)
+        alternatives = [
+            [pair1[0] + 1, pair2[0] + 1],
+            [pair1[0] + 1, pair2[1] + 1],
+            [pair1[1] + 1, pair2[0] + 1],
+            [pair1[1] + 1, pair2[1] + 1],
+        ]
+        random.shuffle(alternatives)
+
+        return {
+            "word": word,
+            "sequence_key": target_key,
             "correct_sequence": correct_sequence,
             "alternatives": alternatives,
         }
