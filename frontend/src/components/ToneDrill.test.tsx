@@ -2,91 +2,87 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { mockSpeak, mockAudioPlay } from '../test/setup';
-import type { Word } from '../types';
 
-// Test words with different tones
-const testWords: Word[] = [
-  { id: 1, vietnamese: 'mèo', english: 'cat', imageUrl: 'cat.jpg' },
-  { id: 2, vietnamese: 'chó', english: 'dog', imageUrl: 'dog.jpg' },
-  { id: 3, vietnamese: 'cá', english: 'fish', imageUrl: 'fish.jpg' },
-  { id: 4, vietnamese: 'gà', english: 'chicken', imageUrl: 'chicken.jpg' },
-];
+// Mock drill data
+const mockDrill = {
+  word_id: 1,
+  vietnamese: 'mèo',
+  english: 'cat',
+  correct_sequence: [2],
+  alternatives: [[2], [3]],
+};
 
-// Track which word is returned
-let mockWordIndex = 0;
+const mockStats = {
+  reviews_today: 0,
+  correct_today: 0,
+  total_reviews: 0,
+  total_correct: 0,
+  pair_probabilities: [
+    { pair: [0, 1], probability: 0.5, attempts: 10 },
+    { pair: [0, 2], probability: 0.5, attempts: 10 },
+    { pair: [0, 3], probability: 0.5, attempts: 10 },
+    { pair: [0, 4], probability: 0.5, attempts: 10 },
+    { pair: [0, 5], probability: 0.5, attempts: 10 },
+    { pair: [1, 2], probability: 0.5, attempts: 10 },
+    { pair: [1, 3], probability: 0.5, attempts: 10 },
+    { pair: [1, 4], probability: 0.5, attempts: 10 },
+    { pair: [1, 5], probability: 0.5, attempts: 10 },
+    { pair: [2, 3], probability: 0.5, attempts: 10 },
+    { pair: [2, 4], probability: 0.5, attempts: 10 },
+    { pair: [2, 5], probability: 0.5, attempts: 10 },
+    { pair: [3, 4], probability: 0.5, attempts: 10 },
+    { pair: [3, 5], probability: 0.5, attempts: 10 },
+    { pair: [4, 5], probability: 0.5, attempts: 10 },
+  ],
+  four_choice_probabilities: [],
+};
+
+// Track mocked responses
+let mockDrillResponse = { drill: mockDrill, difficulty_level: '2-choice' as const, stats: mockStats };
 let mockIsLoading = false;
-const mockRecordReview = vi.fn();
-const mockLogToneAttempt = vi.fn();
-const mockRecordProgress = vi.fn();
+let mockError: Error | null = null;
+const mockSubmitAnswer = vi.fn();
 
-// Mock the hooks
-vi.mock('../hooks/useToneFSRS', () => ({
-  useToneFSRS: vi.fn(() => ({
-    getNextWord: vi.fn(() => {
-      if (mockWordIndex >= testWords.length) return null;
-      return { word: testWords[mockWordIndex], sequenceKey: '2' };
-    }),
-    recordReview: mockRecordReview,
-    getDueCount: vi.fn(() => testWords.length - mockWordIndex),
-    getCardForSequence: vi.fn(),
-    getSequenceAccuracy: vi.fn(),
-    getOverallAccuracy: vi.fn(),
+// Mock the hook
+vi.mock('../hooks/useToneDrillApi', () => ({
+  useToneDrillApi: vi.fn(() => ({
+    drill: mockIsLoading ? null : mockDrillResponse.drill,
+    stats: mockDrillResponse.stats,
+    difficultyLevel: mockDrillResponse.difficulty_level,
     isLoading: mockIsLoading,
-  })),
-}));
-
-vi.mock('../hooks/useProgress', () => ({
-  useProgress: vi.fn(() => ({
-    recordReview: mockRecordProgress,
-    reviewsToday: 0,
-    correctToday: 0,
-    isLoading: false,
-  })),
-}));
-
-vi.mock('../hooks/useAttemptLog', () => ({
-  useAttemptLog: vi.fn(() => ({
-    logToneAttempt: mockLogToneAttempt,
+    error: mockError,
+    submitAnswer: mockSubmitAnswer,
+    reload: vi.fn(),
   })),
 }));
 
 // Import AFTER mocks are set up
 import { ToneDrill } from './ToneDrill';
-import { useToneFSRS } from '../hooks/useToneFSRS';
-import { useProgress } from '../hooks/useProgress';
+import { useToneDrillApi } from '../hooks/useToneDrillApi';
 
-describe('ToneDrill Synchronization', () => {
+describe('ToneDrill Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSpeak.mockClear();
     mockAudioPlay.mockClear();
-    mockWordIndex = 0;
     mockIsLoading = false;
+    mockError = null;
+    mockDrillResponse = {
+      drill: mockDrill,
+      difficulty_level: '2-choice',
+      stats: mockStats,
+    };
+    mockSubmitAnswer.mockResolvedValue(mockDrillResponse);
 
-    // Reset mock implementations
-    vi.mocked(useToneFSRS).mockReturnValue({
-      getNextWord: vi.fn(() => {
-        if (mockWordIndex >= testWords.length) return null;
-        return { word: testWords[mockWordIndex], sequenceKey: '2' };
-      }),
-      recordReview: mockRecordReview,
-      getDueCount: vi.fn(() => testWords.length - mockWordIndex),
-      getCardForSequence: vi.fn(),
-      getSequenceAccuracy: vi.fn(),
-      getOverallAccuracy: vi.fn(),
-      getDifficultyLevel: vi.fn(() => '4-choice' as const),
-      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
-      getPairSuccessProbability: vi.fn(() => 0.5),
-      getAllPairProbabilities: vi.fn(() => []),
-      isLoading: mockIsLoading,
-    });
-
-    vi.mocked(useProgress).mockReturnValue({
-      recordReview: mockRecordProgress,
-      reviewsToday: 0,
-      correctToday: 0,
+    // Reset mock implementation
+    vi.mocked(useToneDrillApi).mockReturnValue({
+      drill: mockDrill,
+      stats: mockStats,
+      difficultyLevel: '2-choice',
       isLoading: false,
-      loadProgress: vi.fn(),
+      error: null,
+      submitAnswer: mockSubmitAnswer,
+      reload: vi.fn(),
     });
   });
 
@@ -95,7 +91,7 @@ describe('ToneDrill Synchronization', () => {
   });
 
   it('should display the English translation for the current word', async () => {
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
     await waitFor(() => {
       expect(screen.getByText('cat')).toBeInTheDocument();
@@ -103,15 +99,15 @@ describe('ToneDrill Synchronization', () => {
   });
 
   it('should have a Play Word button', async () => {
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
     await waitFor(() => {
       expect(screen.getByText('Play Word')).toBeInTheDocument();
     });
   });
 
-  it('should have 4 tone option buttons', async () => {
-    render(<ToneDrill words={testWords} />);
+  it('should have 2 tone option buttons in 2-choice mode', async () => {
+    render(<ToneDrill />);
 
     await waitFor(() => {
       expect(screen.getByText('cat')).toBeInTheDocument();
@@ -126,45 +122,58 @@ describe('ToneDrill Synchronization', () => {
              !btn.textContent?.includes('Hide')
     );
 
-    expect(toneButtons.length).toBe(4);
+    expect(toneButtons.length).toBe(2);
   });
 
-  it('should show cards due count', async () => {
-    render(<ToneDrill words={testWords} />);
+  it('should show mode indicator', async () => {
+    render(<ToneDrill />);
 
     await waitFor(() => {
-      expect(screen.getByText(/cards due/)).toBeInTheDocument();
+      expect(screen.getByText(/Mode: 2-choice/)).toBeInTheDocument();
     });
   });
 
-  it('should show "all done" when no more words', async () => {
-    mockWordIndex = testWords.length;
-
-    vi.mocked(useToneFSRS).mockReturnValue({
-      getNextWord: vi.fn(() => null),
-      recordReview: mockRecordReview,
-      getDueCount: vi.fn(() => 0),
-      getCardForSequence: vi.fn(),
-      getSequenceAccuracy: vi.fn(),
-      getOverallAccuracy: vi.fn(),
-      getDifficultyLevel: vi.fn(() => '4-choice' as const),
-      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
-      getPairSuccessProbability: vi.fn(() => 0.5),
-      getAllPairProbabilities: vi.fn(() => []),
+  it('should show error state when there is an error', async () => {
+    vi.mocked(useToneDrillApi).mockReturnValue({
+      drill: null,
+      stats: null,
+      difficultyLevel: '2-choice',
       isLoading: false,
+      error: new Error('Authentication required'),
+      submitAnswer: mockSubmitAnswer,
+      reload: vi.fn(),
     });
 
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
     await waitFor(() => {
-      expect(screen.getByText('All done for now!')).toBeInTheDocument();
+      expect(screen.getByText('Error')).toBeInTheDocument();
+      expect(screen.getByText('Authentication required')).toBeInTheDocument();
+    });
+  });
+
+  it('should show loading state', async () => {
+    vi.mocked(useToneDrillApi).mockReturnValue({
+      drill: null,
+      stats: null,
+      difficultyLevel: '2-choice',
+      isLoading: true,
+      error: null,
+      submitAnswer: mockSubmitAnswer,
+      reload: vi.fn(),
+    });
+
+    render(<ToneDrill />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
   });
 
   it('should disable tone buttons after selection', async () => {
     const user = userEvent.setup();
 
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
     await waitFor(() => {
       expect(screen.getByText('cat')).toBeInTheDocument();
@@ -187,7 +196,7 @@ describe('ToneDrill Synchronization', () => {
         btn => !btn.textContent?.includes('Play') &&
                !btn.textContent?.includes('Check') &&
                !btn.textContent?.includes('Stats') &&
-             !btn.textContent?.includes('Hide')
+               !btn.textContent?.includes('Hide')
       );
       updatedButtons.forEach(btn => {
         expect(btn).toBeDisabled();
@@ -201,31 +210,15 @@ describe('AudioButton', () => {
     vi.clearAllMocks();
     mockSpeak.mockClear();
     mockAudioPlay.mockClear();
-    mockWordIndex = 0;
-    mockIsLoading = false;
 
-    vi.mocked(useToneFSRS).mockReturnValue({
-      getNextWord: vi.fn(() => {
-        return { word: testWords[0], sequenceKey: '2' };
-      }),
-      recordReview: mockRecordReview,
-      getDueCount: vi.fn(() => testWords.length),
-      getCardForSequence: vi.fn(),
-      getSequenceAccuracy: vi.fn(),
-      getOverallAccuracy: vi.fn(),
-      getDifficultyLevel: vi.fn(() => '4-choice' as const),
-      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
-      getPairSuccessProbability: vi.fn(() => 0.5),
-      getAllPairProbabilities: vi.fn(() => []),
+    vi.mocked(useToneDrillApi).mockReturnValue({
+      drill: mockDrill,
+      stats: mockStats,
+      difficultyLevel: '2-choice',
       isLoading: false,
-    });
-
-    vi.mocked(useProgress).mockReturnValue({
-      recordReview: mockRecordProgress,
-      reviewsToday: 0,
-      correctToday: 0,
-      isLoading: false,
-      loadProgress: vi.fn(),
+      error: null,
+      submitAnswer: mockSubmitAnswer,
+      reload: vi.fn(),
     });
   });
 
@@ -236,7 +229,7 @@ describe('AudioButton', () => {
   it('should trigger audio when Play button is clicked', async () => {
     const user = userEvent.setup();
 
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
     await waitFor(() => {
       expect(screen.getByText('Play Word')).toBeInTheDocument();
@@ -263,7 +256,7 @@ describe('AudioButton', () => {
   it('should keep English label in sync after playing audio', async () => {
     const user = userEvent.setup();
 
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
     // Initial word is "cat"
     await waitFor(() => {
@@ -285,7 +278,7 @@ describe('AudioButton', () => {
     // English label should still be "cat" - not changed to a different word
     expect(screen.getByText('cat')).toBeInTheDocument();
 
-    // Should still have 4 tone buttons
+    // Should still have 2 tone buttons (2-choice mode)
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
@@ -293,44 +286,38 @@ describe('AudioButton', () => {
              !btn.textContent?.includes('Stats') &&
              !btn.textContent?.includes('Hide')
     );
-    expect(toneButtons.length).toBe(4);
+    expect(toneButtons.length).toBe(2);
   });
 });
 
-describe('Word Transition Synchronization', () => {
-  let callCount = 0;
-
+describe('Answer Submission', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSpeak.mockClear();
     mockAudioPlay.mockClear();
-    callCount = 0;
 
-    // Mock that advances to next word on each getNextWord call
-    vi.mocked(useToneFSRS).mockReturnValue({
-      getNextWord: vi.fn(() => {
-        const word = testWords[callCount % testWords.length];
-        callCount++;
-        return { word, sequenceKey: String(callCount) };
-      }),
-      recordReview: mockRecordReview,
-      getDueCount: vi.fn(() => testWords.length),
-      getCardForSequence: vi.fn(),
-      getSequenceAccuracy: vi.fn(),
-      getOverallAccuracy: vi.fn(),
-      getDifficultyLevel: vi.fn(() => '4-choice' as const),
-      getTargetPair: vi.fn(() => [1, 2] as [number, number]),
-      getPairSuccessProbability: vi.fn(() => 0.5),
-      getAllPairProbabilities: vi.fn(() => []),
-      isLoading: false,
+    const nextDrill = {
+      word_id: 2,
+      vietnamese: 'chó',
+      english: 'dog',
+      correct_sequence: [3],
+      alternatives: [[2], [3]],
+    };
+
+    mockSubmitAnswer.mockResolvedValue({
+      drill: nextDrill,
+      difficulty_level: '2-choice' as const,
+      stats: { ...mockStats, reviews_today: 1 },
     });
 
-    vi.mocked(useProgress).mockReturnValue({
-      recordReview: mockRecordProgress,
-      reviewsToday: 0,
-      correctToday: 0,
+    vi.mocked(useToneDrillApi).mockReturnValue({
+      drill: mockDrill,
+      stats: mockStats,
+      difficultyLevel: '2-choice',
       isLoading: false,
-      loadProgress: vi.fn(),
+      error: null,
+      submitAnswer: mockSubmitAnswer,
+      reload: vi.fn(),
     });
   });
 
@@ -338,20 +325,15 @@ describe('Word Transition Synchronization', () => {
     vi.useRealTimers();
   });
 
-  it('should show new English label after answering and advancing', async () => {
+  it('should call submitAnswer when a tone is selected', async () => {
     const user = userEvent.setup();
 
-    render(<ToneDrill words={testWords} />);
+    render(<ToneDrill />);
 
-    // First word should be "cat"
     await waitFor(() => {
       expect(screen.getByText('cat')).toBeInTheDocument();
     });
 
-    // Wait for initial autoplay
-    await new Promise(r => setTimeout(r, 200));
-
-    // Click a tone button to answer
     const allButtons = screen.getAllByRole('button');
     const toneButtons = allButtons.filter(
       btn => !btn.textContent?.includes('Play') &&
@@ -359,102 +341,18 @@ describe('Word Transition Synchronization', () => {
              !btn.textContent?.includes('Stats') &&
              !btn.textContent?.includes('Hide')
     );
+
+    // Click a tone button
     await user.click(toneButtons[0]);
 
-    // Wait for feedback delay (1000ms in ToneGrid) + auto-advance delay (1500ms in ToneDrill)
+    // Wait for ToneGrid's 1000ms delay + ToneDrill's 1500ms delay
     await waitFor(() => {
-      // After advancing, should show the next word "dog"
-      expect(screen.getByText('dog')).toBeInTheDocument();
-    }, { timeout: 3000 });
-
-    // Verify the UI is still in sync - should have 4 tone buttons again
-    await waitFor(() => {
-      const updatedButtons = screen.getAllByRole('button').filter(
-        btn => !btn.textContent?.includes('Play') &&
-               !btn.textContent?.includes('Check') &&
-               !btn.textContent?.includes('Stats') &&
-             !btn.textContent?.includes('Hide')
+      expect(mockSubmitAnswer).toHaveBeenCalledWith(
+        expect.objectContaining({
+          word_id: 1,
+          correct_sequence: [2],
+        })
       );
-      expect(updatedButtons.length).toBe(4);
-    });
-  });
-
-  it('should auto-play audio for the new word after advancing', async () => {
-    const user = userEvent.setup();
-
-    render(<ToneDrill words={testWords} />);
-
-    // First word
-    await waitFor(() => {
-      expect(screen.getByText('cat')).toBeInTheDocument();
-    });
-
-    // Wait for initial autoplay
-    await new Promise(r => setTimeout(r, 200));
-
-    // Clear mocks to track new audio plays
-    mockAudioPlay.mockClear();
-    mockSpeak.mockClear();
-
-    // Answer the question
-    const allButtons = screen.getAllByRole('button');
-    const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') &&
-             !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('Stats') &&
-             !btn.textContent?.includes('Hide')
-    );
-    await user.click(toneButtons[0]);
-
-    // Wait for transition to new word
-    await waitFor(() => {
-      expect(screen.getByText('dog')).toBeInTheDocument();
-    }, { timeout: 3000 });
-
-    // Wait for autoplay on new word
-    await new Promise(r => setTimeout(r, 200));
-
-    // Audio should have been triggered for the new word
-    expect(mockAudioPlay.mock.calls.length + mockSpeak.mock.calls.length).toBeGreaterThan(0);
-  });
-
-  it('should have enabled tone buttons for the new word', async () => {
-    const user = userEvent.setup();
-
-    render(<ToneDrill words={testWords} />);
-
-    await waitFor(() => {
-      expect(screen.getByText('cat')).toBeInTheDocument();
-    });
-
-    await new Promise(r => setTimeout(r, 200));
-
-    // Answer
-    const allButtons = screen.getAllByRole('button');
-    const toneButtons = allButtons.filter(
-      btn => !btn.textContent?.includes('Play') &&
-             !btn.textContent?.includes('Check') &&
-             !btn.textContent?.includes('Stats') &&
-             !btn.textContent?.includes('Hide')
-    );
-    await user.click(toneButtons[0]);
-
-    // Wait for new word
-    await waitFor(() => {
-      expect(screen.getByText('dog')).toBeInTheDocument();
-    }, { timeout: 3000 });
-
-    // New word's tone buttons should be enabled (not disabled)
-    await waitFor(() => {
-      const newToneButtons = screen.getAllByRole('button').filter(
-        btn => !btn.textContent?.includes('Play') &&
-               !btn.textContent?.includes('Check') &&
-               !btn.textContent?.includes('Stats') &&
-             !btn.textContent?.includes('Hide')
-      );
-      // At least one button should be enabled for the new word
-      const enabledButtons = newToneButtons.filter(btn => !btn.hasAttribute('disabled'));
-      expect(enabledButtons.length).toBe(4);
-    });
+    }, { timeout: 3500 });
   });
 });
