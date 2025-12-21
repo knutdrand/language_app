@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Drill } from './components/Drill';
 import { ToneDrill } from './components/ToneDrill';
+import { VowelDrill } from './components/VowelDrill';
 import { SourceSelector } from './components/SourceSelector';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
@@ -27,7 +28,9 @@ function App() {
 
   const footerText = drillMode === 'image'
     ? 'Listen to the word and select the matching image'
-    : 'Listen to the word and select the correct tone sequence';
+    : drillMode === 'tone'
+    ? 'Listen to the word and select the correct tone sequence'
+    : 'Listen to the word and select the correct vowel sound';
 
   // Show loading spinner while checking auth
   if (isLoading) {
@@ -74,26 +77,38 @@ function App() {
             <button
               onClick={() => setDrillMode('image')}
               className={`
-                flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                 ${drillMode === 'image'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }
               `}
             >
-              Image Mode
+              Image
             </button>
             <button
               onClick={() => setDrillMode('tone')}
               className={`
-                flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                 ${drillMode === 'tone'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }
               `}
             >
-              Tone Mode
+              Tone
+            </button>
+            <button
+              onClick={() => setDrillMode('vowel')}
+              className={`
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                ${drillMode === 'vowel'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }
+              `}
+            >
+              Vowel
             </button>
           </div>
 
@@ -113,10 +128,14 @@ function App() {
             words={filteredWords}
             sources={sources as Source[]}
           />
-        ) : (
+        ) : drillMode === 'tone' ? (
           <ToneDrill
             key={`tone-${selectedSourceId || 'all'}`}
-            words={filteredWords}
+            sources={sources as Source[]}
+          />
+        ) : (
+          <VowelDrill
+            key={`vowel-${selectedSourceId || 'all'}`}
             sources={sources as Source[]}
           />
         )}

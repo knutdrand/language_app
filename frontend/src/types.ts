@@ -36,4 +36,4 @@ export interface SessionStats {
   lastReviewDate: string;
 }
 
-export type DrillMode = 'image' | 'tone';
+export type DrillMode = 'image' | 'tone' | 'vowel';
