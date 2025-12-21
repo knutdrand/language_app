@@ -1,12 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { Source } from '../types';
 import { AudioButton } from './AudioButton';
 import { ToneGrid } from './ToneGrid';
 import {
-  useToneDrillApi,
+  useDrillApi,
   type PreviousAnswer,
   type DifficultyLevel,
-} from '../hooks/useToneDrillApi';
+} from '../hooks/useDrillApi';
 import {
   type ToneId,
   formatToneSequence,
@@ -14,22 +13,20 @@ import {
   sequencesEqual,
 } from '../utils/tones';
 
-interface ToneDrillProps {
-  sources?: Source[];
-}
-
 // Tone names for display
 const TONE_NAMES = ['Level', 'Falling', 'Rising', 'Dipping', 'Creaky', 'Heavy'];
 
-export function ToneDrill({ sources = [] }: ToneDrillProps) {
+export function ToneDrill() {
   const {
     drill,
-    stats,
+    pairStats,
+    legacyPairProbabilities,
     difficultyLevel,
     isLoading,
     error,
     submitAnswer,
-  } = useToneDrillApi();
+    getPairProbability,
+  } = useDrillApi('tone');
 
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [lastResult, setLastResult] = useState<{
@@ -47,6 +44,9 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
 
   // Track pair probability before answer for 2-choice mode
   const [currentPairProbBefore, setCurrentPairProbBefore] = useState<number | null>(null);
+  // Track reviews for session stats (since backend no longer sends these)
+  const [sessionReviews, setSessionReviews] = useState(0);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
 
   // Reset attempt timer when drill changes
   useEffect(() => {
@@ -57,19 +57,17 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
       setKey((k) => k + 1);
 
       // Track the pair probability before answer for 2-choice mode
-      if (difficultyLevel === '2-choice' && stats) {
+      if (difficultyLevel === '2-choice' && pairStats.length > 0) {
         const correctSeq = drill.correct_sequence;
         const alternatives = drill.alternatives;
-        // Find the pair being drilled (0-indexed)
+        // Find the pair being drilled (1-indexed in new API)
         if (alternatives.length === 2 && correctSeq.length === 1) {
           const pair: [number, number] = [
-            Math.min(alternatives[0][0] - 1, alternatives[1][0] - 1),
-            Math.max(alternatives[0][0] - 1, alternatives[1][0] - 1),
+            Math.min(alternatives[0][0], alternatives[1][0]),
+            Math.max(alternatives[0][0], alternatives[1][0]),
           ];
-          const pairProb = stats.pair_probabilities.find(
-            (p) => p.pair[0] === pair[0] && p.pair[1] === pair[1]
-          );
-          setCurrentPairProbBefore(pairProb?.probability ?? null);
+          const prob = getPairProbability(pair);
+          setCurrentPairProbBefore(prob);
         } else {
           setCurrentPairProbBefore(null);
         }
@@ -77,7 +75,7 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
         setCurrentPairProbBefore(null);
       }
     }
-  }, [drill, difficultyLevel, stats]);
+  }, [drill, difficultyLevel, pairStats, getPairProbability]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -87,14 +85,6 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
       }
     };
   }, []);
-
-  const getSourceForWord = useCallback(
-    (sourceId: string | undefined): Source | undefined => {
-      if (!sourceId) return undefined;
-      return sources.find((s) => s.id === sourceId);
-    },
-    [sources]
-  );
 
   const handleSelect = useCallback(
     async (selectedSequence: ToneId[], isCorrect: boolean) => {
@@ -108,8 +98,9 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
         ? Date.now() - attemptStartTime.current
         : undefined;
 
-      // Prepare answer for submission
+      // Prepare answer for submission (new format with problem_type_id)
       const answer: PreviousAnswer = {
+        problem_type_id: drill.problem_type_id,
         word_id: drill.word_id,
         correct_sequence: drill.correct_sequence,
         selected_sequence: selectedSequence as number[],
@@ -117,13 +108,19 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
         response_time_ms: responseTimeMs,
       };
 
-      // Find the pair being drilled for 2-choice mode
+      // Find the pair being drilled for 2-choice mode (1-indexed now)
       let pair: [number, number] | null = null;
       if (difficultyLevel === '2-choice' && drill.alternatives.length === 2 && drill.correct_sequence.length === 1) {
         pair = [
-          Math.min(drill.alternatives[0][0] - 1, drill.alternatives[1][0] - 1),
-          Math.max(drill.alternatives[0][0] - 1, drill.alternatives[1][0] - 1),
+          Math.min(drill.alternatives[0][0], drill.alternatives[1][0]),
+          Math.max(drill.alternatives[0][0], drill.alternatives[1][0]),
         ];
+      }
+
+      // Update session stats
+      setSessionReviews((r) => r + 1);
+      if (isCorrect) {
+        setSessionCorrect((c) => c + 1);
       }
 
       setLastResult({
@@ -147,13 +144,15 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
         try {
           const response = await submitAnswer(answer);
 
-          // Update the probability after for feedback
-          if (pair && response.stats) {
-            const pairProb = response.stats.pair_probabilities.find(
-              (p) => p.pair[0] === pair![0] && p.pair[1] === pair![1]
+          // Update the probability after for feedback (1-indexed pairs now)
+          if (pair && response.pair_stats) {
+            const pairStat = response.pair_stats.find(
+              (p) =>
+                (p.pair[0] === pair![0] && p.pair[1] === pair![1]) ||
+                (p.pair[0] === pair![1] && p.pair[1] === pair![0])
             );
             setLastResult((prev) =>
-              prev ? { ...prev, probAfter: pairProb?.probability ?? null } : null
+              prev ? { ...prev, probAfter: pairStat?.mean ?? null } : null
             );
           }
         } catch (e) {
@@ -174,8 +173,8 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
   };
 
   const accuracy =
-    stats && stats.reviews_today > 0
-      ? Math.round((stats.correct_today / stats.reviews_today) * 100)
+    sessionReviews > 0
+      ? Math.round((sessionCorrect / sessionReviews) * 100)
       : 0;
 
   if (isLoading) {
@@ -205,11 +204,11 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
         <p className="text-gray-600">
           You've reviewed all due tones. Come back later for more practice.
         </p>
-        {stats && (
+        {sessionReviews > 0 && (
           <div className="mt-4 p-4 bg-gray-100 rounded-xl">
-            <p className="text-sm text-gray-500">Today's stats (Tone Mode)</p>
+            <p className="text-sm text-gray-500">Session stats (Tone Mode)</p>
             <p className="text-xl font-semibold">
-              {stats.reviews_today} reviews • {accuracy}% accuracy
+              {sessionReviews} reviews • {accuracy}% accuracy
             </p>
           </div>
         )}
@@ -227,7 +226,7 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
         <span>Mode: {difficultyLevel}</span>
         <div className="flex items-center gap-2">
           <span>
-            {stats?.reviews_today ?? 0} reviewed • {accuracy}%
+            {sessionReviews} reviewed • {accuracy}%
           </span>
           <button
             onClick={() => setShowTooltip(!showTooltip)}
@@ -239,11 +238,10 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
       </div>
 
       {/* Collapsible probabilities */}
-      {showTooltip && stats && (
+      {showTooltip && pairStats.length > 0 && (
         <StatsPanel
           difficultyLevel={difficultyLevel}
-          pairProbabilities={stats.pair_probabilities}
-          fourChoiceProbabilities={stats.four_choice_probabilities}
+          pairProbabilities={legacyPairProbabilities}
         />
       )}
 
@@ -316,65 +314,43 @@ export function ToneDrill({ sources = [] }: ToneDrillProps) {
 // Stats panel component
 interface StatsPanelProps {
   difficultyLevel: DifficultyLevel;
-  pairProbabilities: { pair: number[]; probability: number; correct: number; total: number }[];
-  fourChoiceProbabilities: { set: number[]; probability: number }[];
+  pairProbabilities: { pair: [number, number]; probability: number; correct: number; total: number }[];
 }
 
 function StatsPanel({
   difficultyLevel,
   pairProbabilities,
-  fourChoiceProbabilities,
 }: StatsPanelProps) {
-  if (difficultyLevel === '2-choice') {
-    const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.total, 0);
-    return (
-      <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
-        <div className="flex justify-between items-center mb-2">
-          <p className="text-xs font-semibold text-gray-700">Pair Success Probabilities</p>
-          <p className="text-xs text-gray-500">
-            Total: {totalAttempts}/100
-            {totalAttempts >= 100 ? ' ✓' : ''}
-          </p>
-        </div>
-        <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
-          {pairProbabilities.map(({ pair, probability, correct, total }) => {
-            const pct = Math.round(probability * 100);
-            const colorClass =
-              pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
-            return (
-              <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
-                <span className="text-gray-600">
-                  {TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:
-                </span>
-                <span className={colorClass}>
-                  {pct}% <span className="text-gray-400">({correct}/{total})</span>
-                </span>
-              </div>
-            );
-          })}
-        </div>
+  const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.total, 0);
+
+  return (
+    <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
+      <div className="flex justify-between items-center mb-2">
+        <p className="text-xs font-semibold text-gray-700">
+          {difficultyLevel === '2-choice' ? 'Pair' : 'Set'} Success Probabilities
+        </p>
+        <p className="text-xs text-gray-500">
+          Total: {totalAttempts}/100
+          {totalAttempts >= 100 ? ' ✓' : ''}
+        </p>
       </div>
-    );
-  } else {
-    // 4-choice mode: show 4-choice set probabilities
-    return (
-      <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
-        <p className="text-xs font-semibold text-gray-700 mb-2">4-Choice Set Probabilities</p>
-        <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
-          {fourChoiceProbabilities.map(({ set, probability }) => {
-            const pct = Math.round(probability * 100);
-            const colorClass =
-              pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
-            const label = set.map((t) => TONE_NAMES[t][0]).join('/');
-            return (
-              <div key={set.join('-')} className="flex justify-between gap-2">
-                <span className="text-gray-600 truncate">{label}:</span>
-                <span className={`${colorClass} flex-shrink-0`}>{pct}%</span>
-              </div>
-            );
-          })}
-        </div>
+      <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
+        {pairProbabilities.map(({ pair, probability, correct, total }) => {
+          const pct = Math.round(probability * 100);
+          const colorClass =
+            pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
+          return (
+            <div key={`${pair[0]}-${pair[1]}`} className="flex justify-between">
+              <span className="text-gray-600">
+                {TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:
+              </span>
+              <span className={colorClass}>
+                {pct}% <span className="text-gray-400">({correct}/{total})</span>
+              </span>
+            </div>
+          );
+        })}
       </div>
-    );
-  }
+    </div>
+  );
 }

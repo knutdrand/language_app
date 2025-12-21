@@ -16,6 +16,7 @@ class Problem(BaseModel):
     problem_type_id: str  # e.g., "tone_1", "tone_2", "vowel_1"
     word_id: int
     vietnamese: str
+    english: str = ""  # English translation for display
     correct_index: int  # 0-indexed position in correct_sequence
     correct_sequence: list[int]  # 1-indexed tones/vowels for each syllable
     alternatives: list[list[int]]  # Other options shown (excludes correct)

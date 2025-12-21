@@ -1,12 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { Source } from '../types';
 import { AudioButton } from './AudioButton';
 import { VowelGrid } from './VowelGrid';
 import {
-  useVowelDrillApi,
-  type VowelPreviousAnswer,
-  type VowelDifficultyLevel,
-} from '../hooks/useVowelDrillApi';
+  useDrillApi,
+  type PreviousAnswer,
+} from '../hooks/useDrillApi';
 import {
   type VowelId,
   formatVowelSequence,
@@ -14,25 +12,23 @@ import {
   sequencesEqual,
 } from '../utils/vowels';
 
-interface VowelDrillProps {
-  sources?: Source[];
-}
-
 // Get vowel name by ID (1-indexed)
 function getVowelName(id: number): string {
   const vowel = VOWELS.find((v) => v.id === id);
   return vowel ? vowel.character : String(id);
 }
 
-export function VowelDrill({ sources = [] }: VowelDrillProps) {
+export function VowelDrill() {
   const {
     drill,
-    stats,
+    pairStats,
+    legacyPairProbabilities,
     difficultyLevel,
     isLoading,
     error,
     submitAnswer,
-  } = useVowelDrillApi();
+    getPairProbability,
+  } = useDrillApi('vowel');
 
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [lastResult, setLastResult] = useState<{
@@ -50,6 +46,9 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
 
   // Track pair probability before answer for 2-choice mode
   const [currentPairProbBefore, setCurrentPairProbBefore] = useState<number | null>(null);
+  // Track reviews for session stats
+  const [sessionReviews, setSessionReviews] = useState(0);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
 
   // Reset attempt timer when drill changes
   useEffect(() => {
@@ -60,19 +59,17 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
       setKey((k) => k + 1);
 
       // Track the pair probability before answer for 2-choice mode
-      if (difficultyLevel === '2-choice' && stats) {
+      if (difficultyLevel === '2-choice' && pairStats.length > 0) {
         const correctSeq = drill.correct_sequence;
         const alternatives = drill.alternatives;
-        // Find the pair being drilled (0-indexed)
+        // Find the pair being drilled (1-indexed in new API)
         if (alternatives.length === 2 && correctSeq.length === 1) {
           const pair: [number, number] = [
-            Math.min(alternatives[0][0] - 1, alternatives[1][0] - 1),
-            Math.max(alternatives[0][0] - 1, alternatives[1][0] - 1),
+            Math.min(alternatives[0][0], alternatives[1][0]),
+            Math.max(alternatives[0][0], alternatives[1][0]),
           ];
-          const pairProb = stats.pair_probabilities.find(
-            (p) => p.pair[0] === pair[0] && p.pair[1] === pair[1]
-          );
-          setCurrentPairProbBefore(pairProb?.probability ?? null);
+          const prob = getPairProbability(pair);
+          setCurrentPairProbBefore(prob);
         } else {
           setCurrentPairProbBefore(null);
         }
@@ -80,7 +77,7 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
         setCurrentPairProbBefore(null);
       }
     }
-  }, [drill, difficultyLevel, stats]);
+  }, [drill, difficultyLevel, pairStats, getPairProbability]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -90,14 +87,6 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
       }
     };
   }, []);
-
-  const getSourceForWord = useCallback(
-    (sourceId: string | undefined): Source | undefined => {
-      if (!sourceId) return undefined;
-      return sources.find((s) => s.id === sourceId);
-    },
-    [sources]
-  );
 
   const handleSelect = useCallback(
     async (selectedSequence: VowelId[], isCorrect: boolean) => {
@@ -111,8 +100,9 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
         ? Date.now() - attemptStartTime.current
         : undefined;
 
-      // Prepare answer for submission
-      const answer: VowelPreviousAnswer = {
+      // Prepare answer for submission (new format with problem_type_id)
+      const answer: PreviousAnswer = {
+        problem_type_id: drill.problem_type_id,
         word_id: drill.word_id,
         correct_sequence: drill.correct_sequence,
         selected_sequence: selectedSequence as number[],
@@ -120,13 +110,19 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
         response_time_ms: responseTimeMs,
       };
 
-      // Find the pair being drilled for 2-choice mode
+      // Find the pair being drilled for 2-choice mode (1-indexed now)
       let pair: [number, number] | null = null;
       if (difficultyLevel === '2-choice' && drill.alternatives.length === 2 && drill.correct_sequence.length === 1) {
         pair = [
-          Math.min(drill.alternatives[0][0] - 1, drill.alternatives[1][0] - 1),
-          Math.max(drill.alternatives[0][0] - 1, drill.alternatives[1][0] - 1),
+          Math.min(drill.alternatives[0][0], drill.alternatives[1][0]),
+          Math.max(drill.alternatives[0][0], drill.alternatives[1][0]),
         ];
+      }
+
+      // Update session stats
+      setSessionReviews((r) => r + 1);
+      if (isCorrect) {
+        setSessionCorrect((c) => c + 1);
       }
 
       setLastResult({
@@ -150,13 +146,15 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
         try {
           const response = await submitAnswer(answer);
 
-          // Update the probability after for feedback
-          if (pair && response.stats) {
-            const pairProb = response.stats.pair_probabilities.find(
-              (p) => p.pair[0] === pair![0] && p.pair[1] === pair![1]
+          // Update the probability after for feedback (1-indexed pairs now)
+          if (pair && response.pair_stats) {
+            const pairStat = response.pair_stats.find(
+              (p) =>
+                (p.pair[0] === pair![0] && p.pair[1] === pair![1]) ||
+                (p.pair[0] === pair![1] && p.pair[1] === pair![0])
             );
             setLastResult((prev) =>
-              prev ? { ...prev, probAfter: pairProb?.probability ?? null } : null
+              prev ? { ...prev, probAfter: pairStat?.mean ?? null } : null
             );
           }
         } catch (e) {
@@ -177,8 +175,8 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
   };
 
   const accuracy =
-    stats && stats.reviews_today > 0
-      ? Math.round((stats.correct_today / stats.reviews_today) * 100)
+    sessionReviews > 0
+      ? Math.round((sessionCorrect / sessionReviews) * 100)
       : 0;
 
   if (isLoading) {
@@ -208,11 +206,11 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
         <p className="text-gray-600">
           You've reviewed all due vowels. Come back later for more practice.
         </p>
-        {stats && (
+        {sessionReviews > 0 && (
           <div className="mt-4 p-4 bg-gray-100 rounded-xl">
-            <p className="text-sm text-gray-500">Today's stats (Vowel Mode)</p>
+            <p className="text-sm text-gray-500">Session stats (Vowel Mode)</p>
             <p className="text-xl font-semibold">
-              {stats.reviews_today} reviews • {accuracy}% accuracy
+              {sessionReviews} reviews • {accuracy}% accuracy
             </p>
           </div>
         )}
@@ -230,7 +228,7 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
         <span>Mode: {difficultyLevel}</span>
         <div className="flex items-center gap-2">
           <span>
-            {stats?.reviews_today ?? 0} reviewed • {accuracy}%
+            {sessionReviews} reviewed • {accuracy}%
           </span>
           <button
             onClick={() => setShowTooltip(!showTooltip)}
@@ -242,10 +240,9 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
       </div>
 
       {/* Collapsible probabilities */}
-      {showTooltip && stats && (
+      {showTooltip && pairStats.length > 0 && (
         <VowelStatsPanel
-          difficultyLevel={difficultyLevel}
-          pairProbabilities={stats.pair_probabilities}
+          pairProbabilities={legacyPairProbabilities}
         />
       )}
 
@@ -317,12 +314,10 @@ export function VowelDrill({ sources = [] }: VowelDrillProps) {
 
 // Stats panel component for vowels
 interface VowelStatsPanelProps {
-  difficultyLevel: VowelDifficultyLevel;
-  pairProbabilities: { pair: number[]; probability: number; correct: number; total: number }[];
+  pairProbabilities: { pair: [number, number]; probability: number; correct: number; total: number }[];
 }
 
 function VowelStatsPanel({
-  difficultyLevel,
   pairProbabilities,
 }: VowelStatsPanelProps) {
   const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.total, 0);

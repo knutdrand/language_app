@@ -52,6 +52,7 @@ class DrillResponse(BaseModel):
     problem_type_id: str
     word_id: int
     vietnamese: str
+    english: str = ""  # English translation
     correct_sequence: list[int]  # 1-indexed
     alternatives: list[list[int]]  # 1-indexed
 
@@ -159,6 +160,7 @@ async def get_next_drill(
         problem_type_id=next_problem.problem_type_id,
         word_id=next_problem.word_id,
         vietnamese=next_problem.vietnamese,
+        english=next_problem.english,
         correct_sequence=next_problem.correct_sequence,
         alternatives=next_problem.alternatives,
     )

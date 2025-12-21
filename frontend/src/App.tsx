@@ -146,7 +146,6 @@ function App() {
         ) : drillMode === 'tone' ? (
           <ToneDrill
             key={`tone-${selectedSourceId || 'all'}`}
-            sources={sources as Source[]}
           />
         ) : drillMode === 'speak' ? (
           <SpeakDrill
@@ -156,7 +155,6 @@ function App() {
         ) : (
           <VowelDrill
             key={`vowel-${selectedSourceId || 'all'}`}
-            sources={sources as Source[]}
           />
         )}
       </main>
