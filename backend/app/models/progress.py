@@ -34,6 +34,22 @@ class UserToneCard(SQLModel, table=True):
         arbitrary_types_allowed = True
 
 
+class UserVowelCard(SQLModel, table=True):
+    """FSRS card state for a vowel sequence, per user."""
+    __tablename__ = "user_vowel_cards"
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
+    user_id: str = Field(foreign_key="users.id", index=True)
+    sequence_key: str = Field(index=True)
+    card_data: dict = Field(default={}, sa_column=Column(JSON))
+    correct: int = Field(default=0)
+    total: int = Field(default=0)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
 class UserProgress(SQLModel, table=True):
     """Progress stats per user."""
     __tablename__ = "user_progress"
@@ -46,6 +62,7 @@ class UserProgress(SQLModel, table=True):
     total_reviews: int = Field(default=0)
     total_correct: int = Field(default=0)
     confusion_state: Optional[dict] = Field(default=None, sa_column=Column(JSON))
+    vowel_confusion_state: Optional[dict] = Field(default=None, sa_column=Column(JSON))
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Config:

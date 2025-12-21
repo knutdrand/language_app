@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { Drill } from './components/Drill';
 import { ToneDrill } from './components/ToneDrill';
 import { SpeakDrill } from './components/SpeakDrill';
+import { VowelDrill } from './components/VowelDrill';
 import { SourceSelector } from './components/SourceSelector';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
@@ -30,7 +31,9 @@ function App() {
     ? 'Listen to the word and select the matching image'
     : drillMode === 'tone'
     ? 'Listen to the word and select the correct tone sequence'
-    : 'Practice speaking Vietnamese with tone feedback';
+    : drillMode === 'speak'
+    ? 'Practice speaking Vietnamese with tone feedback'
+    : 'Listen to the word and select the correct vowel sound';
 
   // Show loading spinner while checking auth
   if (isLoading) {
@@ -77,7 +80,7 @@ function App() {
             <button
               onClick={() => setDrillMode('image')}
               className={`
-                flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                 ${drillMode === 'image'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -89,7 +92,7 @@ function App() {
             <button
               onClick={() => setDrillMode('tone')}
               className={`
-                flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                 ${drillMode === 'tone'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -101,7 +104,7 @@ function App() {
             <button
               onClick={() => setDrillMode('speak')}
               className={`
-                flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
                 ${drillMode === 'speak'
                   ? 'bg-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -109,6 +112,18 @@ function App() {
               `}
             >
               Speak
+            </button>
+            <button
+              onClick={() => setDrillMode('vowel')}
+              className={`
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                ${drillMode === 'vowel'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }
+              `}
+            >
+              Vowel
             </button>
           </div>
 
@@ -131,13 +146,17 @@ function App() {
         ) : drillMode === 'tone' ? (
           <ToneDrill
             key={`tone-${selectedSourceId || 'all'}`}
-            words={filteredWords}
             sources={sources as Source[]}
           />
-        ) : (
+        ) : drillMode === 'speak' ? (
           <SpeakDrill
             key={`speak-${selectedSourceId || 'all'}`}
             words={filteredWords}
+          />
+        ) : (
+          <VowelDrill
+            key={`vowel-${selectedSourceId || 'all'}`}
+            sources={sources as Source[]}
           />
         )}
       </main>
