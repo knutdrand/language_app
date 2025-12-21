@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Annotated, Optional, Literal
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, computed_field
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -62,7 +62,12 @@ class PairStats(BaseModel):
     pair: tuple[int, int]  # 1-indexed
     alpha: float
     beta: float
-    mean: float
+
+    @computed_field
+    @property
+    def mean(self) -> float:
+        """Mean of Beta distribution, computed from alpha and beta."""
+        return self.alpha / (self.alpha + self.beta)
 
 
 class StateUpdateResponse(BaseModel):
@@ -148,7 +153,7 @@ async def get_next_drill(
     all_pair_stats = ml.get_all_pair_stats(primary_type_id, primary_state)
 
     pair_stats = [
-        PairStats(pair=pair, alpha=beta.alpha, beta=beta.beta, mean=beta.mean)
+        PairStats(pair=pair, alpha=beta.alpha, beta=beta.beta)
         for pair, beta in all_pair_stats.items()
     ]
 
@@ -200,7 +205,7 @@ async def get_drill_stats(
     return {
         "difficulty_level": difficulty,
         "pair_stats": [
-            {"pair": pair, "alpha": beta.alpha, "beta": beta.beta, "mean": beta.mean}
+            PairStats(pair=pair, alpha=beta.alpha, beta=beta.beta).model_dump()
             for pair, beta in all_pair_stats.items()
         ],
     }

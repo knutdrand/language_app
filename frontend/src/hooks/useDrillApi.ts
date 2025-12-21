@@ -154,8 +154,8 @@ export function useDrillApi(drillType: DrillType) {
   const legacyPairProbabilities = pairStats.map((s) => ({
     pair: [s.pair[0] - 1, s.pair[1] - 1] as [number, number],  // Convert to 0-indexed
     probability: s.mean,
-    correct: Math.round(s.alpha),  // Approximate
-    total: Math.round(s.alpha + s.beta),  // Approximate
+    correct: s.alpha,
+    total: s.alpha + s.beta,
   }));
 
   return {

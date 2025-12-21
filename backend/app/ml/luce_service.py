@@ -132,7 +132,9 @@ class LuceMLService:
         """Get Beta distribution for P(success | problem, state).
 
         Computes the Luce choice probability for the correct answer
-        and converts to Beta parameters.
+        and returns Beta params where alpha/beta directly represent
+        the success probability (alpha = p_correct, beta = 1 - p_correct,
+        scaled by a fixed factor for numerical stability).
         """
         # Get the class being tested (first syllable)
         correct_class = problem.correct_sequence[0]
@@ -152,23 +154,10 @@ class LuceMLService:
         # P(correct) is the first option
         p_correct = exp_strengths[0] / total
 
-        # Convert to Beta parameters
-        # Use effective sample size based on entropy of the distribution
-        # Higher entropy = less confident = lower effective N
-        probs = [e / total for e in exp_strengths]
-        entropy = -sum(p * math.log(p + 1e-10) for p in probs)
-        max_entropy = math.log(len(all_classes))
-
-        # Effective N scales with confidence (inverse entropy ratio)
-        confidence = 1.0 - (entropy / max_entropy) if max_entropy > 0 else 1.0
-        effective_n = 2.0 + confidence * 10.0  # Range [2, 12]
-
+        # Use fixed effective_n so alpha/(alpha+beta) = p_correct exactly
+        effective_n = 2.0
         alpha = p_correct * effective_n
         beta = (1 - p_correct) * effective_n
-
-        # Ensure minimum values
-        alpha = max(alpha, 0.1)
-        beta = max(beta, 0.1)
 
         return BetaParams(alpha=alpha, beta=beta)
 
@@ -302,18 +291,23 @@ class LuceMLService:
         # Get all success distributions in one batch
         betas = self.batch_success_distribution(problems, state)
 
-        # Average the two directions for each pair
+        # Use moment-matched Beta mixture for each pair
+        from .beta_utils import beta_mixture_approx
+
         result = {}
         for idx in range(0, len(betas), 2):
             beta_i = betas[idx]      # i is correct
             beta_j = betas[idx + 1]  # j is correct
             i, j, _ = pair_indices[idx]
 
-            # Average the Beta parameters
-            avg_alpha = (beta_i.alpha + beta_j.alpha) / 2
-            avg_beta = (beta_i.beta + beta_j.beta) / 2
+            # Compute moment-matched mixture of the two directions
+            mix_alpha, mix_beta = beta_mixture_approx(
+                beta_i.alpha, beta_i.beta,
+                beta_j.alpha, beta_j.beta,
+                w1=0.5,  # Equal weight for both directions
+            )
 
-            result[(i, j)] = BetaParams(alpha=avg_alpha, beta=avg_beta)
+            result[(i, j)] = BetaParams(alpha=mix_alpha, beta=mix_beta)
 
         return result
 

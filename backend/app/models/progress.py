@@ -74,6 +74,7 @@ class UserState(SQLModel, table=True):
 
     Each problem type (e.g., tone_1, tone_2, vowel_1) has its own state.
     Problem types are defined by drill_type + syllable_count.
+    Unique constraint on (user_id, problem_type_id) enforced at DB level.
     """
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
     user_id: str = Field(foreign_key="users.id", index=True)

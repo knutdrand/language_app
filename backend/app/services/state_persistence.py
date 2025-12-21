@@ -43,8 +43,11 @@ async def save_state(
 ) -> None:
     """Save state for a user and problem type.
 
-    Creates or updates the state record.
+    Creates or updates the state record. Uses IntegrityError handling
+    for race condition protection (unique constraint on user_id + problem_type_id).
     """
+    from sqlalchemy.exc import IntegrityError
+
     stmt = select(UserState).where(
         UserState.user_id == user_id,
         UserState.problem_type_id == problem_type_id,
@@ -61,12 +64,27 @@ async def save_state(
             updated_at=datetime.utcnow(),
         )
         session.add(user_state)
+        try:
+            await session.commit()
+        except IntegrityError:
+            # Race condition: another request created the record
+            await session.rollback()
+            # Retry as update
+            result = await session.execute(
+                select(UserState).where(
+                    UserState.user_id == user_id,
+                    UserState.problem_type_id == problem_type_id,
+                )
+            )
+            user_state = result.scalar_one()
+            user_state.state_json = state.model_dump()
+            user_state.updated_at = datetime.utcnow()
+            await session.commit()
     else:
         # Update existing record
         user_state.state_json = state.model_dump()
         user_state.updated_at = datetime.utcnow()
-
-    await session.commit()
+        await session.commit()
 
 
 async def load_all_states(

@@ -345,7 +345,7 @@ function StatsPanel({
                 {TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:
               </span>
               <span className={colorClass}>
-                {pct}% <span className="text-gray-400">({correct}/{total})</span>
+                {pct}% <span className="text-gray-400">({correct.toFixed(1)}/{total.toFixed(1)})</span>
               </span>
             </div>
           );

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Drill } from './components/Drill';
 import { ToneDrill } from './components/ToneDrill';
 import { SpeakDrill } from './components/SpeakDrill';
@@ -7,6 +7,7 @@ import { SourceSelector } from './components/SourceSelector';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
+import { API_BASE_URL } from './config';
 import words from './data/words.json';
 import sources from './data/sources.json';
 import type { Word, Source, DrillMode } from './types';
@@ -18,6 +19,27 @@ function App() {
   const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
   const [drillMode, setDrillMode] = useState<DrillMode>('image');
   const [authView, setAuthView] = useState<AuthView>('login');
+  const [backendError, setBackendError] = useState<string | null>(null);
+
+  // Check backend health on startup
+  useEffect(() => {
+    async function checkHealth() {
+      try {
+        const response = await fetch(`${API_BASE_URL}/health`, {
+          method: 'GET',
+          signal: AbortSignal.timeout(5000),
+        });
+        if (!response.ok) {
+          setBackendError(`Backend returned status ${response.status}`);
+        } else {
+          setBackendError(null);
+        }
+      } catch (e) {
+        setBackendError(`Cannot connect to backend at ${API_BASE_URL}`);
+      }
+    }
+    checkHealth();
+  }, []);
 
   // Filter words by selected source
   const filteredWords = useMemo(() => {
@@ -40,6 +62,24 @@ function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50">
         <div className="text-indigo-600">Loading...</div>
+      </div>
+    );
+  }
+
+  // Show error if backend is not reachable
+  if (backendError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50">
+        <div className="text-center p-8">
+          <div className="text-red-600 text-xl font-semibold mb-2">Backend Unavailable</div>
+          <div className="text-red-500 text-sm">{backendError}</div>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }
