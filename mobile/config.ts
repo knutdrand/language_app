@@ -1,10 +1,10 @@
 import { Platform } from 'react-native';
 
 // Backend API configuration
-// When using ADB reverse (adb reverse tcp:8001 tcp:8001), localhost works on Android
+// When using ADB reverse (adb reverse tcp:8023 tcp:8023), localhost works on Android
 // This is required for Expo Go development
 const getDefaultApiUrl = () => {
-  return 'http://localhost:8001';
+  return 'http://localhost:8023';
 };
 
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || getDefaultApiUrl();

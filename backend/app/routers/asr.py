@@ -2,12 +2,51 @@
 ASR router - API endpoints for tone recognition via speech.
 """
 import io
+import tempfile
 import numpy as np
 from typing import Annotated
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from pydantic import BaseModel
 
 router = APIRouter()
+
+
+def convert_audio_to_wav(audio_bytes: bytes, filename: str) -> tuple[np.ndarray, int]:
+    """
+    Convert audio bytes to numpy array, handling various formats via pydub/ffmpeg.
+    Returns (audio_data, sample_rate).
+    """
+    import soundfile as sf
+
+    # First try soundfile directly (works for WAV, FLAC, OGG)
+    try:
+        audio_data, sample_rate = sf.read(io.BytesIO(audio_bytes))
+        return audio_data, sample_rate
+    except Exception:
+        pass
+
+    # Fall back to pydub for other formats (webm, mp3, etc.)
+    try:
+        from pydub import AudioSegment
+
+        # Determine format from filename extension
+        ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else 'webm'
+
+        # Load with pydub (requires ffmpeg)
+        audio_segment = AudioSegment.from_file(io.BytesIO(audio_bytes), format=ext)
+
+        # Convert to mono, 16kHz
+        audio_segment = audio_segment.set_channels(1).set_frame_rate(16000)
+
+        # Get raw samples as numpy array
+        samples = np.array(audio_segment.get_array_of_samples(), dtype=np.float32)
+
+        # Normalize to [-1, 1]
+        samples = samples / (2 ** 15)  # 16-bit audio
+
+        return samples, 16000
+    except Exception as e:
+        raise ValueError(f"Could not convert audio: {e}")
 
 
 class ToneCheckResult(BaseModel):
@@ -34,7 +73,6 @@ async def check_tone_pronunciation(
     Upload an audio file of the user speaking, along with the expected text.
     Returns whether the tones match.
     """
-    import soundfile as sf
     import librosa
     from app.services.asr.transcriber import (
         transcribe_audio,
@@ -42,10 +80,10 @@ async def check_tone_pronunciation(
         SAMPLE_RATE,
     )
 
-    # Read audio file
+    # Read and convert audio file
     try:
         audio_bytes = await audio.read()
-        audio_data, sample_rate = sf.read(io.BytesIO(audio_bytes))
+        audio_data, sample_rate = convert_audio_to_wav(audio_bytes, audio.filename or "recording.webm")
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Could not read audio file: {e}")
 
@@ -62,8 +100,9 @@ async def check_tone_pronunciation(
         )
 
     # Normalize to [-1, 1]
-    if audio_data.max() > 1.0 or audio_data.min() < -1.0:
-        audio_data = audio_data / max(abs(audio_data.max()), abs(audio_data.min()))
+    max_val = max(abs(audio_data.max()), abs(audio_data.min()))
+    if max_val > 1.0:
+        audio_data = audio_data / max_val
 
     # Transcribe
     try:
@@ -86,14 +125,13 @@ async def transcribe_audio_endpoint(
 
     Returns the transcribed text with tones.
     """
-    import soundfile as sf
     import librosa
     from app.services.asr.transcriber import transcribe_audio, SAMPLE_RATE
 
-    # Read audio file
+    # Read and convert audio file
     try:
         audio_bytes = await audio.read()
-        audio_data, sample_rate = sf.read(io.BytesIO(audio_bytes))
+        audio_data, sample_rate = convert_audio_to_wav(audio_bytes, audio.filename or "recording.webm")
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Could not read audio file: {e}")
 
@@ -110,8 +148,9 @@ async def transcribe_audio_endpoint(
         )
 
     # Normalize
-    if audio_data.max() > 1.0 or audio_data.min() < -1.0:
-        audio_data = audio_data / max(abs(audio_data.max()), abs(audio_data.min()))
+    max_val = max(abs(audio_data.max()), abs(audio_data.min()))
+    if max_val > 1.0:
+        audio_data = audio_data / max_val
 
     # Transcribe
     try:

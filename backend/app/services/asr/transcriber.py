@@ -99,9 +99,6 @@ def extract_tones_from_text(text: str) -> list[int]:
     Returns list of tone IDs (1-6) for each syllable.
     Uses the same tone detection as the main app.
     """
-    # Import from main app's tone detection
-    import sys
-    sys.path.insert(0, "/Users/knutdr/Sources/language_app_tone_asr/backend")
     from app.services.tone_drill import get_tone_sequence
 
     return get_tone_sequence(text)

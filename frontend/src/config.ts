@@ -1,5 +1,5 @@
 // Backend API configuration
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8023';
 
 // TTS provider: 'fpt' (cloud, higher quality) or 'piper' (local)
 export const TTS_PROVIDER = import.meta.env.VITE_TTS_PROVIDER || 'fpt';

@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Drill } from './components/Drill';
 import { ToneDrill } from './components/ToneDrill';
+import { SpeakDrill } from './components/SpeakDrill';
 import { SourceSelector } from './components/SourceSelector';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
@@ -27,7 +28,9 @@ function App() {
 
   const footerText = drillMode === 'image'
     ? 'Listen to the word and select the matching image'
-    : 'Listen to the word and select the correct tone sequence';
+    : drillMode === 'tone'
+    ? 'Listen to the word and select the correct tone sequence'
+    : 'Practice speaking Vietnamese with tone feedback';
 
   // Show loading spinner while checking auth
   if (isLoading) {
@@ -81,7 +84,7 @@ function App() {
                 }
               `}
             >
-              Image Mode
+              Image
             </button>
             <button
               onClick={() => setDrillMode('tone')}
@@ -93,7 +96,19 @@ function App() {
                 }
               `}
             >
-              Tone Mode
+              Tone
+            </button>
+            <button
+              onClick={() => setDrillMode('speak')}
+              className={`
+                flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors
+                ${drillMode === 'speak'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }
+              `}
+            >
+              Speak
             </button>
           </div>
 
@@ -113,11 +128,16 @@ function App() {
             words={filteredWords}
             sources={sources as Source[]}
           />
-        ) : (
+        ) : drillMode === 'tone' ? (
           <ToneDrill
             key={`tone-${selectedSourceId || 'all'}`}
             words={filteredWords}
             sources={sources as Source[]}
+          />
+        ) : (
+          <SpeakDrill
+            key={`speak-${selectedSourceId || 'all'}`}
+            words={filteredWords}
           />
         )}
       </main>
