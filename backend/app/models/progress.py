@@ -69,6 +69,22 @@ class UserProgress(SQLModel, table=True):
         arbitrary_types_allowed = True
 
 
+class UserState(SQLModel, table=True):
+    """ML confusion state per user per problem type.
+
+    Each problem type (e.g., tone_1, tone_2, vowel_1) has its own state.
+    Problem types are defined by drill_type + syllable_count.
+    """
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
+    user_id: str = Field(foreign_key="users.id", index=True)
+    problem_type_id: str = Field(index=True)  # e.g., "tone_1", "tone_2", "vowel_1"
+    state_json: dict = Field(default={}, sa_column=Column(JSON))
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
 # Request/Response schemas
 class WordCardSync(SQLModel):
     """Schema for syncing a word card."""

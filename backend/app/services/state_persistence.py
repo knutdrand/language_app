@@ -1,0 +1,112 @@
+"""State persistence for ML confusion states.
+
+Handles loading and saving ConfusionState to the database.
+"""
+
+from datetime import datetime
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+
+from app.models.progress import UserState
+from app.ml import ConfusionState, get_ml_service, get_problem_type
+
+
+async def load_state(
+    session: AsyncSession,
+    user_id: str,
+    problem_type_id: str,
+) -> ConfusionState:
+    """Load state for a user and problem type.
+
+    If no state exists, returns initial state with priors.
+    """
+    stmt = select(UserState).where(
+        UserState.user_id == user_id,
+        UserState.problem_type_id == problem_type_id,
+    )
+    result = await session.execute(stmt)
+    user_state = result.scalar_one_or_none()
+
+    if user_state is None:
+        # Return initial state with priors
+        return get_ml_service().get_initial_state(problem_type_id)
+
+    # Deserialize from JSON
+    return ConfusionState(**user_state.state_json)
+
+
+async def save_state(
+    session: AsyncSession,
+    user_id: str,
+    problem_type_id: str,
+    state: ConfusionState,
+) -> None:
+    """Save state for a user and problem type.
+
+    Creates or updates the state record.
+    """
+    stmt = select(UserState).where(
+        UserState.user_id == user_id,
+        UserState.problem_type_id == problem_type_id,
+    )
+    result = await session.execute(stmt)
+    user_state = result.scalar_one_or_none()
+
+    if user_state is None:
+        # Create new record
+        user_state = UserState(
+            user_id=user_id,
+            problem_type_id=problem_type_id,
+            state_json=state.model_dump(),
+            updated_at=datetime.utcnow(),
+        )
+        session.add(user_state)
+    else:
+        # Update existing record
+        user_state.state_json = state.model_dump()
+        user_state.updated_at = datetime.utcnow()
+
+    await session.commit()
+
+
+async def load_all_states(
+    session: AsyncSession,
+    user_id: str,
+) -> dict[str, ConfusionState]:
+    """Load all states for a user.
+
+    Returns dict mapping problem_type_id to ConfusionState.
+    Missing states are not included (caller should use get_initial_state).
+    """
+    stmt = select(UserState).where(UserState.user_id == user_id)
+    result = await session.execute(stmt)
+    user_states = result.scalars().all()
+
+    return {
+        us.problem_type_id: ConfusionState(**us.state_json)
+        for us in user_states
+    }
+
+
+async def delete_state(
+    session: AsyncSession,
+    user_id: str,
+    problem_type_id: str,
+) -> bool:
+    """Delete state for a user and problem type.
+
+    Returns True if deleted, False if not found.
+    """
+    stmt = select(UserState).where(
+        UserState.user_id == user_id,
+        UserState.problem_type_id == problem_type_id,
+    )
+    result = await session.execute(stmt)
+    user_state = result.scalar_one_or_none()
+
+    if user_state is None:
+        return False
+
+    await session.delete(user_state)
+    await session.commit()
+    return True

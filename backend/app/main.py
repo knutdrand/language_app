@@ -4,7 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from app.routers import audio, attempts, fsrs, auth, sync, ml, tone_drill, vowel_drill, asr
+from app.routers import audio, attempts, fsrs, auth, sync, tone_drill, vowel_drill, asr, drill
+# Note: ml router temporarily disabled during refactor
 from app.database import init_db
 from app.config import get_settings
 
@@ -44,10 +45,11 @@ app.include_router(attempts.router, prefix="/api", tags=["attempts"])
 app.include_router(fsrs.router, prefix="/api", tags=["fsrs"])
 app.include_router(auth.router)  # Auth router has its own /api/auth prefix
 app.include_router(sync.router, prefix="/api", tags=["sync"])
-app.include_router(ml.router)  # ML router has its own /api/ml prefix
+# app.include_router(ml.router)  # ML router temporarily disabled during refactor
 app.include_router(tone_drill.router, prefix="/api", tags=["tone-drill"])
 app.include_router(vowel_drill.router, prefix="/api", tags=["vowel-drill"])
 app.include_router(asr.router, prefix="/api", tags=["asr"])
+app.include_router(drill.router, prefix="/api", tags=["drill"])  # New unified drill endpoint
 
 
 @app.get("/health")

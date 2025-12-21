@@ -1,25 +1,46 @@
-"""ML module for confusion probability modeling."""
+"""ML layer for confusion-based probability estimation.
 
-from .model import (
-    ToneT,
-    TONES,
+This module provides:
+- Problem, Answer, StateUpdate, ConfusionState: Data models
+- ProblemTypeConfig, PROBLEM_TYPES: Problem type registry
+- ConfusionMLService: ML service implementation
+"""
+
+from .types import (
     Problem,
+    Answer,
+    StateUpdate,
     ConfusionState,
-    make_initial_state,
-    get_confusion_prob,
-    get_confusion_prob_batch,
-    update_state,
-    get_error_probability,
+    BetaParams,
+)
+from .registry import (
+    ProblemTypeConfig,
+    PROBLEM_TYPES,
+    get_problem_type,
+    register_problem_type,
+    make_problem_type_id,
+    get_problem_types_for_drill,
+)
+from .service import (
+    ConfusionMLService,
+    get_ml_service,
 )
 
 __all__ = [
-    "ToneT",
-    "TONES",
+    # Types
     "Problem",
+    "Answer",
+    "StateUpdate",
     "ConfusionState",
-    "make_initial_state",
-    "get_confusion_prob",
-    "get_confusion_prob_batch",
-    "update_state",
-    "get_error_probability",
+    "BetaParams",
+    # Registry
+    "ProblemTypeConfig",
+    "PROBLEM_TYPES",
+    "get_problem_type",
+    "register_problem_type",
+    "make_problem_type_id",
+    "get_problem_types_for_drill",
+    # Service
+    "ConfusionMLService",
+    "get_ml_service",
 ]
