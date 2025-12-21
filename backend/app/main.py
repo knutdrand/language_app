@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from app.routers import audio, attempts, fsrs, auth, sync, ml, tone_drill
+from app.routers import audio, attempts, fsrs, auth, sync, ml, tone_drill, asr
 from app.database import init_db
 from app.config import get_settings
 
@@ -46,6 +46,7 @@ app.include_router(auth.router)  # Auth router has its own /api/auth prefix
 app.include_router(sync.router, prefix="/api", tags=["sync"])
 app.include_router(ml.router)  # ML router has its own /api/ml prefix
 app.include_router(tone_drill.router, prefix="/api", tags=["tone-drill"])
+app.include_router(asr.router, prefix="/api", tags=["asr"])
 
 
 @app.get("/health")
