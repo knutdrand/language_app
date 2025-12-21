@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 import secrets
-from typing import List
+from typing import List, Literal
 
 
 class Settings(BaseSettings):
@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+
+    # ML Service Configuration
+    # Options: "luce" (Luce Choice Model) or "dirichlet" (Dirichlet-Categorical)
+    ML_SERVICE_TYPE: Literal["luce", "dirichlet"] = "luce"
+    ML_LEARNING_RATE: float = 0.1  # Learning rate for Luce model updates
 
     # Database
     # SQLite for development: sqlite+aiosqlite:///./data/app.db

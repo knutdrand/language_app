@@ -216,13 +216,30 @@ class ConfusionMLService:
         return result
 
 
-# Module-level singleton for convenience
-_service: Optional[ConfusionMLService] = None
+# Module-level singletons for convenience
+_confusion_service: Optional[ConfusionMLService] = None
 
 
-def get_ml_service() -> ConfusionMLService:
-    """Get the ML service singleton."""
-    global _service
-    if _service is None:
-        _service = ConfusionMLService()
-    return _service
+def get_confusion_service() -> ConfusionMLService:
+    """Get the Dirichlet-Categorical ML service singleton."""
+    global _confusion_service
+    if _confusion_service is None:
+        _confusion_service = ConfusionMLService()
+    return _confusion_service
+
+
+def get_ml_service() -> MLServiceProtocol:
+    """Get the configured ML service based on settings.
+
+    Returns either LuceMLService or ConfusionMLService depending on
+    the ML_SERVICE_TYPE setting. Default is "luce".
+    """
+    from app.config import get_settings
+
+    settings = get_settings()
+
+    if settings.ML_SERVICE_TYPE == "luce":
+        from .luce_service import get_luce_service
+        return get_luce_service(learning_rate=settings.ML_LEARNING_RATE)
+    else:
+        return get_confusion_service()

@@ -24,6 +24,13 @@ from .registry import (
 from .service import (
     ConfusionMLService,
     get_ml_service,
+    get_confusion_service,
+    MLServiceProtocol,
+)
+from .luce_service import (
+    LuceMLService,
+    LuceState,
+    get_luce_service,
 )
 
 __all__ = [
@@ -40,7 +47,14 @@ __all__ = [
     "register_problem_type",
     "make_problem_type_id",
     "get_problem_types_for_drill",
-    # Service
+    # Service - Dirichlet-Categorical
+    "MLServiceProtocol",
     "ConfusionMLService",
+    "get_confusion_service",
+    # Factory (returns configured service)
     "get_ml_service",
+    # Service - Luce Choice Model
+    "LuceMLService",
+    "LuceState",
+    "get_luce_service",
 ]
