@@ -30,6 +30,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="speak"
+        options={{
+          title: 'Speak',
+          tabBarIcon: ({ color }) => <TabBarIcon name="microphone" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Settings',
