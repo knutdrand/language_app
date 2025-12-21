@@ -77,12 +77,18 @@ def confusion_state_from_dict(data: Optional[dict]) -> Optional[ConfusionState]:
     """Convert dict to ConfusionState."""
     if not data or "counts" not in data:
         return None
-    return ConfusionState(counts=data["counts"])
+    return ConfusionState(
+        counts=data["counts"],
+        counts_by_context=data.get("counts_by_context", {})
+    )
 
 
 def confusion_state_to_dict(state: ConfusionState) -> dict:
     """Convert ConfusionState to dict for storage."""
-    return {"counts": state.counts}
+    return {
+        "counts": state.counts,
+        "counts_by_context": state.counts_by_context
+    }
 
 
 @router.post("/tone-drill/next", response_model=NextDrillResponse)

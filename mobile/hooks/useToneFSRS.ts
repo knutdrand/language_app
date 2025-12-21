@@ -944,17 +944,42 @@ export function useToneFSRS(words: Word[]) {
       const chosenTones = (chosenSequenceKey || sequenceKey).split('-').map(Number);
       const newCounts = confusionStateRef.current.counts.map((row) => [...row]);
 
+      // Copy existing counts_by_context
+      const newCountsByContext: Record<string, number[][]> = {};
+      if (confusionStateRef.current.counts_by_context) {
+        for (const [key, matrix] of Object.entries(confusionStateRef.current.counts_by_context)) {
+          newCountsByContext[key] = matrix.map((row) => [...row]);
+        }
+      }
+
+      // Helper to get context key (cap syllable_count at 3, position at 2)
+      const getContextKey = (syllableCount: number, position: number): string => {
+        const syl = Math.min(syllableCount, 3);
+        const pos = Math.min(position, 2);
+        return `${syl}-${pos}`;
+      };
+
+      const syllableCount = correctTones.length;
+
       // Update confusion matrix: for each position, record what was chosen vs what was correct
       const minLen = Math.min(correctTones.length, chosenTones.length);
       for (let i = 0; i < minLen; i++) {
         const correctIdx = correctTones[i] - 1;
         const chosenIdx = chosenTones[i] - 1;
         if (correctIdx >= 0 && correctIdx < 6 && chosenIdx >= 0 && chosenIdx < 6) {
+          // Update global counts
           newCounts[correctIdx][chosenIdx] += 1;
+
+          // Update context-specific counts
+          const contextKey = getContextKey(syllableCount, i);
+          if (!newCountsByContext[contextKey]) {
+            newCountsByContext[contextKey] = Array.from({ length: 6 }, () => Array(6).fill(0));
+          }
+          newCountsByContext[contextKey][correctIdx][chosenIdx] += 1;
         }
       }
 
-      const newConfusionState = { counts: newCounts };
+      const newConfusionState = { counts: newCounts, counts_by_context: newCountsByContext };
       confusionStateRef.current = newConfusionState;
       setConfusionState(newConfusionState);
       mlApi.saveConfusionState(newConfusionState);

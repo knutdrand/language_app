@@ -55,8 +55,22 @@ class Word(BaseModel):
 
 @dataclass
 class ConfusionState:
-    """6x6 confusion matrix tracking tone confusions."""
+    """6x6 confusion matrix tracking tone confusions.
+
+    Attributes:
+        counts: Global 6x6 matrix for all contexts
+        counts_by_context: Per-context matrices keyed by "syllable_count-position"
+            e.g., "1-0" for 1-syllable position 0, "2-1" for 2-syllable position 1
+    """
     counts: list[list[int]] = field(default_factory=lambda: [[0] * 6 for _ in range(6)])
+    counts_by_context: dict[str, list[list[int]]] = field(default_factory=dict)
+
+    @staticmethod
+    def get_context_key(syllable_count: int, position: int) -> str:
+        """Generate context key. Cap syllable_count at 3, position at 2."""
+        syl = min(syllable_count, 3)
+        pos = min(position, 2)
+        return f"{syl}-{pos}"
 
 
 def detect_tone(syllable: str) -> int:
@@ -638,17 +652,34 @@ class ToneDrillService:
         correct_sequence: list[int],
         selected_sequence: list[int],
     ) -> ConfusionState:
-        """Update confusion matrix based on answer. Sequences are 1-indexed."""
-        new_counts = [row.copy() for row in confusion_state.counts]
+        """Update confusion matrix based on answer. Sequences are 1-indexed.
 
+        Updates both global counts and context-specific counts keyed by
+        syllable_count and position.
+        """
+        new_counts = [row.copy() for row in confusion_state.counts]
+        new_counts_by_context = {
+            k: [row.copy() for row in v]
+            for k, v in confusion_state.counts_by_context.items()
+        }
+
+        syllable_count = len(correct_sequence)
         min_len = min(len(correct_sequence), len(selected_sequence))
+
         for i in range(min_len):
             correct_idx = correct_sequence[i] - 1  # Convert to 0-indexed
             chosen_idx = selected_sequence[i] - 1
             if 0 <= correct_idx < 6 and 0 <= chosen_idx < 6:
+                # Update global counts
                 new_counts[correct_idx][chosen_idx] += 1
 
-        return ConfusionState(counts=new_counts)
+                # Update context-specific counts
+                key = ConfusionState.get_context_key(syllable_count, i)
+                if key not in new_counts_by_context:
+                    new_counts_by_context[key] = [[0] * 6 for _ in range(6)]
+                new_counts_by_context[key][correct_idx][chosen_idx] += 1
+
+        return ConfusionState(counts=new_counts, counts_by_context=new_counts_by_context)
 
 
 # Singleton instance

@@ -25,6 +25,7 @@ export interface ProgressData {
 
 export interface ConfusionState {
   counts: number[][];
+  counts_by_context?: Record<string, number[][]>;  // "syllable_count-position" → 6x6
 }
 
 export interface SyncData {
