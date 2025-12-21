@@ -78,6 +78,9 @@ language_app/
 ### FSRS Integration
 Uses `ts-fsrs` library. Cards stored in localStorage under `language_app_cards`. On correct answer: Rating.Good, on incorrect: Rating.Again.
 
+### ML Layer Architecture
+The backend should get all information about success probabilities, confusion matrices, and other performance metrics from the ML layer (services). It should not keep separate track of performance and should not access the state used by the ML layer directly. The ML layer owns the confusion state and exposes computed statistics (like Beta distribution parameters) through its API.
+
 ## Target Languages
 
 Vietnamese (implemented), Norwegian and Spanish (planned)
