@@ -95,6 +95,10 @@ VOWEL_GROUPS = [
 # Review probability for mastered groups
 REVIEW_PROBABILITY = 0.2
 
+# Sampling aggressiveness: higher = focus more on problematic pairs
+# 1.0 = linear, 2.0 = squared, 3.0 = cubed
+SAMPLING_AGGRESSIVENESS = 3.0
+
 
 class Word(BaseModel):
     id: int
@@ -420,13 +424,15 @@ class DrillService:
             # For tones: sample from all pairs
             pairs = list(pair_stats.keys())
 
-        # Weight by error probability
+        # Weight by error probability (aggressive: raise to power)
         error_probs = []
         for p in pairs:
             if p in pair_stats:
-                error_probs.append(1 - pair_stats[p].mean)
+                error = 1 - pair_stats[p].mean
             else:
-                error_probs.append(0.5)  # Default for new pairs
+                error = 0.5  # Default for new pairs
+            # Raise to power for more aggressive focus on problematic pairs
+            error_probs.append(error ** SAMPLING_AGGRESSIVENESS)
 
         selected_pair = pairs[self._weighted_sample(error_probs)]
 
