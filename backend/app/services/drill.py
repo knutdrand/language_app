@@ -27,8 +27,8 @@ from app.ml import (
 WORDS_PATH = Path(__file__).parent.parent.parent.parent / "frontend" / "src" / "data" / "words.json"
 
 # Mastery thresholds (main logic owns these)
-PAIR_MASTERY_THRESHOLD = 0.80
-FOUR_CHOICE_MASTERY_THRESHOLD = 0.80
+PAIR_MASTERY_THRESHOLD = 0.80  # Required to progress from 2-choice to 4-choice
+FOUR_CHOICE_MASTERY_THRESHOLD = 0.90  # Required to progress from 4-choice to multi-syllable
 
 # Preview probability for next difficulty level
 PREVIEW_PROBABILITY = 0.2
