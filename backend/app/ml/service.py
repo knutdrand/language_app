@@ -231,8 +231,10 @@ def get_confusion_service() -> ConfusionMLService:
 def get_ml_service() -> MLServiceProtocol:
     """Get the configured ML service based on settings.
 
-    Returns either LuceMLService or ConfusionMLService depending on
-    the ML_SERVICE_TYPE setting. Default is "luce".
+    Returns the appropriate ML service depending on ML_SERVICE_TYPE:
+    - "luce": LuceMLService (counts[played][selected])
+    - "bradley_terry": BradleyTerryMLService (pairwise wins)
+    - "dirichlet": ConfusionMLService (Dirichlet-Categorical)
     """
     from app.config import get_settings
 
@@ -240,6 +242,9 @@ def get_ml_service() -> MLServiceProtocol:
 
     if settings.ML_SERVICE_TYPE == "luce":
         from .luce_service import get_luce_service
-        return get_luce_service(learning_rate=settings.ML_LEARNING_RATE)
+        return get_luce_service(prior=settings.ML_PRIOR)
+    elif settings.ML_SERVICE_TYPE == "bradley_terry":
+        from .luce_service import get_bradley_terry_service
+        return get_bradley_terry_service(prior=settings.ML_PRIOR)
     else:
         return get_confusion_service()

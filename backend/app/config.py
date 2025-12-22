@@ -12,9 +12,12 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
 
     # ML Service Configuration
-    # Options: "luce" (Luce Choice Model) or "dirichlet" (Dirichlet-Categorical)
-    ML_SERVICE_TYPE: Literal["luce", "dirichlet"] = "luce"
-    ML_LEARNING_RATE: float = 0.1  # Learning rate for Luce model updates
+    # Options:
+    #   "luce" - Luce Choice Model (counts[played][selected])
+    #   "dirichlet" - Dirichlet-Categorical model
+    #   "bradley_terry" - Bradley-Terry with pairwise comparisons
+    ML_SERVICE_TYPE: Literal["luce", "dirichlet", "bradley_terry"] = "luce"
+    ML_PRIOR: float = 1.0  # Laplace smoothing prior / pseudo-wins
 
     # Database
     # SQLite for development: sqlite+aiosqlite:///./data/app.db
