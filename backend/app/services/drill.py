@@ -51,6 +51,37 @@ TONE_MARKS = {
     'ặ': 6, 'ậ': 6, 'ệ': 6, 'ộ': 6, 'ợ': 6, 'ự': 6,
 }
 
+# Vietnamese vowel characters mapped to vowel IDs (1-indexed)
+VOWEL_CHAR_MAP = {
+    # a (ID 1)
+    'a': 1, 'à': 1, 'á': 1, 'ả': 1, 'ã': 1, 'ạ': 1,
+    # ă (ID 2)
+    'ă': 2, 'ằ': 2, 'ắ': 2, 'ẳ': 2, 'ẵ': 2, 'ặ': 2,
+    # â (ID 3)
+    'â': 3, 'ầ': 3, 'ấ': 3, 'ẩ': 3, 'ẫ': 3, 'ậ': 3,
+    # e (ID 4)
+    'e': 4, 'è': 4, 'é': 4, 'ẻ': 4, 'ẽ': 4, 'ẹ': 4,
+    # ê (ID 5)
+    'ê': 5, 'ề': 5, 'ế': 5, 'ể': 5, 'ễ': 5, 'ệ': 5,
+    # i (ID 6)
+    'i': 6, 'ì': 6, 'í': 6, 'ỉ': 6, 'ĩ': 6, 'ị': 6,
+    # o (ID 7)
+    'o': 7, 'ò': 7, 'ó': 7, 'ỏ': 7, 'õ': 7, 'ọ': 7,
+    # ô (ID 8)
+    'ô': 8, 'ồ': 8, 'ố': 8, 'ổ': 8, 'ỗ': 8, 'ộ': 8,
+    # ơ (ID 9)
+    'ơ': 9, 'ờ': 9, 'ớ': 9, 'ở': 9, 'ỡ': 9, 'ợ': 9,
+    # u (ID 10)
+    'u': 10, 'ù': 10, 'ú': 10, 'ủ': 10, 'ũ': 10, 'ụ': 10,
+    # ư (ID 11)
+    'ư': 11, 'ừ': 11, 'ứ': 11, 'ử': 11, 'ữ': 11, 'ự': 11,
+    # y (ID 12)
+    'y': 12, 'ỳ': 12, 'ý': 12, 'ỷ': 12, 'ỹ': 12, 'ỵ': 12,
+}
+
+# Vowel names for openness ranking
+VOWEL_NAMES = ['a', 'ă', 'â', 'e', 'ê', 'i', 'o', 'ô', 'ơ', 'u', 'ư', 'y']
+
 
 class Word(BaseModel):
     id: int
@@ -74,6 +105,54 @@ def get_tone_sequence(word: str) -> list[int]:
     return [detect_tone(s) for s in syllables if s]
 
 
+def extract_vowel_nucleus(syllable: str) -> Optional[int]:
+    """Extract the primary vowel nucleus from a Vietnamese syllable.
+
+    Returns the vowel ID (1-12) of the primary vowel, or None if no vowel found.
+    For diphthongs/triphthongs, returns the vowel that carries the tone mark,
+    or the most open vowel if no tone mark.
+    """
+    normalized = syllable.lower().strip()
+
+    # Find all vowel positions
+    vowel_positions = []
+    for i, char in enumerate(normalized):
+        vowel_id = VOWEL_CHAR_MAP.get(char)
+        if vowel_id is not None:
+            vowel_positions.append((i, char, vowel_id))
+
+    if not vowel_positions:
+        return None
+
+    if len(vowel_positions) == 1:
+        return vowel_positions[0][2]
+
+    # For multiple vowels, find the "main" vowel
+    # Check which vowel has a tone mark (not base form)
+    base_vowels = set(VOWEL_NAMES)
+    for _, char, vowel_id in vowel_positions:
+        if char not in base_vowels:
+            return vowel_id
+
+    # No tone marks found, use openness heuristics
+    openness_rank = {
+        1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 7: 6, 8: 7, 9: 8, 10: 9, 11: 10, 6: 11, 12: 11
+    }
+    sorted_vowels = sorted(vowel_positions, key=lambda x: openness_rank.get(x[2], 12))
+    return sorted_vowels[0][2]
+
+
+def get_vowel_sequence(word: str) -> list[int]:
+    """Get the vowel sequence for a word (list of 1-indexed vowel IDs)."""
+    syllables = word.strip().split()
+    sequence = []
+    for s in syllables:
+        vowel_id = extract_vowel_nucleus(s)
+        if vowel_id is not None:
+            sequence.append(vowel_id)
+    return sequence
+
+
 class DrillService:
     """Service for drill sampling and orchestration.
 
@@ -91,15 +170,23 @@ class DrillService:
         self._words_by_sequence: dict[str, list[Word]] = {}
         self._load_words()
 
+    @property
+    def n_classes(self) -> int:
+        """Number of classes: 6 for tones, 12 for vowels."""
+        return 6 if self.drill_type == "tone" else 12
+
     def _load_words(self):
-        """Load words from JSON file and index by tone sequence."""
+        """Load words from JSON file and index by sequence."""
         if WORDS_PATH.exists():
             with open(WORDS_PATH) as f:
                 data = json.load(f)
                 self._words = [Word(**w) for w in data]
 
         for word in self._words:
-            sequence = get_tone_sequence(word.vietnamese)
+            if self.drill_type == "tone":
+                sequence = get_tone_sequence(word.vietnamese)
+            else:
+                sequence = get_vowel_sequence(word.vietnamese)
             key = "-".join(str(t) for t in sequence)
             if key not in self._words_by_sequence:
                 self._words_by_sequence[key] = []
@@ -193,22 +280,27 @@ class DrillService:
         initial_total = sum(sum(row) for row in initial.counts)
         return int(total - initial_total)
 
-    @staticmethod
-    def _get_all_pairs() -> list[tuple[int, int]]:
+    def _get_all_pairs(self) -> list[tuple[int, int]]:
         """Get all pairs of classes. Returns 1-indexed."""
         pairs = []
-        for a in range(1, 7):
-            for b in range(a + 1, 7):
+        for a in range(1, self.n_classes + 1):
+            for b in range(a + 1, self.n_classes + 1):
                 pairs.append((a, b))
         return pairs
 
-    @staticmethod
-    def _get_all_four_choice_sets() -> list[list[int]]:
-        """Get all 15 possible 4-choice sets. Returns 1-indexed."""
+    def _get_all_four_choice_sets(self) -> list[list[int]]:
+        """Get all possible 4-choice sets. Returns 1-indexed.
+
+        For tones (6 classes): returns all 15 sets (6 choose 4).
+        For vowels (12 classes): returns empty (too many - use sampling instead).
+        """
+        if self.n_classes > 6:
+            # Too many sets for vowels, use sampling in _sample_4_choice instead
+            return []
         sets = []
-        for exclude1 in range(1, 7):
-            for exclude2 in range(exclude1 + 1, 7):
-                s = [t for t in range(1, 7) if t != exclude1 and t != exclude2]
+        for exclude1 in range(1, self.n_classes + 1):
+            for exclude2 in range(exclude1 + 1, self.n_classes + 1):
+                s = [t for t in range(1, self.n_classes + 1) if t != exclude1 and t != exclude2]
                 sets.append(s)
         return sets
 
@@ -290,29 +382,31 @@ class DrillService:
         if state is None:
             state = self.ml.get_initial_state(problem_type_id)
 
-        # Get all 4-choice sets and calculate error probability for each
-        all_sets = self._get_all_four_choice_sets()
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
+        all_sets = self._get_all_four_choice_sets()
 
-        error_probs = []
-        for s in all_sets:
-            # Average error probability across all pairs in set
-            total_error = 0
-            count = 0
-            for i, a in enumerate(s):
-                for b in s[i+1:]:
-                    pair_key = (min(a, b), max(a, b))
-                    if pair_key in pair_stats:
-                        total_error += 1 - pair_stats[pair_key].mean
-                        count += 1
-            error_probs.append(total_error / max(count, 1))
+        if all_sets:
+            # For tones: use predefined sets weighted by error probability
+            error_probs = []
+            for s in all_sets:
+                total_error = 0
+                count = 0
+                for i, a in enumerate(s):
+                    for b in s[i+1:]:
+                        pair_key = (min(a, b), max(a, b))
+                        if pair_key in pair_stats:
+                            total_error += 1 - pair_stats[pair_key].mean
+                            count += 1
+                error_probs.append(total_error / max(count, 1))
+            selected_set = all_sets[self._weighted_sample(error_probs)]
+        else:
+            # For vowels: sample 4 confused classes based on pair error probability
+            selected_set = self._sample_confused_set(pair_stats, 4)
 
-        selected_set = all_sets[self._weighted_sample(error_probs)]
-
-        # Find word with tone from this set
+        # Find word with class from this set
         random.shuffle(selected_set)
-        for tone in selected_set:
-            words = self._words_by_sequence.get(str(tone), [])
+        for cls in selected_set:
+            words = self._words_by_sequence.get(str(cls), [])
             if words:
                 word = random.choice(words)
                 return Problem(
@@ -321,11 +415,41 @@ class DrillService:
                     vietnamese=word.vietnamese,
                     english=word.english,
                     correct_index=0,
-                    correct_sequence=[tone],
-                    alternatives=[[t] for t in selected_set],
+                    correct_sequence=[cls],
+                    alternatives=[[c] for c in selected_set],
                 )
 
         return None
+
+    def _sample_confused_set(self, pair_stats: dict, size: int) -> list[int]:
+        """Sample a set of confused classes based on error probability.
+
+        Used for vowels where there are too many possible sets to enumerate.
+        """
+        # Get pairs sorted by error probability (highest first)
+        pairs_by_error = sorted(
+            pair_stats.items(),
+            key=lambda x: 1 - x[1].mean,
+            reverse=True
+        )
+
+        # Collect classes from most confused pairs
+        selected = set()
+        for (a, b), _ in pairs_by_error:
+            selected.add(a)
+            selected.add(b)
+            if len(selected) >= size:
+                break
+
+        # If we don't have enough, add random classes
+        all_classes = list(range(1, self.n_classes + 1))
+        random.shuffle(all_classes)
+        for c in all_classes:
+            if len(selected) >= size:
+                break
+            selected.add(c)
+
+        return list(selected)[:size]
 
     def _sample_multi_syllable(self, states: dict[str, ConfusionState]) -> Optional[Problem]:
         """Sample a multi-syllable drill."""
@@ -393,28 +517,28 @@ class DrillService:
 
     def _generate_distractors(self, correct_sequence: list[int]) -> list[list[int]]:
         """Generate distractor sequences."""
-        all_tones = [1, 2, 3, 4, 5, 6]
+        all_classes = list(range(1, self.n_classes + 1))
         distractors = [correct_sequence]
 
         for _ in range(50):
             if len(distractors) >= 4:
                 break
             new_seq = []
-            for correct_tone in correct_sequence:
+            for correct_cls in correct_sequence:
                 if random.random() < 0.7:
-                    other_tones = [t for t in all_tones if t != correct_tone]
-                    new_seq.append(random.choice(other_tones))
+                    other_classes = [c for c in all_classes if c != correct_cls]
+                    new_seq.append(random.choice(other_classes))
                 else:
-                    new_seq.append(correct_tone)
+                    new_seq.append(correct_cls)
             if new_seq != correct_sequence and new_seq not in distractors:
                 distractors.append(new_seq)
 
         while len(distractors) < 4:
-            fallback = [(t % 6) + 1 for t in correct_sequence]
+            fallback = [(c % self.n_classes) + 1 for c in correct_sequence]
             if fallback not in distractors:
                 distractors.append(fallback)
             else:
-                distractors.append([(i % 6) + 1 for i in range(len(correct_sequence))])
+                distractors.append([(i % self.n_classes) + 1 for i in range(len(correct_sequence))])
 
         random.shuffle(distractors)
         return distractors
