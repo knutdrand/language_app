@@ -16,7 +16,6 @@ Key properties:
 - Handles varying alternative set sizes correctly (Luce property)
 """
 
-import math
 import numpy as np
 from typing import Optional
 
@@ -101,23 +100,27 @@ class LuceMLService:
 
         # Get the class being tested (first syllable)
         correct_class = problem.correct_sequence[0]
+        # alternatives already includes the correct answer
         alt_classes = [alt[0] for alt in problem.alternatives]
-        all_classes = [correct_class] + alt_classes
 
         # Compute strengths (counts + prior)
         strengths = []
-        for c in all_classes:
+        correct_strength = None
+        for c in alt_classes:
             count = state.counts[correct_class - 1][c - 1]
-            strengths.append(count + prior)
+            strength = count + prior
+            strengths.append(strength)
+            if c == correct_class:
+                correct_strength = strength
 
         # Luce choice probability
         total_strength = sum(strengths)
-        p_correct = strengths[0] / total_strength
+        p_correct = correct_strength / total_strength if correct_strength else 0.25
 
         # Effective N based on observations for this played class
         # prior_n = number of alternatives * prior (initial pseudocounts)
         n_obs = sum(state.counts[correct_class - 1])
-        prior_n = len(all_classes) * prior
+        prior_n = len(alt_classes) * prior
         effective_n = prior_n + n_obs
 
         alpha = p_correct * effective_n
@@ -215,7 +218,7 @@ class LuceMLService:
 
         for i in range(n):
             for j in range(i + 1, n):
-                # Problem where class i+1 is correct, j+1 is alternative
+                # Problem where class i+1 is correct, choosing between i+1 and j+1
                 problems.append(
                     Problem(
                         problem_type_id=problem_type_id,
@@ -223,12 +226,12 @@ class LuceMLService:
                         vietnamese="",
                         correct_index=0,
                         correct_sequence=[i + 1],  # 1-indexed
-                        alternatives=[[j + 1]],  # 1-indexed
+                        alternatives=[[i + 1], [j + 1]],  # Both options
                     )
                 )
                 pair_indices.append((i + 1, j + 1, "i"))
 
-                # Problem where class j+1 is correct, i+1 is alternative
+                # Problem where class j+1 is correct, choosing between i+1 and j+1
                 problems.append(
                     Problem(
                         problem_type_id=problem_type_id,
@@ -236,7 +239,7 @@ class LuceMLService:
                         vietnamese="",
                         correct_index=0,
                         correct_sequence=[j + 1],
-                        alternatives=[[i + 1]],
+                        alternatives=[[i + 1], [j + 1]],  # Both options
                     )
                 )
                 pair_indices.append((i + 1, j + 1, "j"))
@@ -285,98 +288,68 @@ def get_luce_service(prior: float = 1.0) -> LuceMLService:
 
 
 class BradleyTerryState(ConfusionState):
-    """State for Bradley-Terry model using pairwise wins.
+    """State for Bradley-Terry model using confusion matrix.
 
-    Unlike LuceState which tracks counts[played][selected], this state
-    tracks pairwise comparison outcomes:
+    Tracks counts[correct][selected] - how often each class was selected
+    when each class was the correct answer:
 
-        counts[i][j] = number of times class i beat class j
+        counts[i][j] = number of times class j was selected when class i was correct
 
-    This captures head-to-head dominance relationships from user choices.
-    When user selects class 'a' from alternatives {a, b, c, d}:
-        - a beat b: counts[a-1][b-1] += 1
-        - a beat c: counts[a-1][c-1] += 1
-        - a beat d: counts[a-1][d-1] += 1
+    This allows computing asymmetric success probabilities:
+    - P(a | correct=a) may differ from P(b | correct=b)
+    - Pair success = mean(P(a|correct=a), P(b|correct=b))
     """
 
-    prior: float = 1.0  # Pseudo-wins added for regularization
-    model_version: int = 2  # 1=old confusion matrix, 2=pairwise wins
-
-    # Cached strengths (transient, not serialized)
-    # Note: Excluded from serialization via Field(exclude=True)
-    _cached_strengths: Optional[list[float]] = None
+    prior: float = 1.0  # Pseudo-counts for regularization
+    model_version: int = 3  # 1=old, 2=pairwise wins, 3=confusion matrix
 
     model_config = {
         "arbitrary_types_allowed": True,
-        # Exclude private fields from serialization
     }
 
     @classmethod
     def initial(cls, n_classes: int, prior: float = 1.0) -> "BradleyTerryState":
-        """Create initial state with zero wins."""
+        """Create initial state with zero counts."""
         counts = [[0.0] * n_classes for _ in range(n_classes)]
-        return cls(n_classes=n_classes, counts=counts, prior=prior, model_version=2)
+        return cls(n_classes=n_classes, counts=counts, prior=prior, model_version=3)
 
-    def copy_with_pairwise_wins(
-        self, winner: int, losers: list[int]
-    ) -> "BradleyTerryState":
-        """Return new state with recorded pairwise wins. 1-indexed inputs.
+    def copy_with_increment(self, correct: int, selected: int) -> "BradleyTerryState":
+        """Return new state with incremented count. 1-indexed inputs.
 
         Args:
-            winner: The class that won (1-indexed)
-            losers: List of classes that lost to winner (1-indexed)
+            correct: The correct class (1-indexed)
+            selected: The class user selected (1-indexed)
         """
         new_counts = [row.copy() for row in self.counts]
-        for loser in losers:
-            new_counts[winner - 1][loser - 1] += 1.0
+        new_counts[correct - 1][selected - 1] += 1.0
         return BradleyTerryState(
             n_classes=self.n_classes,
             counts=new_counts,
             prior=self.prior,
-            model_version=2,
-            _cached_strengths=None,  # Invalidate cache
+            model_version=3,
         )
 
 
 class BradleyTerryMLService:
-    """ML service using Bradley-Terry model with pairwise comparisons.
+    """ML service using confusion matrix for success probability.
 
-    Uses the MM algorithm (Hunter 2004) to estimate latent strengths from
-    pairwise win data, then applies the Luce choice rule for probabilities.
+    Tracks counts[correct][selected] and computes:
+    - P(a | correct=a, choices={a,b}) from counts[a][a] / (counts[a][a] + counts[a][b])
+    - Pair success = mean(P(a|correct=a), P(b|correct=b))
     """
 
     def __init__(self, prior: float = 1.0):
         """Initialize with prior for regularization.
 
         Args:
-            prior: Pseudo-wins added to each pair (default 1.0)
+            prior: Pseudo-count added to each cell (default 1.0)
         """
         self.prior = prior
 
     def get_initial_state(self, problem_type_id: str) -> BradleyTerryState:
-        """Create initial state with zero wins."""
+        """Create initial state with zero counts."""
         config = get_problem_type(problem_type_id)
         return BradleyTerryState.initial(config.n_classes, self.prior)
-
-    def _compute_strengths(self, state: ConfusionState) -> list[float]:
-        """Compute Bradley-Terry strengths from wins matrix.
-
-        Uses lazy caching - only recomputes if cache is invalid.
-        """
-        # Check cache if available
-        if isinstance(state, BradleyTerryState) and state._cached_strengths is not None:
-            return state._cached_strengths
-
-        from .bradley_terry import compute_bt_strengths
-
-        prior = getattr(state, "prior", self.prior)
-        strengths = compute_bt_strengths(state.counts, prior=prior)
-
-        # Cache if possible (mutates state, but that's fine for cache)
-        if isinstance(state, BradleyTerryState):
-            object.__setattr__(state, "_cached_strengths", strengths)
-
-        return strengths
 
     def get_success_distribution(
         self,
@@ -385,31 +358,30 @@ class BradleyTerryMLService:
     ) -> BetaParams:
         """Get Beta distribution for P(success | problem, state).
 
-        Uses Bradley-Terry strengths with Luce choice rule:
-            P(correct | alternatives) = θ_correct / Σ_k θ_k
+        Uses confusion matrix: P(correct) based on counts[correct][selected]
+        for all alternatives in the problem.
         """
-        theta = self._compute_strengths(state)
-
-        # Get classes involved (0-indexed for theta)
-        correct_class = problem.correct_sequence[0]
-        alt_classes = [alt[0] for alt in problem.alternatives]
-        all_classes = [correct_class] + alt_classes
-
-        # Luce choice probability using BT strengths
-        strengths = [theta[c - 1] for c in all_classes]
-        total_strength = sum(strengths)
-        p_correct = strengths[0] / total_strength if total_strength > 0 else 0.5
-
-        # Effective N: total pairwise comparisons involving correct class
-        n = state.n_classes
         prior = getattr(state, "prior", self.prior)
-        total_comparisons = sum(
-            state.counts[correct_class - 1][j] + state.counts[j][correct_class - 1]
-            for j in range(n)
-            if j != correct_class - 1
-        )
-        prior_n = (n - 1) * 2 * prior  # Prior comparisons in both directions
-        effective_n = prior_n + total_comparisons
+
+        # Get classes involved (0-indexed)
+        correct_idx = problem.correct_sequence[0] - 1
+        alt_indices = [alt[0] - 1 for alt in problem.alternatives]
+        all_indices = [correct_idx] + alt_indices
+
+        # Compute strengths from confusion matrix row for correct class
+        strengths = []
+        for idx in all_indices:
+            count = state.counts[correct_idx][idx]
+            strengths.append(count + prior)
+
+        # Luce choice probability
+        total_strength = sum(strengths)
+        p_correct = strengths[0] / total_strength
+
+        # Effective N based on observations for this correct class
+        n_obs = sum(state.counts[correct_idx])
+        prior_n = len(all_indices) * prior
+        effective_n = prior_n + n_obs
 
         alpha = p_correct * effective_n
         beta = (1 - p_correct) * effective_n
@@ -432,13 +404,13 @@ class BradleyTerryMLService:
     ) -> tuple[BradleyTerryState, list[StateUpdate]]:
         """Update state after observing user's answer.
 
-        Records pairwise wins: the selected class beats all other alternatives.
+        Records in confusion matrix: counts[correct][selected] += 1
 
         Example: correct=1, alternatives=[2,3,4], user selects 1
-            -> wins[1][2] += 1, wins[1][3] += 1, wins[1][4] += 1
+            -> counts[1][1] += 1
 
         Example: correct=1, alternatives=[2,3,4], user selects 2 (wrong)
-            -> wins[2][1] += 1, wins[2][3] += 1, wins[2][4] += 1
+            -> counts[1][2] += 1
         """
         updates: list[StateUpdate] = []
 
@@ -450,32 +422,27 @@ class BradleyTerryMLService:
                 n_classes=state.n_classes,
                 counts=state.counts,
                 prior=self.prior,
-                model_version=2,
+                model_version=3,
             )
 
         # Get classes involved
         correct_class = problem.correct_sequence[0]
         selected_class = answer.selected_sequence[0]
-        alt_classes = [alt[0] for alt in problem.alternatives]
-        all_classes = [correct_class] + alt_classes
 
-        # The selected class beats all other alternatives
-        losers = [c for c in all_classes if c != selected_class]
+        # Record the update in confusion matrix
+        old_value = bt_state.counts[correct_class - 1][selected_class - 1]
+        new_value = old_value + 1.0
 
-        for loser in losers:
-            old_value = bt_state.counts[selected_class - 1][loser - 1]
-            new_value = old_value + 1.0
-
-            updates.append(
-                StateUpdate(
-                    tracker_id=f"wins[{selected_class}][{loser}]",
-                    old_value=old_value,
-                    new_value=new_value,
-                )
+        updates.append(
+            StateUpdate(
+                tracker_id=f"counts[{correct_class}][{selected_class}]",
+                old_value=old_value,
+                new_value=new_value,
             )
+        )
 
-        # Create new state with pairwise wins
-        new_state = bt_state.copy_with_pairwise_wins(selected_class, losers)
+        # Create new state with incremented count
+        new_state = bt_state.copy_with_increment(correct_class, selected_class)
 
         return new_state, updates
 
@@ -485,16 +452,18 @@ class BradleyTerryMLService:
         played_class: int,
         state: ConfusionState,
     ) -> dict[int, float]:
-        """Get confusion probabilities for a single played class.
+        """Get confusion probabilities for a single played/correct class.
 
-        Returns P(selected=j | played=i) for all classes j using BT strengths.
+        Returns P(selected=j | correct=i) for all classes j.
+        Classes are 1-indexed.
         """
-        theta = self._compute_strengths(state)
+        prior = getattr(state, "prior", self.prior)
         n = state.n_classes
 
-        # Compute Luce choice probabilities
-        total = sum(theta)
-        probs = [t / total for t in theta] if total > 0 else [1.0 / n] * n
+        # Compute strengths from confusion matrix row
+        strengths = [state.counts[played_class - 1][j] + prior for j in range(n)]
+        total = sum(strengths)
+        probs = [s / total for s in strengths]
 
         # Return 1-indexed
         return {i + 1: probs[i] for i in range(n)}
@@ -504,37 +473,46 @@ class BradleyTerryMLService:
         problem_type_id: str,
         state: ConfusionState,
     ) -> dict[tuple[int, int], BetaParams]:
-        """Get Beta parameters for all pairs using Bradley-Terry strengths.
+        """Get Beta parameters for all pairs.
 
-        Uses pairwise probability from BT model with uncertainty based on
-        the number of comparisons for that pair.
+        For pair (a, b), computes:
+        - P(a | correct=a, choices={a,b}) = (counts[a][a] + prior) / (counts[a][a] + counts[a][b] + 2*prior)
+        - P(b | correct=b, choices={b,a}) = (counts[b][b] + prior) / (counts[b][b] + counts[b][a] + 2*prior)
+        - Pair success = mean of these two probabilities
         """
-        theta = self._compute_strengths(state)
+        from .beta_utils import beta_mixture_approx
+
         n = state.n_classes
         prior = getattr(state, "prior", self.prior)
 
         result = {}
         for i in range(n):
             for j in range(i + 1, n):
-                # Pairwise probability from BT
-                theta_sum = theta[i] + theta[j]
-                p_ij = theta[i] / theta_sum if theta_sum > 0 else 0.5
+                # P(i | correct=i, choices={i,j})
+                strength_ii = state.counts[i][i] + prior
+                strength_ij = state.counts[i][j] + prior
+                p_i_given_i = strength_ii / (strength_ii + strength_ij)
+                n_i = state.counts[i][i] + state.counts[i][j] + 2 * prior
 
-                # Effective observations for this pair
-                n_ij = (
-                    state.counts[i][j] + state.counts[j][i] + 2 * prior
+                # P(j | correct=j, choices={j,i})
+                strength_jj = state.counts[j][j] + prior
+                strength_ji = state.counts[j][i] + prior
+                p_j_given_j = strength_jj / (strength_jj + strength_ji)
+                n_j = state.counts[j][j] + state.counts[j][i] + 2 * prior
+
+                # Beta params for each direction
+                alpha_i = p_i_given_i * n_i
+                beta_i = (1 - p_i_given_i) * n_i
+                alpha_j = p_j_given_j * n_j
+                beta_j = (1 - p_j_given_j) * n_j
+
+                # Moment-matched mixture (equal weight for both directions)
+                mix_alpha, mix_beta = beta_mixture_approx(
+                    alpha_i, beta_i, alpha_j, beta_j, w1=0.5
                 )
 
-                # Convert to Beta params
-                # p_ij = P(i beats j), so discrimination = |p_ij - 0.5| * 2
-                discrimination = abs(p_ij - 0.5) * 2
-                effective_correct = 0.5 + discrimination * 0.5
-
-                alpha = effective_correct * n_ij
-                beta = (1 - effective_correct) * n_ij
-
                 result[(i + 1, j + 1)] = BetaParams(
-                    alpha=max(alpha, 0.1), beta=max(beta, 0.1)
+                    alpha=max(mix_alpha, 0.1), beta=max(mix_beta, 0.1)
                 )
 
         return result

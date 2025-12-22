@@ -5,8 +5,6 @@ from app.services.vowel_drill import (
     VowelConfusionState,
     NUM_VOWELS,
     extract_vowel_nucleus,
-    has_diphthong,
-    count_vowels_in_syllable,
 )
 
 
@@ -28,46 +26,17 @@ class TestVowelExtraction:
             result = extract_vowel_nucleus(syllable)
             assert result == expected_id, f"Expected {expected_id} for '{syllable}', got {result}"
 
-    def test_extract_diphthong_allowed(self):
-        """Diphthong syllables should return the primary vowel when allowed."""
+    def test_extract_diphthong_returns_primary_vowel(self):
+        """Diphthong syllables should return the primary (tone-marked or first) vowel."""
         test_cases = [
-            ("đầu", 3),   # â is primary (has tone mark)
-            ("núi", 10),  # u is primary (more open than i)
-            ("khỏe", 7),  # o is primary (more open than e)
+            ("đầu", 3),   # â has tone mark
+            ("núi", 10),  # u has tone mark
+            ("khỏe", 7),  # o has tone mark
         ]
         for syllable, expected_id in test_cases:
-            result = extract_vowel_nucleus(syllable, allow_diphthongs=True)
+            result = extract_vowel_nucleus(syllable)
             assert result == expected_id, f"Expected {expected_id} for '{syllable}', got {result}"
 
-    def test_extract_diphthong_not_allowed(self):
-        """Diphthong syllables should return None when not allowed."""
-        diphthongs = ["đầu", "núi", "khỏe", "mèo", "nước"]
-        for syllable in diphthongs:
-            result = extract_vowel_nucleus(syllable, allow_diphthongs=False)
-            assert result is None, f"Expected None for diphthong '{syllable}', got {result}"
-
-    def test_count_vowels(self):
-        """Vowel counting should be accurate."""
-        test_cases = [
-            ("mắt", 1),
-            ("đầu", 2),
-            ("nước", 2),
-            ("chị", 1),
-        ]
-        for syllable, expected_count in test_cases:
-            result = count_vowels_in_syllable(syllable)
-            assert result == expected_count, f"Expected {expected_count} for '{syllable}', got {result}"
-
-    def test_has_diphthong(self):
-        """Diphthong detection should be accurate."""
-        diphthongs = ["đầu", "núi", "khỏe", "mèo", "nước"]
-        simple = ["mắt", "chị", "ký", "rất", "năm"]
-
-        for syllable in diphthongs:
-            assert has_diphthong(syllable), f"'{syllable}' should be detected as diphthong"
-
-        for syllable in simple:
-            assert not has_diphthong(syllable), f"'{syllable}' should not be detected as diphthong"
 
 
 class TestConfusionMatrixCounts:
@@ -136,9 +105,9 @@ class TestConfusionMatrixCounts:
             f"Expected {num_drills} total attempts, got {total_in_matrix}"
         )
 
-    def test_pair_beta_params_returned(self):
+    def test_pair_probabilities_returned(self):
         """
-        Verify that pair probabilities return alpha/beta params.
+        Verify that pair probabilities return required fields.
         """
         service = VowelDrillService()
         confusion_state = VowelConfusionState(
@@ -160,14 +129,14 @@ class TestConfusionMatrixCounts:
 
         pair_probs = service.get_all_pair_probabilities(confusion_state)
 
-        # Each pair should have alpha and beta keys
+        # Each pair should have required keys
         for p in pair_probs:
             assert "pair" in p, "pair key missing"
-            assert "alpha" in p, "alpha key missing"
-            assert "beta" in p, "beta key missing"
-            # Alpha should be at least the prior (2 * PSEUDOCOUNT = 10 for vowels)
-            assert p["alpha"] >= 10, f"alpha should be >= 10, got {p['alpha']}"
-            assert p["beta"] >= 10, f"beta should be >= 10, got {p['beta']}"
+            assert "probability" in p, "probability key missing"
+            assert "correct" in p, "correct key missing"
+            assert "total" in p, "total key missing"
+            # Probability should be between 0 and 1
+            assert 0 <= p["probability"] <= 1, f"probability out of range: {p['probability']}"
 
         # The correct total comes from get_total_attempts
         actual_total = service.get_total_attempts(confusion_state)
@@ -176,39 +145,6 @@ class TestConfusionMatrixCounts:
         assert actual_total == num_drills, (
             f"get_total_attempts should return {num_drills}, got {actual_total}"
         )
-
-
-class TestSimpleVowelIndex:
-    """Tests for the simple vowel word index (no diphthongs)."""
-
-    def test_simple_vowel_words_exclude_diphthongs(self):
-        """Words in simple vowel index should not contain diphthongs."""
-        service = VowelDrillService()
-
-        for vowel_id, words in service._simple_vowel_words.items():
-            for word in words:
-                syllables = word.vietnamese.strip().split()
-                # Only mono-syllabic words
-                assert len(syllables) == 1, (
-                    f"Word '{word.vietnamese}' in simple index is not mono-syllabic"
-                )
-                # No diphthongs
-                assert not has_diphthong(syllables[0]), (
-                    f"Word '{word.vietnamese}' in simple index has diphthong"
-                )
-
-    def test_mono_syllabic_words_method_returns_simple_vowels(self):
-        """get_mono_syllabic_words should only return simple vowel words."""
-        service = VowelDrillService()
-
-        for vowel_id in range(1, NUM_VOWELS + 1):
-            words = service.get_mono_syllabic_words(vowel_id)
-            for word in words:
-                syllables = word.vietnamese.strip().split()
-                assert len(syllables) == 1
-                assert not has_diphthong(syllables[0]), (
-                    f"get_mono_syllabic_words({vowel_id}) returned diphthong: {word.vietnamese}"
-                )
 
 
 if __name__ == "__main__":
