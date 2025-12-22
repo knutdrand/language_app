@@ -82,6 +82,19 @@ VOWEL_CHAR_MAP = {
 # Vowel names for openness ranking
 VOWEL_NAMES = ['a', 'ă', 'â', 'e', 'ê', 'i', 'o', 'ô', 'ơ', 'u', 'ư', 'y']
 
+# Vowel confusion groups in learning order (1-indexed IDs)
+# Ordered by group size: 2-vowel groups first, then 3-vowel groups
+VOWEL_GROUPS = [
+    [6, 12],      # i, y - nearly identical
+    [4, 5],       # e, ê - front vowels
+    [10, 11],     # u, ư - u-variants
+    [1, 2, 3],    # a, ă, â - a-variants
+    [7, 8, 9],    # o, ô, ơ - o-variants
+]
+
+# Review probability for mastered groups
+REVIEW_PROBABILITY = 0.2
+
 
 class Word(BaseModel):
     id: int
@@ -174,6 +187,47 @@ class DrillService:
     def n_classes(self) -> int:
         """Number of classes: 6 for tones, 12 for vowels."""
         return 6 if self.drill_type == "tone" else 12
+
+    def _get_current_vowel_group(self, state: ConfusionState) -> int:
+        """Get the current vowel group index (0-based).
+
+        Returns the first group that hasn't been mastered yet.
+        Returns len(VOWEL_GROUPS) if all groups are mastered.
+        """
+        if self.drill_type != "vowel":
+            return 0
+
+        problem_type_id = make_problem_type_id("vowel", 1)
+        pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
+
+        for group_idx, group in enumerate(VOWEL_GROUPS):
+            # Check all pairs within this group
+            group_mastered = True
+            for i, a in enumerate(group):
+                for b in group[i+1:]:
+                    pair_key = (min(a, b), max(a, b))
+                    if pair_key in pair_stats:
+                        if pair_stats[pair_key].mean < PAIR_MASTERY_THRESHOLD:
+                            group_mastered = False
+                            break
+                if not group_mastered:
+                    break
+            if not group_mastered:
+                return group_idx
+
+        # All groups mastered
+        return len(VOWEL_GROUPS)
+
+    def _get_vowel_pairs_for_groups(self, group_indices: list[int]) -> list[tuple[int, int]]:
+        """Get all pairs from the specified vowel groups."""
+        pairs = []
+        for idx in group_indices:
+            if idx < len(VOWEL_GROUPS):
+                group = VOWEL_GROUPS[idx]
+                for i, a in enumerate(group):
+                    for b in group[i+1:]:
+                        pairs.append((min(a, b), max(a, b)))
+        return pairs
 
     def _load_words(self):
         """Load words from JSON file and index by sequence."""
@@ -341,24 +395,52 @@ class DrillService:
         if state is None:
             state = self.ml.get_initial_state(problem_type_id)
 
-        # Get pair stats and weight by error probability
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
-        pairs = list(pair_stats.keys())
-        error_probs = [1 - pair_stats[p].mean for p in pairs]
+
+        # For vowels: use group-based sampling
+        if self.drill_type == "vowel":
+            current_group = self._get_current_vowel_group(state)
+
+            if current_group >= len(VOWEL_GROUPS):
+                # All groups mastered - sample from all pairs
+                pairs = list(pair_stats.keys())
+            else:
+                # Decide: 80% current group, 20% review mastered groups
+                if current_group > 0 and random.random() < REVIEW_PROBABILITY:
+                    # Review: sample from mastered groups
+                    mastered_indices = list(range(current_group))
+                    pairs = self._get_vowel_pairs_for_groups(mastered_indices)
+                else:
+                    # Current group
+                    pairs = self._get_vowel_pairs_for_groups([current_group])
+
+            if not pairs:
+                pairs = list(pair_stats.keys())
+        else:
+            # For tones: sample from all pairs
+            pairs = list(pair_stats.keys())
+
+        # Weight by error probability
+        error_probs = []
+        for p in pairs:
+            if p in pair_stats:
+                error_probs.append(1 - pair_stats[p].mean)
+            else:
+                error_probs.append(0.5)  # Default for new pairs
 
         selected_pair = pairs[self._weighted_sample(error_probs)]
 
-        # Sample tone from pair
-        selected_tone = selected_pair[0] if random.random() < 0.5 else selected_pair[1]
+        # Sample class from pair
+        selected_class = selected_pair[0] if random.random() < 0.5 else selected_pair[1]
 
         # Find word
-        words = self._words_by_sequence.get(str(selected_tone), [])
+        words = self._words_by_sequence.get(str(selected_class), [])
         if not words:
-            # Try other tone
-            other_tone = selected_pair[1] if selected_tone == selected_pair[0] else selected_pair[0]
-            words = self._words_by_sequence.get(str(other_tone), [])
+            # Try other class
+            other_class = selected_pair[1] if selected_class == selected_pair[0] else selected_pair[0]
+            words = self._words_by_sequence.get(str(other_class), [])
             if words:
-                selected_tone = other_tone
+                selected_class = other_class
 
         if not words:
             return None
@@ -371,7 +453,7 @@ class DrillService:
             vietnamese=word.vietnamese,
             english=word.english,
             correct_index=0,
-            correct_sequence=[selected_tone],
+            correct_sequence=[selected_class],
             alternatives=[[selected_pair[0]], [selected_pair[1]]],
         )
 
@@ -400,8 +482,35 @@ class DrillService:
                 error_probs.append(total_error / max(count, 1))
             selected_set = all_sets[self._weighted_sample(error_probs)]
         else:
-            # For vowels: sample 4 confused classes based on pair error probability
-            selected_set = self._sample_confused_set(pair_stats, 4)
+            # For vowels: use group-based sampling
+            current_group = self._get_current_vowel_group(state)
+
+            if current_group >= len(VOWEL_GROUPS):
+                # All groups mastered - sample from all vowels
+                selected_set = self._sample_confused_set(pair_stats, 4)
+            else:
+                # Get current group vowels
+                group_vowels = VOWEL_GROUPS[current_group].copy()
+
+                # If group has 3 vowels, add 1 from mastered groups for variety
+                # If group has 2 vowels, add 2 from mastered groups
+                needed = 4 - len(group_vowels)
+                if needed > 0 and current_group > 0:
+                    # Get vowels from mastered groups
+                    mastered_vowels = []
+                    for idx in range(current_group):
+                        mastered_vowels.extend(VOWEL_GROUPS[idx])
+                    random.shuffle(mastered_vowels)
+                    group_vowels.extend(mastered_vowels[:needed])
+
+                # If still need more, add random vowels
+                while len(group_vowels) < 4:
+                    for v in range(1, self.n_classes + 1):
+                        if v not in group_vowels:
+                            group_vowels.append(v)
+                            break
+
+                selected_set = group_vowels[:4]
 
         # Find word with class from this set
         random.shuffle(selected_set)
