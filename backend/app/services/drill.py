@@ -29,7 +29,6 @@ WORDS_PATH = Path(__file__).parent.parent.parent.parent / "frontend" / "src" / "
 # Mastery thresholds (main logic owns these)
 PAIR_MASTERY_THRESHOLD = 0.80
 FOUR_CHOICE_MASTERY_THRESHOLD = 0.80
-MIN_TOTAL_ATTEMPTS = 100
 
 # Preview probability for next difficulty level
 PREVIEW_PROBABILITY = 0.2
@@ -297,11 +296,6 @@ class DrillService:
         Uses ML layer to get probabilities, applies thresholds here.
         """
         problem_type_id = make_problem_type_id(self.drill_type, 1)
-
-        # Check if we have enough attempts
-        total_attempts = self._get_total_attempts(state)
-        if total_attempts < MIN_TOTAL_ATTEMPTS:
-            return "2-choice"
 
         # Check pair mastery
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
