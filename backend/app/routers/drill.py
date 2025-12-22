@@ -70,6 +70,14 @@ class PairStats(BaseModel):
         return self.alpha / (self.alpha + self.beta)
 
 
+class FourChoiceStats(BaseModel):
+    """Statistics for a 4-choice set."""
+    set: list[int]  # 4 class IDs (1-indexed)
+    alpha: float
+    beta: float
+    mean: float
+
+
 class StateUpdateResponse(BaseModel):
     """A state update that was made."""
     tracker_id: str
@@ -83,6 +91,7 @@ class NextDrillResponse(BaseModel):
     difficulty_level: DifficultyLevel
     state_updates: list[StateUpdateResponse]
     pair_stats: list[PairStats]
+    four_choice_stats: list[FourChoiceStats] = []
 
 
 @router.post("/drill/next", response_model=NextDrillResponse)
@@ -157,6 +166,18 @@ async def get_next_drill(
         for pair, beta in all_pair_stats.items()
     ]
 
+    # Get 4-choice stats
+    four_choice_stats_raw = service.get_four_choice_stats(primary_state)
+    four_choice_stats = [
+        FourChoiceStats(
+            set=s["set"],
+            alpha=s["alpha"],
+            beta=s["beta"],
+            mean=s["mean"],
+        )
+        for s in four_choice_stats_raw
+    ]
+
     # Determine difficulty level
     difficulty = service._get_difficulty_level(primary_state)
 
@@ -182,6 +203,7 @@ async def get_next_drill(
             for u in state_updates
         ],
         pair_stats=pair_stats,
+        four_choice_stats=four_choice_stats,
     )
 
 
@@ -202,10 +224,22 @@ async def get_drill_stats(
     service = get_drill_service(drill_type)
     difficulty = service._get_difficulty_level(state)
 
+    # Get 4-choice stats
+    four_choice_stats_raw = service.get_four_choice_stats(state)
+
     return {
         "difficulty_level": difficulty,
         "pair_stats": [
             PairStats(pair=pair, alpha=beta.alpha, beta=beta.beta).model_dump()
             for pair, beta in all_pair_stats.items()
+        ],
+        "four_choice_stats": [
+            FourChoiceStats(
+                set=s["set"],
+                alpha=s["alpha"],
+                beta=s["beta"],
+                mean=s["mean"],
+            ).model_dump()
+            for s in four_choice_stats_raw
         ],
     }

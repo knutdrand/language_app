@@ -297,29 +297,29 @@ class DrillService:
         """
         problem_type_id = make_problem_type_id(self.drill_type, 1)
 
-        # Check pair mastery
+        # Check pair mastery (2-choice)
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
         for (a, b), beta in pair_stats.items():
             if beta.mean < PAIR_MASTERY_THRESHOLD:
                 return "2-choice"
 
-        # Check four-choice mastery (approximation using pair stats)
-        # A four-choice set is mastered if all component pairs are mastered
+        # Check four-choice mastery using actual 4-choice success probability
         all_sets = self._get_all_four_choice_sets()
         for s in all_sets:
-            # Check all pairs within this set
-            set_mastered = True
-            for i, a in enumerate(s):
-                for b in s[i+1:]:
-                    pair_key = (min(a, b), max(a, b))
-                    if pair_key in pair_stats:
-                        if pair_stats[pair_key].mean < FOUR_CHOICE_MASTERY_THRESHOLD:
-                            set_mastered = False
-                            break
-                if not set_mastered:
-                    break
-            if not set_mastered:
-                return "4-choice"
+            # For each class in the set, compute 4-choice success probability
+            for correct_class in s:
+                dummy_problem = Problem(
+                    problem_type_id=problem_type_id,
+                    word_id=0,
+                    vietnamese="",
+                    english="",
+                    correct_index=0,
+                    correct_sequence=[correct_class],
+                    alternatives=[[c] for c in s],
+                )
+                beta = self.ml.get_success_distribution(dummy_problem, state)
+                if beta.mean < FOUR_CHOICE_MASTERY_THRESHOLD:
+                    return "4-choice"
 
         return "multi-syllable"
 
@@ -355,6 +355,55 @@ class DrillService:
                 s = [t for t in range(1, self.n_classes + 1) if t != exclude1 and t != exclude2]
                 sets.append(s)
         return sets
+
+    def get_four_choice_stats(
+        self, state: ConfusionState
+    ) -> list[dict]:
+        """Get success probability stats for all 4-choice sets.
+
+        Returns a list of dicts with:
+        - set: list of 4 class IDs (1-indexed)
+        - alpha: Beta distribution alpha
+        - beta: Beta distribution beta
+        - mean: mean success probability
+        """
+        problem_type_id = make_problem_type_id(self.drill_type, 1)
+        all_sets = self._get_all_four_choice_sets()
+
+        if not all_sets:
+            return []
+
+        results = []
+        for s in all_sets:
+            # Compute average success probability across all classes in the set
+            total_alpha = 0.0
+            total_beta = 0.0
+            for correct_class in s:
+                dummy_problem = Problem(
+                    problem_type_id=problem_type_id,
+                    word_id=0,
+                    vietnamese="",
+                    english="",
+                    correct_index=0,
+                    correct_sequence=[correct_class],
+                    alternatives=[[c] for c in s],
+                )
+                beta_params = self.ml.get_success_distribution(dummy_problem, state)
+                total_alpha += beta_params.alpha
+                total_beta += beta_params.beta
+
+            # Average the alpha/beta values
+            avg_alpha = total_alpha / len(s)
+            avg_beta = total_beta / len(s)
+
+            results.append({
+                "set": s,
+                "alpha": avg_alpha,
+                "beta": avg_beta,
+                "mean": avg_alpha / (avg_alpha + avg_beta),
+            })
+
+        return results
 
     def _sample_problem(
         self,

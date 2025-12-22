@@ -25,6 +25,13 @@ export interface PairStats {
   mean: number;
 }
 
+export interface FourChoiceStats {
+  set: number[];  // 4 class IDs (1-indexed)
+  alpha: number;
+  beta: number;
+  mean: number;
+}
+
 export interface StateUpdate {
   tracker_id: string;
   old_value: number;
@@ -45,6 +52,7 @@ interface NextDrillResponse {
   difficulty_level: DifficultyLevel;
   state_updates: StateUpdate[];
   pair_stats: PairStats[];
+  four_choice_stats: FourChoiceStats[];
 }
 
 const DRILL_URL = `${API_BASE_URL}/api/drill/next`;
@@ -73,6 +81,7 @@ async function fetchNextDrill(
 export function useDrillApi(drillType: DrillType) {
   const [drill, setDrill] = useState<Drill | null>(null);
   const [pairStats, setPairStats] = useState<PairStats[]>([]);
+  const [fourChoiceStats, setFourChoiceStats] = useState<FourChoiceStats[]>([]);
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>('2-choice');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -89,6 +98,7 @@ export function useDrillApi(drillType: DrillType) {
         if (mounted) {
           setDrill(response.drill);
           setPairStats(response.pair_stats);
+          setFourChoiceStats(response.four_choice_stats || []);
           setDifficultyLevel(response.difficulty_level);
         }
       } catch (e) {
@@ -115,6 +125,7 @@ export function useDrillApi(drillType: DrillType) {
       const response = await fetchNextDrill(drillType, answer);
       setDrill(response.drill);
       setPairStats(response.pair_stats);
+      setFourChoiceStats(response.four_choice_stats || []);
       setDifficultyLevel(response.difficulty_level);
       return response;
     },
@@ -129,6 +140,7 @@ export function useDrillApi(drillType: DrillType) {
       const response = await fetchNextDrill(drillType);
       setDrill(response.drill);
       setPairStats(response.pair_stats);
+      setFourChoiceStats(response.four_choice_stats || []);
       setDifficultyLevel(response.difficulty_level);
     } catch (e) {
       setError(e instanceof Error ? e : new Error(String(e)));
@@ -161,6 +173,7 @@ export function useDrillApi(drillType: DrillType) {
   return {
     drill,
     pairStats,
+    fourChoiceStats,
     difficultyLevel,
     isLoading,
     error,

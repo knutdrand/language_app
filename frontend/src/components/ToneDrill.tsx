@@ -4,7 +4,7 @@ import { ToneGrid } from './ToneGrid';
 import {
   useDrillApi,
   type PreviousAnswer,
-  type DifficultyLevel,
+  type FourChoiceStats,
 } from '../hooks/useDrillApi';
 import {
   type ToneId,
@@ -15,11 +15,21 @@ import {
 
 // Tone names for display
 const TONE_NAMES = ['Level', 'Falling', 'Rising', 'Dipping', 'Creaky', 'Heavy'];
+// Tone abbreviations for 4-choice stats (1-indexed)
+const TONE_ABBREV: { [key: number]: string } = {
+  1: 'L',  // Level
+  2: 'F',  // Falling
+  3: 'R',  // Rising
+  4: 'D',  // Dipping
+  5: 'C',  // Creaky
+  6: 'H',  // Heavy
+};
 
 export function ToneDrill() {
   const {
     drill,
     pairStats,
+    fourChoiceStats,
     legacyPairProbabilities,
     difficultyLevel,
     isLoading,
@@ -240,8 +250,8 @@ export function ToneDrill() {
       {/* Collapsible probabilities */}
       {showTooltip && pairStats.length > 0 && (
         <StatsPanel
-          difficultyLevel={difficultyLevel}
           pairProbabilities={legacyPairProbabilities}
+          fourChoiceStats={fourChoiceStats}
         />
       )}
 
@@ -313,29 +323,33 @@ export function ToneDrill() {
 
 // Stats panel component
 interface StatsPanelProps {
-  difficultyLevel: DifficultyLevel;
   pairProbabilities: { pair: [number, number]; probability: number; correct: number; total: number }[];
+  fourChoiceStats: FourChoiceStats[];
 }
 
 function StatsPanel({
-  difficultyLevel,
   pairProbabilities,
+  fourChoiceStats,
 }: StatsPanelProps) {
-  const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.total, 0);
+
+  // Format a 4-choice set as abbreviations (e.g., "F/R/D/C")
+  const formatSet = (set: number[]): string => {
+    return set.map(id => TONE_ABBREV[id] || '?').join('/');
+  };
 
   return (
     <div className="w-full bg-gray-50 rounded-lg p-3 border border-gray-200">
+      {/* 2-choice pair stats */}
       <div className="flex justify-between items-center mb-2">
         <p className="text-xs font-semibold text-gray-700">
-          {difficultyLevel === '2-choice' ? 'Pair' : 'Set'} Success Probabilities
+          Pair Success (2-choice)
         </p>
         <p className="text-xs text-gray-500">
-          Total: {totalAttempts}/100
-          {totalAttempts >= 100 ? ' ✓' : ''}
+          {pairProbabilities.filter(p => Math.round(p.probability * 100) >= 80).length}/{pairProbabilities.length} mastered
         </p>
       </div>
-      <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
-        {pairProbabilities.map(({ pair, probability, correct, total }) => {
+      <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs mb-3">
+        {pairProbabilities.map(({ pair, probability }) => {
           const pct = Math.round(probability * 100);
           const colorClass =
             pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-yellow-600' : 'text-red-600';
@@ -344,13 +358,40 @@ function StatsPanel({
               <span className="text-gray-600">
                 {TONE_NAMES[pair[0]]}/{TONE_NAMES[pair[1]]}:
               </span>
-              <span className={colorClass}>
-                {pct}% <span className="text-gray-400">({correct.toFixed(1)}/{total.toFixed(1)})</span>
-              </span>
+              <span className={colorClass}>{pct}%</span>
             </div>
           );
         })}
       </div>
+
+      {/* 4-choice set stats */}
+      {fourChoiceStats.length > 0 && (
+        <>
+          <div className="flex justify-between items-center mb-2 pt-2 border-t border-gray-200">
+            <p className="text-xs font-semibold text-gray-700">
+              Set Success (4-choice)
+            </p>
+            <p className="text-xs text-gray-500">
+              {fourChoiceStats.filter(s => Math.round(s.mean * 100) >= 90).length}/{fourChoiceStats.length} mastered
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-xs">
+            {fourChoiceStats.map((stat) => {
+              const pct = Math.round(stat.mean * 100);
+              const colorClass =
+                pct >= 90 ? 'text-green-600' : pct >= 70 ? 'text-yellow-600' : 'text-red-600';
+              return (
+                <div key={stat.set.join('-')} className="flex justify-between">
+                  <span className="text-gray-600 font-mono">
+                    {formatSet(stat.set)}:
+                  </span>
+                  <span className={colorClass}>{pct}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
