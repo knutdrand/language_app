@@ -1,90 +1,54 @@
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import type { Word } from '../../types';
 import { AudioButton } from '../../components/AudioButton';
 import { ToneGrid } from '../../components/ToneGrid';
-import { useToneFSRS } from '../../hooks/useToneFSRS';
-import { useProgress, initializeProgress } from '../../stores/progressStore';
-import { useAttemptLog } from '../../hooks/useAttemptLog';
+import {
+  useDrillApi,
+  type PreviousAnswer,
+  type DifficultyLevel,
+} from '../../hooks/useDrillApi';
 import {
   type ToneId,
-  getToneSequence,
-  getDistractorSequences,
-  getSingleDistractorSequence,
   formatToneSequence,
   formatToneSequenceDiacritics,
+  sequencesEqual,
 } from '../../utils/tones';
 
-// Import words data
-import wordsData from '../../data/words.json';
-const words: Word[] = wordsData as Word[];
-
 export default function ToneDrillScreen() {
-  // Initialize progress store
-  useEffect(() => {
-    initializeProgress();
-  }, []);
+  const {
+    drill,
+    difficultyLevel,
+    isLoading,
+    error,
+    submitAnswer,
+    reload,
+  } = useDrillApi('tone');
 
-  const { getNextWord, recordReview, getDueCount, getDifficultyLevel, getTargetPair, isLoading } = useToneFSRS(words);
-  const { recordReview: recordProgress, reviewsToday, correctToday } = useProgress();
-  const { logToneAttempt } = useAttemptLog();
-
-  const [currentWord, setCurrentWord] = useState<Word | null>(null);
-  const [currentSequenceKey, setCurrentSequenceKey] = useState<string | null>(null);
-  const [correctSequence, setCorrectSequence] = useState<ToneId[]>([]);
-  const [distractorSequences, setDistractorSequences] = useState<ToneId[][]>([]);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [lastResult, setLastResult] = useState<{
     correct: boolean;
-    word: Word;
+    vietnamese: string;
     correctSeq: ToneId[];
   } | null>(null);
   const [key, setKey] = useState(0);
   const attemptStartTime = useRef<number | null>(null);
-  const hasLoadedInitial = useRef(false);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const loadNextWord = useCallback(() => {
-    const difficultyLevel = getDifficultyLevel();
-    const targetPair = getTargetPair();
+  // Session stats (local only)
+  const [sessionReviews, setSessionReviews] = useState(0);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
 
-    const next = getNextWord();
-
-    if (next) {
-      const seq = getToneSequence(next.word.vietnamese);
-      setCurrentWord(next.word);
-      setCurrentSequenceKey(next.sequenceKey);
-      setCorrectSequence(seq);
-
-      // Set distractors based on difficulty level
-      if (difficultyLevel === '2-choice') {
-        // For 2-choice: use the weakest pair as the distractor
-        const distractor = getSingleDistractorSequence(seq, targetPair as [ToneId, ToneId]);
-        setDistractorSequences([distractor]);
-      } else {
-        // For 4-choice and multi-syllable: use 3 distractors
-        setDistractorSequences(getDistractorSequences(seq));
-      }
-
+  // Reset attempt timer when drill changes
+  useEffect(() => {
+    if (drill) {
+      attemptStartTime.current = Date.now();
       setShowingFeedback(false);
       setLastResult(null);
       setKey((k) => k + 1);
-      attemptStartTime.current = Date.now();
-    } else {
-      setCurrentWord(null);
-      setCurrentSequenceKey(null);
     }
-  }, [getNextWord, getDifficultyLevel, getTargetPair]);
-
-  // Load first word when loading completes
-  useEffect(() => {
-    if (!isLoading && !hasLoadedInitial.current) {
-      hasLoadedInitial.current = true;
-      loadNextWord();
-    }
-  }, [isLoading, loadNextWord]);
+  }, [drill]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -96,45 +60,76 @@ export default function ToneDrillScreen() {
   }, []);
 
   const handleSelect = useCallback(
-    (selectedSequence: ToneId[], isCorrect: boolean) => {
-      if (!currentWord || !currentSequenceKey) return;
+    async (selectedSequence: ToneId[], isCorrect: boolean) => {
+      if (!drill) return;
       if (showingFeedback) return;
 
       const responseTimeMs = attemptStartTime.current
         ? Date.now() - attemptStartTime.current
         : undefined;
 
-      logToneAttempt({
-        wordId: currentWord.id,
-        vietnamese: currentWord.vietnamese,
-        english: currentWord.english,
-        correctSequence,
-        selectedSequence,
-        alternatives: distractorSequences,
-        isCorrect,
-        responseTimeMs,
-      });
+      // Update session stats
+      setSessionReviews((r) => r + 1);
+      if (isCorrect) {
+        setSessionCorrect((c) => c + 1);
+      }
 
-      setLastResult({ correct: isCorrect, word: currentWord, correctSeq: correctSequence });
+      setLastResult({
+        correct: isCorrect,
+        vietnamese: drill.vietnamese,
+        correctSeq: drill.correct_sequence as ToneId[],
+      });
       setShowingFeedback(true);
 
-      recordReview(currentSequenceKey, isCorrect);
-      recordProgress(isCorrect);
-
+      // Clear any existing timer
       if (advanceTimerRef.current) {
         clearTimeout(advanceTimerRef.current);
       }
 
-      advanceTimerRef.current = setTimeout(() => {
+      // Submit answer and get next drill after delay
+      advanceTimerRef.current = setTimeout(async () => {
         advanceTimerRef.current = null;
-        loadNextWord();
+
+        const answer: PreviousAnswer = {
+          problem_type_id: drill.problem_type_id,
+          word_id: drill.word_id,
+          correct_sequence: drill.correct_sequence,
+          selected_sequence: selectedSequence as number[],
+          alternatives: drill.alternatives,
+          response_time_ms: responseTimeMs,
+        };
+
+        try {
+          await submitAnswer(answer);
+        } catch (e) {
+          console.error('Failed to submit answer:', e);
+        }
       }, 1500);
     },
-    [currentWord, currentSequenceKey, correctSequence, distractorSequences, showingFeedback, recordReview, recordProgress, loadNextWord, logToneAttempt]
+    [drill, showingFeedback, submitAnswer]
   );
 
-  const dueCount = useMemo(() => getDueCount(), [getDueCount, key]);
-  const accuracy = reviewsToday > 0 ? Math.round((correctToday / reviewsToday) * 100) : 0;
+  // Extract distractors from alternatives
+  const getDistractorSequences = (): ToneId[][] => {
+    if (!drill) return [];
+    const correct = drill.correct_sequence;
+    return drill.alternatives
+      .filter((alt) => !sequencesEqual(alt as ToneId[], correct as ToneId[]))
+      .map((alt) => alt as ToneId[]);
+  };
+
+  const accuracy = sessionReviews > 0
+    ? Math.round((sessionCorrect / sessionReviews) * 100)
+    : 0;
+
+  const formatDifficultyLevel = (level: DifficultyLevel): string => {
+    switch (level) {
+      case '2-choice': return '2-choice (1-syl)';
+      case 'mixed': return 'Mixed';
+      case '4-choice-multi': return '4-choice (2-syl)';
+      default: return level;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -146,7 +141,23 @@ export default function ToneDrillScreen() {
     );
   }
 
-  if (!currentWord) {
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.centered}>
+          <Text style={styles.errorEmoji}>❌</Text>
+          <Text style={styles.errorTitle}>Error</Text>
+          <Text style={styles.errorSubtitle}>{error.message}</Text>
+          <Text style={styles.errorHint}>Please make sure you are logged in.</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={reload}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!drill) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
@@ -155,13 +166,15 @@ export default function ToneDrillScreen() {
           <Text style={styles.doneSubtitle}>
             You've reviewed all due tones. Come back later for more practice.
           </Text>
-          <View style={styles.statsBox}>
-            <Text style={styles.statsLabel}>Today's stats (Tone Mode)</Text>
-            <Text style={styles.statsValue}>
-              {reviewsToday} reviews • {accuracy}% accuracy
-            </Text>
-          </View>
-          <TouchableOpacity style={styles.checkMoreButton} onPress={loadNextWord}>
+          {sessionReviews > 0 && (
+            <View style={styles.statsBox}>
+              <Text style={styles.statsLabel}>Session stats</Text>
+              <Text style={styles.statsValue}>
+                {sessionReviews} reviews • {accuracy}% accuracy
+              </Text>
+            </View>
+          )}
+          <TouchableOpacity style={styles.checkMoreButton} onPress={reload}>
             <Text style={styles.checkMoreButtonText}>Check for more</Text>
           </TouchableOpacity>
         </View>
@@ -169,14 +182,19 @@ export default function ToneDrillScreen() {
     );
   }
 
+  const correctSequence = drill.correct_sequence as ToneId[];
+  const distractorSequences = getDistractorSequences();
+
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Progress bar */}
         <View style={styles.progressRow}>
-          <Text style={styles.progressText}>{dueCount} cards due</Text>
           <Text style={styles.progressText}>
-            {reviewsToday} reviewed • {accuracy}% accuracy
+            Mode: {formatDifficultyLevel(difficultyLevel)}
+          </Text>
+          <Text style={styles.progressText}>
+            {sessionReviews} reviewed • {accuracy}%
           </Text>
         </View>
 
@@ -198,7 +216,7 @@ export default function ToneDrillScreen() {
               styles.feedbackSubtitle,
               lastResult.correct ? styles.feedbackTextCorrect : styles.feedbackTextIncorrect,
             ]}>
-              {lastResult.word.vietnamese} ({formatToneSequenceDiacritics(lastResult.correctSeq)})
+              {lastResult.vietnamese} ({formatToneSequenceDiacritics(lastResult.correctSeq)})
             </Text>
           </View>
         )}
@@ -206,11 +224,16 @@ export default function ToneDrillScreen() {
         {/* Audio button */}
         <View style={styles.audioSection}>
           <AudioButton
-            wordId={currentWord.id}
-            text={currentWord.vietnamese}
+            wordId={drill.word_id}
+            text={drill.vietnamese}
             autoPlay={!showingFeedback}
           />
         </View>
+
+        {/* English meaning */}
+        {drill.english && (
+          <Text style={styles.englishText}>{drill.english}</Text>
+        )}
 
         {/* Instruction */}
         <Text style={styles.instruction}>Select the correct tone sequence:</Text>
@@ -248,6 +271,37 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 24,
     color: '#6B7280',
+  },
+  errorEmoji: {
+    fontSize: 64,
+    marginBottom: 8,
+  },
+  errorTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#991B1B',
+  },
+  errorSubtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
+  },
+  errorHint: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    textAlign: 'center',
+  },
+  retryButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: '#6366F1',
+    borderRadius: 12,
+  },
+  retryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
   progressRow: {
     flexDirection: 'row',
@@ -288,6 +342,11 @@ const styles = StyleSheet.create({
   },
   audioSection: {
     marginVertical: 16,
+  },
+  englishText: {
+    fontSize: 18,
+    color: '#6B7280',
+    textAlign: 'center',
   },
   instruction: {
     fontSize: 14,

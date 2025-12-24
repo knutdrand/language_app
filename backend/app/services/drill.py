@@ -36,7 +36,7 @@ PREVIEW_PROBABILITY = 0.2
 # Number of tone classes (6 Vietnamese tones)
 N_TONES = 6
 
-DifficultyLevel = Literal["2-choice", "4-choice", "multi-syllable"]
+DifficultyLevel = Literal["2-choice", "mixed", "4-choice-multi"]
 
 
 # Vietnamese tone diacritics mapped to tone IDs (1-indexed)
@@ -155,6 +155,11 @@ class DrillService:
         """Determine current difficulty level based on mastery.
 
         Uses ML layer to get probabilities, applies thresholds here.
+
+        Progression:
+        1. 2-choice (1-syllable) → exit when 80% all pairs
+        2. mixed (4-choice 1-syl + 2-choice 2-syl) → exit when 90% on 4-choice sets
+        3. 4-choice-multi (4-choice 2-syllable)
         """
         problem_type_id = make_problem_type_id("tone", 1)
 
@@ -180,9 +185,9 @@ class DrillService:
                 )
                 beta = self.ml.get_success_distribution(dummy_problem, state)
                 if beta.mean < FOUR_CHOICE_MASTERY_THRESHOLD:
-                    return "4-choice"
+                    return "mixed"
 
-        return "multi-syllable"
+        return "4-choice-multi"
 
     def _get_total_attempts(self, state: ConfusionState) -> int:
         """Get total attempts from confusion matrix."""
@@ -271,20 +276,29 @@ class DrillService:
         # 20% preview of next level
         if random.random() < PREVIEW_PROBABILITY:
             if difficulty == "2-choice":
-                problem = self._sample_4_choice(states)
+                # Preview mixed level (either 4-choice 1-syl or 2-choice 2-syl)
+                if random.random() < 0.5:
+                    problem = self._sample_4_choice(states)
+                else:
+                    problem = self._sample_2_choice_multi_syllable(states)
                 if problem:
                     return problem
-            elif difficulty == "4-choice":
-                problem = self._sample_multi_syllable(states)
+            elif difficulty == "mixed":
+                # Preview 4-choice multi-syllable
+                problem = self._sample_4_choice_multi_syllable(states)
                 if problem:
                     return problem
 
         if difficulty == "2-choice":
             problem = self._sample_2_choice(states)
-        elif difficulty == "4-choice":
-            problem = self._sample_4_choice(states)
-        else:
-            problem = self._sample_multi_syllable(states)
+        elif difficulty == "mixed":
+            # 50/50 between 4-choice 1-syllable and 2-choice 2-syllable
+            if random.random() < 0.5:
+                problem = self._sample_4_choice(states)
+            else:
+                problem = self._sample_2_choice_multi_syllable(states)
+        else:  # 4-choice-multi
+            problem = self._sample_4_choice_multi_syllable(states)
 
         if problem:
             return problem
@@ -383,8 +397,10 @@ class DrillService:
 
         return None
 
-    def _sample_multi_syllable(self, states: dict[str, ConfusionState]) -> Optional[Problem]:
-        """Sample a multi-syllable drill."""
+    def _sample_2_choice_multi_syllable(
+        self, states: dict[str, ConfusionState]
+    ) -> Optional[Problem]:
+        """Sample a 2-choice multi-syllable drill (2 alternatives)."""
         # Get 2-syllable words
         two_syllable_keys = [k for k in self._words_by_sequence.keys()
                            if len(k.split('-')) == 2]
@@ -392,7 +408,46 @@ class DrillService:
         if not two_syllable_keys:
             return None
 
-        # Sample weighted by confusion
+        problem_type_id = make_problem_type_id("tone", 2)
+        state = states.get(problem_type_id)
+        if state is None:
+            state = self.ml.get_initial_state(problem_type_id)
+
+        # Simple random for now
+        key = random.choice(two_syllable_keys)
+        words = self._words_by_sequence.get(key, [])
+        if not words:
+            return None
+
+        word = random.choice(words)
+        correct_sequence = [int(t) for t in key.split('-')]
+
+        # Generate just 1 distractor (2-choice)
+        distractor = self._generate_single_distractor(correct_sequence)
+        alternatives = [correct_sequence, distractor]
+        random.shuffle(alternatives)
+
+        return Problem(
+            problem_type_id=problem_type_id,
+            word_id=word.id,
+            vietnamese=word.vietnamese,
+            english=word.english,
+            correct_index=0,
+            correct_sequence=correct_sequence,
+            alternatives=alternatives,
+        )
+
+    def _sample_4_choice_multi_syllable(
+        self, states: dict[str, ConfusionState]
+    ) -> Optional[Problem]:
+        """Sample a 4-choice multi-syllable drill (4 alternatives)."""
+        # Get 2-syllable words
+        two_syllable_keys = [k for k in self._words_by_sequence.keys()
+                           if len(k.split('-')) == 2]
+
+        if not two_syllable_keys:
+            return None
+
         problem_type_id = make_problem_type_id("tone", 2)
         state = states.get(problem_type_id)
         if state is None:
@@ -474,6 +529,26 @@ class DrillService:
 
         random.shuffle(distractors)
         return distractors
+
+    def _generate_single_distractor(self, correct_sequence: list[int]) -> list[int]:
+        """Generate a single distractor sequence (for 2-choice)."""
+        all_classes = list(range(1, N_TONES + 1))
+
+        for _ in range(50):
+            new_seq = []
+            for correct_cls in correct_sequence:
+                if random.random() < 0.7:
+                    other_classes = [c for c in all_classes if c != correct_cls]
+                    new_seq.append(random.choice(other_classes))
+                else:
+                    new_seq.append(correct_cls)
+            if new_seq != correct_sequence:
+                return new_seq
+
+        # Fallback: change first syllable
+        distractor = correct_sequence.copy()
+        distractor[0] = (distractor[0] % N_TONES) + 1
+        return distractor
 
     @staticmethod
     def _weighted_sample(weights: list[float]) -> int:

@@ -1,19 +1,19 @@
 /**
- * Unified hook for drill API - works with both tone and vowel drills.
+ * Unified hook for drill API - works with tone drills.
  * All sampling and state management happens on the backend.
  */
 import { useState, useCallback, useEffect } from 'react';
 import { API_BASE_URL } from '../config';
 import { authFetch } from '../services/authApi';
 
-export type DrillType = 'tone' | 'vowel';
+export type DrillType = 'tone';
 export type DifficultyLevel = '2-choice' | 'mixed' | '4-choice-multi';
 
 export interface Drill {
   problem_type_id: string;
   word_id: number;
   vietnamese: string;
-  english?: string;  // Optional - may not be returned by all endpoints
+  english?: string;
   correct_sequence: number[];  // 1-indexed
   alternatives: number[][];    // 1-indexed
 }
@@ -162,14 +162,6 @@ export function useDrillApi(drillType: DrillType) {
     [pairStats]
   );
 
-  // Convert pair_stats to legacy format for backward compatibility
-  const legacyPairProbabilities = pairStats.map((s) => ({
-    pair: [s.pair[0] - 1, s.pair[1] - 1] as [number, number],  // Convert to 0-indexed
-    probability: s.mean,
-    correct: s.alpha,
-    total: s.alpha + s.beta,
-  }));
-
   return {
     drill,
     pairStats,
@@ -180,7 +172,5 @@ export function useDrillApi(drillType: DrillType) {
     submitAnswer,
     reload,
     getPairProbability,
-    // Legacy compatibility
-    legacyPairProbabilities,
   };
 }

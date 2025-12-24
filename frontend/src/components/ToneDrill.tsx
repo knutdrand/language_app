@@ -233,7 +233,12 @@ export function ToneDrill() {
     <div className="flex flex-col items-center gap-6 p-4 w-full max-w-lg mx-auto">
       {/* Progress bar */}
       <div className="w-full flex items-center justify-between text-sm text-gray-500">
-        <span>Mode: {difficultyLevel}</span>
+        <span>Mode: {
+          difficultyLevel === '2-choice' ? '2-choice (1-syl)' :
+          difficultyLevel === 'mixed' ? 'Mixed (4-choice 1-syl / 2-choice 2-syl)' :
+          difficultyLevel === '4-choice-multi' ? '4-choice (2-syl)' :
+          difficultyLevel
+        }</span>
         <div className="flex items-center gap-2">
           <span>
             {sessionReviews} reviewed • {accuracy}%
