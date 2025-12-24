@@ -1,12 +1,11 @@
 # Language App Backend
 
-FastAPI backend for a Vietnamese language learning application focused on listening comprehension and tone/vowel discrimination.
+FastAPI backend for a Vietnamese language learning application focused on listening comprehension and tone discrimination.
 
 ## Features
 
-- **Tone & Vowel Drills**: Adaptive difficulty system using confusion matrices and Bradley-Terry/Luce choice models
-- **Spaced Repetition**: FSRS-based scheduling for optimal review timing
-- **Text-to-Speech**: Piper TTS for Vietnamese audio generation (with FPT.AI support)
+- **Tone Drills**: Adaptive difficulty system using confusion matrices and Bradley-Terry/Luce choice models
+- **Text-to-Speech**: Pre-generated audio via FPT.AI TTS
 - **Speech Recognition**: ASR endpoint for pronunciation feedback
 - **User Authentication**: JWT-based auth with SQLite/PostgreSQL storage
 
@@ -58,7 +57,6 @@ backend/
 │   ├── main.py              # FastAPI app entry point
 │   ├── config.py            # Settings via pydantic-settings
 │   ├── database.py          # Async SQLAlchemy setup
-│   ├── tts.py               # Piper TTS wrapper
 │   ├── auth/                # JWT authentication
 │   │   ├── jwt.py
 │   │   ├── password.py
@@ -74,21 +72,16 @@ backend/
 │   │   └── beta_utils.py    # Beta distribution utilities
 │   ├── services/            # Business logic
 │   │   ├── tone_drill.py    # Tone discrimination drills
-│   │   ├── vowel_drill.py   # Vowel discrimination drills
 │   │   ├── drill.py         # Unified drill orchestration
 │   │   └── state_persistence.py
 │   └── routers/             # API endpoints
-│       ├── audio.py         # TTS audio serving
+│       ├── audio.py         # Audio file serving
 │       ├── drill.py         # Unified drill API
 │       ├── auth.py          # Login/register
 │       ├── asr.py           # Speech recognition
 │       └── ...
 ├── audio/                   # Pre-generated audio files
-│   ├── vi/                  # Piper TTS (WAV)
 │   └── vi_fpt/              # FPT.AI TTS (MP3)
-├── models/                  # Piper voice models (.onnx)
-├── scripts/                 # Utility scripts
-│   └── generate_audio.py    # Batch audio generation
 ├── tests/                   # Pytest tests
 ├── pyproject.toml           # Project configuration
 └── requirements.txt         # Legacy pip requirements
@@ -107,9 +100,8 @@ backend/
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/audio/{lang}/{slug}` | Get audio file for word |
-| POST | `/api/audio/generate` | Generate audio on-demand |
-| GET | `/api/audio/list/{lang}` | List available audio files |
+| GET | `/audio/vi_fpt/{slug}.mp3` | Get audio file for word |
+| GET | `/audio/list/{lang}` | List available audio files |
 
 ### Authentication
 
@@ -150,14 +142,7 @@ uv run pyright app/
 uv run pytest
 ```
 
-### Generate Audio
-
-```bash
-uv run python scripts/generate_audio.py
-```
-
 ## Requirements
 
 - Python 3.10+
-- FFmpeg (for audio format conversion)
-- Piper voice model: `vi_VN-vivos-x_low` (place in `models/`)
+- FFmpeg (for audio format conversion in ASR)

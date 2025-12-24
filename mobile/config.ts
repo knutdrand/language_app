@@ -1,33 +1,11 @@
-import { Platform } from 'react-native';
-
 // Backend API configuration
-// When using ADB reverse (adb reverse tcp:8023 tcp:8023), localhost works on Android
-// This is required for Expo Go development
-const getDefaultApiUrl = () => {
-  return 'http://localhost:8023';
-};
+// Use EXPO_PUBLIC_API_URL to override (e.g., for production server)
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8023';
 
-export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || getDefaultApiUrl();
-
-// TTS provider: 'fpt' (cloud, higher quality) or 'piper' (local)
-export const TTS_PROVIDER = process.env.EXPO_PUBLIC_TTS_PROVIDER || 'fpt';
-
-// Audio source: 'embedded' (bundled in app) or 'remote' (fetch from backend)
-// Default to 'embedded' for offline support in production builds
-export const AUDIO_SOURCE: 'embedded' | 'remote' =
-  (process.env.EXPO_PUBLIC_AUDIO_SOURCE as 'embedded' | 'remote') || 'embedded';
-
-// Audio URL helper - now requires word ID for unique filenames
-export function getAudioUrl(wordId: number, text: string, language: string = 'vi'): string {
+// Audio URL helper - requires word ID for unique filenames
+export function getAudioUrl(wordId: number, text: string): string {
   const filename = getAudioFilename(wordId, text);
-
-  if (TTS_PROVIDER === 'fpt') {
-    // FPT.AI audio files (MP3)
-    return `${API_BASE_URL}/audio/vi_fpt/${filename}.mp3`;
-  } else {
-    // Piper audio files (WAV)
-    return `${API_BASE_URL}/audio/${language}/${filename}.wav`;
-  }
+  return `${API_BASE_URL}/audio/vi_fpt/${filename}.mp3`;
 }
 
 // Generate unique audio filename using word ID and slug

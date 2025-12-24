@@ -1,20 +1,10 @@
 // Backend API configuration
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8023';
 
-// TTS provider: 'fpt' (cloud, higher quality) or 'piper' (local)
-export const TTS_PROVIDER = import.meta.env.VITE_TTS_PROVIDER || 'fpt';
-
-// Audio URL helper - now requires word ID for unique filenames
-export function getAudioUrl(wordId: number, text: string, language: string = 'vi'): string {
+// Audio URL helper - requires word ID for unique filenames
+export function getAudioUrl(wordId: number, text: string): string {
   const filename = getAudioFilename(wordId, text);
-
-  if (TTS_PROVIDER === 'fpt') {
-    // FPT.AI audio files (MP3)
-    return `${API_BASE_URL}/audio/vi_fpt/${filename}.mp3`;
-  } else {
-    // Piper audio files (WAV)
-    return `${API_BASE_URL}/audio/${language}/${filename}.wav`;
-  }
+  return `${API_BASE_URL}/audio/vi_fpt/${filename}.mp3`;
 }
 
 // Generate unique audio filename using word ID and slug
