@@ -8,6 +8,7 @@ from app.models.progress import (
     ToneCardSync,
     SyncRequest,
     SyncResponse,
+    DrillAttempt,
 )
 
 __all__ = [
@@ -21,4 +22,5 @@ __all__ = [
     "ToneCardSync",
     "SyncRequest",
     "SyncResponse",
+    "DrillAttempt",
 ]

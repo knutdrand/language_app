@@ -6,6 +6,8 @@ import { getEmbeddedAudio } from '../data/audioAssets';
 
 interface UseAudioOptions {
   autoPlay?: boolean;
+  voice?: string;   // Voice for audio (e.g., "banmai", "leminh")
+  speed?: number;   // Speed for audio (-3 to +3)
 }
 
 /**
@@ -14,7 +16,7 @@ interface UseAudioOptions {
  * Falls back to speech synthesis on web if audio fails.
  */
 export function useAudio(wordId: number | null, text: string, options: UseAudioOptions = {}) {
-  const { autoPlay = false } = options;
+  const { autoPlay = false, voice, speed } = options;
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const soundRef = useRef<Audio.Sound | null>(null);
@@ -142,7 +144,7 @@ export function useAudio(wordId: number | null, text: string, options: UseAudioO
 
     // Fall back to remote if embedded not available or failed
     if (!success) {
-      const audioUrl = getAudioUrl(wordId, text, 'vi');
+      const audioUrl = getAudioUrl(wordId, text, 'vi', voice, speed);
       success = await playRemote(audioUrl);
     }
 
@@ -151,7 +153,7 @@ export function useAudio(wordId: number | null, text: string, options: UseAudioO
       setIsLoading(false);
       playSpeechSynthesis(text);
     }
-  }, [wordId, text, isPlaying, cleanup, playEmbedded, playRemote, playSpeechSynthesis]);
+  }, [wordId, text, voice, speed, isPlaying, cleanup, playEmbedded, playRemote, playSpeechSynthesis]);
 
   // Stop playback
   const stop = useCallback(async () => {

@@ -115,3 +115,35 @@ class SyncResponse(SQLModel):
     tone_cards: list[ToneCardSync]
     progress: dict
     confusion_state: Optional[dict] = None
+
+
+class DrillAttempt(SQLModel, table=True):
+    """Log of every drill attempt for ML training.
+
+    Captures all information needed to replay/analyze user behavior,
+    including audio parameters (voice, speed) for voice preference learning.
+    """
+    __tablename__ = "drill_attempts"
+
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
+    user_id: str = Field(foreign_key="users.id", index=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow, index=True)
+
+    # Problem info
+    problem_type_id: str = Field(index=True)  # e.g., "tone_1", "tone_2"
+    word_id: int
+    vietnamese: str
+    correct_sequence: list[int] = Field(default=[], sa_column=Column(JSON))
+    alternatives: list[list[int]] = Field(default=[], sa_column=Column(JSON))
+
+    # User response
+    selected_sequence: list[int] = Field(default=[], sa_column=Column(JSON))
+    is_correct: bool
+    response_time_ms: Optional[int] = None
+
+    # Audio parameters (for voice preference learning)
+    voice: str = Field(default="banmai", index=True)
+    speed: int = Field(default=0)
+
+    class Config:
+        arbitrary_types_allowed = True

@@ -6,9 +6,11 @@ interface AudioButtonProps {
   text: string;
   language?: string;
   autoPlay?: boolean;
+  voice?: string;   // Voice for audio (e.g., "banmai", "leminh")
+  speed?: number;   // Speed for audio (-3 to +3)
 }
 
-export function AudioButton({ wordId, text, language = 'vi', autoPlay = false }: AudioButtonProps) {
+export function AudioButton({ wordId, text, language = 'vi', autoPlay = false, voice, speed }: AudioButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const lastPlayedWordId = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -47,7 +49,7 @@ export function AudioButton({ wordId, text, language = 'vi', autoPlay = false }:
     speechSynthesis.cancel();
 
     try {
-      const audioUrl = getAudioUrl(wordId, text, language);
+      const audioUrl = getAudioUrl(wordId, text, voice, speed);
       const audio = new Audio(audioUrl);
       audioRef.current = audio;
 
@@ -67,7 +69,7 @@ export function AudioButton({ wordId, text, language = 'vi', autoPlay = false }:
       console.log('Failed to play backend audio, falling back to browser TTS');
       speakWithBrowser();
     }
-  }, [wordId, text, language, isPlaying, speakWithBrowser]);
+  }, [wordId, text, voice, speed, isPlaying, speakWithBrowser]);
 
   // Auto-play when wordId changes (new word loaded)
   useEffect(() => {

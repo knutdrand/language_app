@@ -3,9 +3,20 @@
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8023';
 
 // Audio URL helper - requires word ID for unique filenames
-export function getAudioUrl(wordId: number, text: string): string {
+// Optional voice/speed params for parameterized audio
+export function getAudioUrl(
+  wordId: number,
+  text: string,
+  language?: string,  // Kept for backward compatibility, not used
+  voice?: string,
+  speed?: number
+): string {
   const filename = getAudioFilename(wordId, text);
-  return `${API_BASE_URL}/audio/vi_fpt/${filename}.mp3`;
+  const params = new URLSearchParams();
+  if (voice) params.set('voice', voice);
+  if (speed !== undefined && speed !== 0) params.set('speed', speed.toString());
+  const queryString = params.toString();
+  return `${API_BASE_URL}/audio/vi_fpt/${filename}.mp3${queryString ? `?${queryString}` : ''}`;
 }
 
 // Generate unique audio filename using word ID and slug

@@ -116,6 +116,8 @@ export function ToneDrill() {
         selected_sequence: selectedSequence as number[],
         alternatives: drill.alternatives,
         response_time_ms: responseTimeMs,
+        voice: drill.voice,
+        speed: drill.speed,
       };
 
       // Find the pair being drilled for 2-choice mode (1-indexed now)
@@ -303,6 +305,8 @@ export function ToneDrill() {
           wordId={drill.word_id}
           text={drill.vietnamese}
           autoPlay={!showingFeedback}
+          voice={drill.voice}
+          speed={drill.speed}
         />
       </div>
 

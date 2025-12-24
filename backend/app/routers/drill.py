@@ -6,7 +6,8 @@ Delegates all logic to services and ML layer.
 
 from __future__ import annotations
 
-from typing import Annotated, Optional
+import random
+from typing import Annotated, Optional, Literal
 from datetime import datetime
 from pydantic import BaseModel, computed_field
 from fastapi import APIRouter, Depends
@@ -14,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_session
 from app.models.user import User
+from app.models.progress import DrillAttempt
 from app.auth.dependencies import get_current_active_user
 from app.ml import (
     Problem,
@@ -29,6 +31,19 @@ from app.services.state_persistence import load_state, save_state, load_all_stat
 
 router = APIRouter()
 
+# Available voice/speed combinations
+VOICES = ["banmai", "leminh"]
+SPEEDS = [-1, 0, 1]
+
+VoiceType = Literal["banmai", "lannhi", "leminh", "myan", "thuminh", "giahuy", "linhsan"]
+
+
+def random_voice_speed() -> tuple[str, int]:
+    """Select random voice and speed for variety."""
+    voice = random.choice(VOICES)
+    speed = random.choice(SPEEDS)
+    return voice, speed
+
 
 # Request/Response schemas
 class PreviousAnswer(BaseModel):
@@ -39,6 +54,9 @@ class PreviousAnswer(BaseModel):
     selected_sequence: list[int]  # 1-indexed
     alternatives: list[list[int]]  # 1-indexed
     response_time_ms: Optional[int] = None
+    # Audio params (for logging)
+    voice: str = "banmai"
+    speed: int = 0
 
 
 class NextDrillRequest(BaseModel):
@@ -54,6 +72,9 @@ class DrillResponse(BaseModel):
     english: str = ""  # English translation
     correct_sequence: list[int]  # 1-indexed
     alternatives: list[list[int]]  # 1-indexed
+    # Audio params (randomly selected)
+    voice: str = "banmai"
+    speed: int = 0
 
 
 class PairStats(BaseModel):
@@ -93,6 +114,38 @@ class NextDrillResponse(BaseModel):
     four_choice_stats: list[FourChoiceStats] = []
 
 
+async def log_attempt(
+    session: AsyncSession,
+    user_id: str,
+    problem_type_id: str,
+    word_id: int,
+    vietnamese: str,
+    correct_sequence: list[int],
+    alternatives: list[list[int]],
+    selected_sequence: list[int],
+    is_correct: bool,
+    response_time_ms: Optional[int],
+    voice: str,
+    speed: int,
+) -> None:
+    """Log a drill attempt to the database."""
+    attempt = DrillAttempt(
+        user_id=user_id,
+        problem_type_id=problem_type_id,
+        word_id=word_id,
+        vietnamese=vietnamese,
+        correct_sequence=correct_sequence,
+        alternatives=alternatives,
+        selected_sequence=selected_sequence,
+        is_correct=is_correct,
+        response_time_ms=response_time_ms,
+        voice=voice,
+        speed=speed,
+    )
+    session.add(attempt)
+    await session.commit()
+
+
 @router.post("/drill/next", response_model=NextDrillResponse)
 async def get_next_drill(
     request: NextDrillRequest,
@@ -104,9 +157,9 @@ async def get_next_drill(
 
     If previous_answer is provided:
     - Updates the ML confusion state
-    - Logs the event for replay capability
+    - Logs the attempt (including voice/speed) for future ML training
 
-    Returns the next drill to present.
+    Returns the next drill with randomly selected voice/speed.
     """
     service = get_drill_service("tone")
 
@@ -125,6 +178,24 @@ async def get_next_drill(
 
     if request.previous_answer:
         pa = request.previous_answer
+
+        # Log the attempt
+        is_correct = pa.selected_sequence == pa.correct_sequence
+        await log_attempt(
+            session=session,
+            user_id=current_user.id,
+            problem_type_id=pa.problem_type_id,
+            word_id=pa.word_id,
+            vietnamese="",  # Could be added to PreviousAnswer if needed
+            correct_sequence=pa.correct_sequence,
+            alternatives=pa.alternatives,
+            selected_sequence=pa.selected_sequence,
+            is_correct=is_correct,
+            response_time_ms=pa.response_time_ms,
+            voice=pa.voice,
+            speed=pa.speed,
+        )
+
         previous_problem = Problem(
             problem_type_id=pa.problem_type_id,
             word_id=pa.word_id,
@@ -180,6 +251,9 @@ async def get_next_drill(
     # Determine difficulty level
     difficulty = service._get_difficulty_level(primary_state)
 
+    # Select random voice/speed for the next drill
+    voice, speed = random_voice_speed()
+
     # Build response
     drill = DrillResponse(
         problem_type_id=next_problem.problem_type_id,
@@ -188,6 +262,8 @@ async def get_next_drill(
         english=next_problem.english,
         correct_sequence=next_problem.correct_sequence,
         alternatives=next_problem.alternatives,
+        voice=voice,
+        speed=speed,
     )
 
     return NextDrillResponse(

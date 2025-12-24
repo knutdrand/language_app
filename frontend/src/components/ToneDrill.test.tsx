@@ -11,6 +11,8 @@ const mockDrill = {
   english: 'cat',
   correct_sequence: [2],
   alternatives: [[2], [3]],
+  voice: 'banmai',
+  speed: 0,
 };
 
 const mockPairStats = [
@@ -282,6 +284,8 @@ describe('Answer Submission', () => {
       english: 'dog',
       correct_sequence: [3],
       alternatives: [[2], [3]],
+      voice: 'leminh',
+      speed: 1,
     };
 
     mockSubmitAnswer.mockResolvedValue({

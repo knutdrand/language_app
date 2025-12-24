@@ -97,6 +97,8 @@ export default function ToneDrillScreen() {
           selected_sequence: selectedSequence as number[],
           alternatives: drill.alternatives,
           response_time_ms: responseTimeMs,
+          voice: drill.voice,
+          speed: drill.speed,
         };
 
         try {
@@ -227,6 +229,8 @@ export default function ToneDrillScreen() {
             wordId={drill.word_id}
             text={drill.vietnamese}
             autoPlay={!showingFeedback}
+            voice={drill.voice}
+            speed={drill.speed}
           />
         </View>
 

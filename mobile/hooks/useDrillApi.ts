@@ -16,6 +16,8 @@ export interface Drill {
   english?: string;
   correct_sequence: number[];  // 1-indexed
   alternatives: number[][];    // 1-indexed
+  voice: string;               // Voice for audio playback
+  speed: number;               // Speed for audio playback
 }
 
 export interface PairStats {
@@ -45,6 +47,8 @@ export interface PreviousAnswer {
   selected_sequence: number[];  // 1-indexed
   alternatives: number[][];    // 1-indexed
   response_time_ms?: number;
+  voice: string;               // Voice used for this drill
+  speed: number;               // Speed used for this drill
 }
 
 interface NextDrillResponse {

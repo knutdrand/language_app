@@ -6,10 +6,12 @@ interface AudioButtonProps {
   wordId: number;
   text: string;
   autoPlay?: boolean;
+  voice?: string;   // Voice for audio (e.g., "banmai", "leminh")
+  speed?: number;   // Speed for audio (-3 to +3)
 }
 
-export function AudioButton({ wordId, text, autoPlay = false }: AudioButtonProps) {
-  const { play, isPlaying, isLoading } = useAudio(wordId, text, { autoPlay });
+export function AudioButton({ wordId, text, autoPlay = false, voice, speed }: AudioButtonProps) {
+  const { play, isPlaying, isLoading } = useAudio(wordId, text, { autoPlay, voice, speed });
 
   return (
     <TouchableOpacity
