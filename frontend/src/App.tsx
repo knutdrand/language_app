@@ -1,8 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Drill } from './components/Drill';
 import { ToneDrill } from './components/ToneDrill';
 import { SpeakDrill } from './components/SpeakDrill';
-import { VowelDrill } from './components/VowelDrill';
 import { SourceSelector } from './components/SourceSelector';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
@@ -17,7 +15,7 @@ type AuthView = 'login' | 'register';
 function App() {
   const { isAuthenticated, isLoading, user, logout } = useAuth();
   const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
-  const [drillMode, setDrillMode] = useState<DrillMode>('image');
+  const [drillMode, setDrillMode] = useState<DrillMode>('tone');
   const [authView, setAuthView] = useState<AuthView>('login');
   const [backendError, setBackendError] = useState<string | null>(null);
 
@@ -49,13 +47,9 @@ function App() {
     return (words as Word[]).filter(w => w.sourceId === selectedSourceId);
   }, [selectedSourceId]);
 
-  const footerText = drillMode === 'image'
-    ? 'Listen to the word and select the matching image'
-    : drillMode === 'tone'
+  const footerText = drillMode === 'tone'
     ? 'Listen to the word and select the correct tone sequence'
-    : drillMode === 'speak'
-    ? 'Practice speaking Vietnamese with tone feedback'
-    : 'Listen to the word and select the correct vowel sound';
+    : 'Practice speaking Vietnamese with tone feedback';
 
   // Show loading spinner while checking auth
   if (isLoading) {
@@ -118,18 +112,6 @@ function App() {
           {/* Mode toggle */}
           <div className="flex gap-2 mb-3">
             <button
-              onClick={() => setDrillMode('image')}
-              className={`
-                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                ${drillMode === 'image'
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }
-              `}
-            >
-              Image
-            </button>
-            <button
               onClick={() => setDrillMode('tone')}
               className={`
                 flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -153,18 +135,6 @@ function App() {
             >
               Speak
             </button>
-            <button
-              onClick={() => setDrillMode('vowel')}
-              className={`
-                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                ${drillMode === 'vowel'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }
-              `}
-            >
-              Vowel
-            </button>
           </div>
 
           <SourceSelector
@@ -177,24 +147,14 @@ function App() {
 
       {/* Main content */}
       <main className="py-6">
-        {drillMode === 'image' ? (
-          <Drill
-            key={`image-${selectedSourceId || 'all'}`}
-            words={filteredWords}
-            sources={sources as Source[]}
-          />
-        ) : drillMode === 'tone' ? (
+        {drillMode === 'tone' ? (
           <ToneDrill
             key={`tone-${selectedSourceId || 'all'}`}
           />
-        ) : drillMode === 'speak' ? (
+        ) : (
           <SpeakDrill
             key={`speak-${selectedSourceId || 'all'}`}
             words={filteredWords}
-          />
-        ) : (
-          <VowelDrill
-            key={`vowel-${selectedSourceId || 'all'}`}
           />
         )}
       </main>

@@ -5,6 +5,7 @@ import { mockSpeak, mockAudioPlay } from '../test/setup';
 
 // Mock drill data
 const mockDrill = {
+  problem_type_id: 'tone_1',
   word_id: 1,
   vietnamese: 'mèo',
   english: 'cat',
@@ -12,78 +13,74 @@ const mockDrill = {
   alternatives: [[2], [3]],
 };
 
-const mockStats = {
-  reviews_today: 0,
-  correct_today: 0,
-  total_reviews: 0,
-  total_correct: 0,
-  pair_probabilities: [
-    { pair: [0, 1], probability: 0.5, correct: 5, total: 10 },
-    { pair: [0, 2], probability: 0.5, correct: 5, total: 10 },
-    { pair: [0, 3], probability: 0.5, correct: 5, total: 10 },
-    { pair: [0, 4], probability: 0.5, correct: 5, total: 10 },
-    { pair: [0, 5], probability: 0.5, correct: 5, total: 10 },
-    { pair: [1, 2], probability: 0.5, correct: 5, total: 10 },
-    { pair: [1, 3], probability: 0.5, correct: 5, total: 10 },
-    { pair: [1, 4], probability: 0.5, correct: 5, total: 10 },
-    { pair: [1, 5], probability: 0.5, correct: 5, total: 10 },
-    { pair: [2, 3], probability: 0.5, correct: 5, total: 10 },
-    { pair: [2, 4], probability: 0.5, correct: 5, total: 10 },
-    { pair: [2, 5], probability: 0.5, correct: 5, total: 10 },
-    { pair: [3, 4], probability: 0.5, correct: 5, total: 10 },
-    { pair: [3, 5], probability: 0.5, correct: 5, total: 10 },
-    { pair: [4, 5], probability: 0.5, correct: 5, total: 10 },
-  ],
-  four_choice_probabilities: [],
-};
+const mockPairStats = [
+  { pair: [1, 2] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [1, 3] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [1, 4] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [1, 5] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [1, 6] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [2, 3] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [2, 4] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [2, 5] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [2, 6] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [3, 4] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [3, 5] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [3, 6] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [4, 5] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [4, 6] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+  { pair: [5, 6] as [number, number], alpha: 5, beta: 5, mean: 0.5 },
+];
+
+const mockLegacyPairProbabilities = mockPairStats.map((s) => ({
+  pair: [s.pair[0] - 1, s.pair[1] - 1] as [number, number],
+  probability: s.mean,
+  correct: s.alpha,
+  total: s.alpha + s.beta,
+}));
 
 // Track mocked responses
-let mockDrillResponse = { drill: mockDrill, difficulty_level: '2-choice' as const, stats: mockStats };
-let mockIsLoading = false;
-let mockError: Error | null = null;
 const mockSubmitAnswer = vi.fn();
+const mockGetPairProbability = vi.fn().mockReturnValue(0.5);
 
-// Mock the hook
-vi.mock('../hooks/useToneDrillApi', () => ({
-  useToneDrillApi: vi.fn(() => ({
-    drill: mockIsLoading ? null : mockDrillResponse.drill,
-    stats: mockDrillResponse.stats,
-    difficultyLevel: mockDrillResponse.difficulty_level,
-    isLoading: mockIsLoading,
-    error: mockError,
+function createMockReturn(overrides = {}) {
+  return {
+    drill: mockDrill,
+    pairStats: mockPairStats,
+    fourChoiceStats: [],
+    legacyPairProbabilities: mockLegacyPairProbabilities,
+    difficultyLevel: '2-choice' as const,
+    isLoading: false,
+    error: null,
     submitAnswer: mockSubmitAnswer,
     reload: vi.fn(),
-  })),
+    getPairProbability: mockGetPairProbability,
+    ...overrides,
+  };
+}
+
+// Mock the hook
+vi.mock('../hooks/useDrillApi', () => ({
+  useDrillApi: vi.fn(() => createMockReturn()),
 }));
 
 // Import AFTER mocks are set up
 import { ToneDrill } from './ToneDrill';
-import { useToneDrillApi } from '../hooks/useToneDrillApi';
+import { useDrillApi } from '../hooks/useDrillApi';
 
 describe('ToneDrill Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockSpeak.mockClear();
     mockAudioPlay.mockClear();
-    mockIsLoading = false;
-    mockError = null;
-    mockDrillResponse = {
+    mockSubmitAnswer.mockResolvedValue({
       drill: mockDrill,
       difficulty_level: '2-choice',
-      stats: mockStats,
-    };
-    mockSubmitAnswer.mockResolvedValue(mockDrillResponse);
-
-    // Reset mock implementation
-    vi.mocked(useToneDrillApi).mockReturnValue({
-      drill: mockDrill,
-      stats: mockStats,
-      difficultyLevel: '2-choice',
-      isLoading: false,
-      error: null,
-      submitAnswer: mockSubmitAnswer,
-      reload: vi.fn(),
+      pair_stats: mockPairStats,
+      four_choice_stats: [],
+      state_updates: [],
     });
+
+    vi.mocked(useDrillApi).mockReturnValue(createMockReturn());
   });
 
   afterEach(() => {
@@ -134,15 +131,10 @@ describe('ToneDrill Component', () => {
   });
 
   it('should show error state when there is an error', async () => {
-    vi.mocked(useToneDrillApi).mockReturnValue({
+    vi.mocked(useDrillApi).mockReturnValue(createMockReturn({
       drill: null,
-      stats: null,
-      difficultyLevel: '2-choice',
-      isLoading: false,
       error: new Error('Authentication required'),
-      submitAnswer: mockSubmitAnswer,
-      reload: vi.fn(),
-    });
+    }));
 
     render(<ToneDrill />);
 
@@ -153,15 +145,10 @@ describe('ToneDrill Component', () => {
   });
 
   it('should show loading state', async () => {
-    vi.mocked(useToneDrillApi).mockReturnValue({
+    vi.mocked(useDrillApi).mockReturnValue(createMockReturn({
       drill: null,
-      stats: null,
-      difficultyLevel: '2-choice',
       isLoading: true,
-      error: null,
-      submitAnswer: mockSubmitAnswer,
-      reload: vi.fn(),
-    });
+    }));
 
     render(<ToneDrill />);
 
@@ -211,15 +198,7 @@ describe('AudioButton', () => {
     mockSpeak.mockClear();
     mockAudioPlay.mockClear();
 
-    vi.mocked(useToneDrillApi).mockReturnValue({
-      drill: mockDrill,
-      stats: mockStats,
-      difficultyLevel: '2-choice',
-      isLoading: false,
-      error: null,
-      submitAnswer: mockSubmitAnswer,
-      reload: vi.fn(),
-    });
+    vi.mocked(useDrillApi).mockReturnValue(createMockReturn());
   });
 
   afterEach(() => {
@@ -297,6 +276,7 @@ describe('Answer Submission', () => {
     mockAudioPlay.mockClear();
 
     const nextDrill = {
+      problem_type_id: 'tone_1',
       word_id: 2,
       vietnamese: 'chó',
       english: 'dog',
@@ -307,18 +287,12 @@ describe('Answer Submission', () => {
     mockSubmitAnswer.mockResolvedValue({
       drill: nextDrill,
       difficulty_level: '2-choice' as const,
-      stats: { ...mockStats, reviews_today: 1 },
+      pair_stats: mockPairStats,
+      four_choice_stats: [],
+      state_updates: [],
     });
 
-    vi.mocked(useToneDrillApi).mockReturnValue({
-      drill: mockDrill,
-      stats: mockStats,
-      difficultyLevel: '2-choice',
-      isLoading: false,
-      error: null,
-      submitAnswer: mockSubmitAnswer,
-      reload: vi.fn(),
-    });
+    vi.mocked(useDrillApi).mockReturnValue(createMockReturn());
   });
 
   afterEach(() => {

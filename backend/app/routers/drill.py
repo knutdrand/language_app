@@ -1,12 +1,12 @@
 """
-Unified drill router - thin API layer for all drill types.
+Tone drill router - API layer for tone drills.
 
 Delegates all logic to services and ML layer.
 """
 
 from __future__ import annotations
 
-from typing import Annotated, Optional, Literal
+from typing import Annotated, Optional
 from datetime import datetime
 from pydantic import BaseModel, computed_field
 from fastapi import APIRouter, Depends
@@ -43,7 +43,6 @@ class PreviousAnswer(BaseModel):
 
 class NextDrillRequest(BaseModel):
     """Request for next drill."""
-    drill_type: Literal["tone", "vowel"] = "tone"
     previous_answer: Optional[PreviousAnswer] = None
 
 
@@ -109,10 +108,10 @@ async def get_next_drill(
 
     Returns the next drill to present.
     """
-    service = get_drill_service(request.drill_type)
+    service = get_drill_service("tone")
 
     # Load all states for this drill type
-    problem_types = get_problem_types_for_drill(request.drill_type)
+    problem_types = get_problem_types_for_drill("tone")
     states: dict[str, ConfusionState] = {}
 
     for pt in problem_types:
@@ -152,7 +151,7 @@ async def get_next_drill(
             await save_state(session, current_user.id, problem_type_id, state)
 
     # Get pair stats for the primary problem type (single syllable)
-    primary_type_id = make_problem_type_id(request.drill_type, 1)
+    primary_type_id = make_problem_type_id("tone", 1)
     primary_state = updated_states.get(primary_type_id)
     if primary_state is None:
         primary_state = await load_state(session, current_user.id, primary_type_id)
@@ -209,19 +208,18 @@ async def get_next_drill(
 
 @router.get("/drill/stats")
 async def get_drill_stats(
-    drill_type: Literal["tone", "vowel"] = "tone",
     current_user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(get_session),
 ) -> dict:
-    """Get current stats for a drill type."""
-    primary_type_id = make_problem_type_id(drill_type, 1)
+    """Get current stats for tone drill."""
+    primary_type_id = make_problem_type_id("tone", 1)
     state = await load_state(session, current_user.id, primary_type_id)
 
     from app.ml import get_ml_service
     ml = get_ml_service()
     all_pair_stats = ml.get_all_pair_stats(primary_type_id, state)
 
-    service = get_drill_service(drill_type)
+    service = get_drill_service("tone")
     difficulty = service._get_difficulty_level(state)
 
     # Get 4-choice stats

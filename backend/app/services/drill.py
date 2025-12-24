@@ -1,5 +1,5 @@
 """
-Unified drill service - handles sampling and orchestration for all drill types.
+Tone drill service - handles sampling and orchestration for tone drills.
 
 Uses the ML layer for all probability calculations and state updates.
 """
@@ -33,6 +33,9 @@ FOUR_CHOICE_MASTERY_THRESHOLD = 0.90  # Required to progress from 4-choice to mu
 # Preview probability for next difficulty level
 PREVIEW_PROBABILITY = 0.2
 
+# Number of tone classes (6 Vietnamese tones)
+N_TONES = 6
+
 DifficultyLevel = Literal["2-choice", "4-choice", "multi-syllable"]
 
 
@@ -49,50 +52,6 @@ TONE_MARKS = {
     'ạ': 6, 'ẹ': 6, 'ị': 6, 'ọ': 6, 'ụ': 6, 'ỵ': 6,
     'ặ': 6, 'ậ': 6, 'ệ': 6, 'ộ': 6, 'ợ': 6, 'ự': 6,
 }
-
-# Vietnamese vowel characters mapped to vowel IDs (1-indexed)
-VOWEL_CHAR_MAP = {
-    # a (ID 1)
-    'a': 1, 'à': 1, 'á': 1, 'ả': 1, 'ã': 1, 'ạ': 1,
-    # ă (ID 2)
-    'ă': 2, 'ằ': 2, 'ắ': 2, 'ẳ': 2, 'ẵ': 2, 'ặ': 2,
-    # â (ID 3)
-    'â': 3, 'ầ': 3, 'ấ': 3, 'ẩ': 3, 'ẫ': 3, 'ậ': 3,
-    # e (ID 4)
-    'e': 4, 'è': 4, 'é': 4, 'ẻ': 4, 'ẽ': 4, 'ẹ': 4,
-    # ê (ID 5)
-    'ê': 5, 'ề': 5, 'ế': 5, 'ể': 5, 'ễ': 5, 'ệ': 5,
-    # i (ID 6)
-    'i': 6, 'ì': 6, 'í': 6, 'ỉ': 6, 'ĩ': 6, 'ị': 6,
-    # o (ID 7)
-    'o': 7, 'ò': 7, 'ó': 7, 'ỏ': 7, 'õ': 7, 'ọ': 7,
-    # ô (ID 8)
-    'ô': 8, 'ồ': 8, 'ố': 8, 'ổ': 8, 'ỗ': 8, 'ộ': 8,
-    # ơ (ID 9)
-    'ơ': 9, 'ờ': 9, 'ớ': 9, 'ở': 9, 'ỡ': 9, 'ợ': 9,
-    # u (ID 10)
-    'u': 10, 'ù': 10, 'ú': 10, 'ủ': 10, 'ũ': 10, 'ụ': 10,
-    # ư (ID 11)
-    'ư': 11, 'ừ': 11, 'ứ': 11, 'ử': 11, 'ữ': 11, 'ự': 11,
-    # y (ID 12)
-    'y': 12, 'ỳ': 12, 'ý': 12, 'ỷ': 12, 'ỹ': 12, 'ỵ': 12,
-}
-
-# Vowel names for openness ranking
-VOWEL_NAMES = ['a', 'ă', 'â', 'e', 'ê', 'i', 'o', 'ô', 'ơ', 'u', 'ư', 'y']
-
-# Vowel confusion groups in learning order (1-indexed IDs)
-# Ordered by group size: 2-vowel groups first, then 3-vowel groups
-VOWEL_GROUPS = [
-    [6, 12],      # i, y - nearly identical
-    [4, 5],       # e, ê - front vowels
-    [10, 11],     # u, ư - u-variants
-    [1, 2, 3],    # a, ă, â - a-variants
-    [7, 8, 9],    # o, ô, ơ - o-variants
-]
-
-# Review probability for mastered groups
-REVIEW_PROBABILITY = 0.2
 
 # Sampling aggressiveness: higher = focus more on problematic pairs
 # 1.0 = linear, 2.0 = squared, 3.0 = cubed
@@ -121,56 +80,8 @@ def get_tone_sequence(word: str) -> list[int]:
     return [detect_tone(s) for s in syllables if s]
 
 
-def extract_vowel_nucleus(syllable: str) -> Optional[int]:
-    """Extract the primary vowel nucleus from a Vietnamese syllable.
-
-    Returns the vowel ID (1-12) of the primary vowel, or None if no vowel found.
-    For diphthongs/triphthongs, returns the vowel that carries the tone mark,
-    or the most open vowel if no tone mark.
-    """
-    normalized = syllable.lower().strip()
-
-    # Find all vowel positions
-    vowel_positions = []
-    for i, char in enumerate(normalized):
-        vowel_id = VOWEL_CHAR_MAP.get(char)
-        if vowel_id is not None:
-            vowel_positions.append((i, char, vowel_id))
-
-    if not vowel_positions:
-        return None
-
-    if len(vowel_positions) == 1:
-        return vowel_positions[0][2]
-
-    # For multiple vowels, find the "main" vowel
-    # Check which vowel has a tone mark (not base form)
-    base_vowels = set(VOWEL_NAMES)
-    for _, char, vowel_id in vowel_positions:
-        if char not in base_vowels:
-            return vowel_id
-
-    # No tone marks found, use openness heuristics
-    openness_rank = {
-        1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 7: 6, 8: 7, 9: 8, 10: 9, 11: 10, 6: 11, 12: 11
-    }
-    sorted_vowels = sorted(vowel_positions, key=lambda x: openness_rank.get(x[2], 12))
-    return sorted_vowels[0][2]
-
-
-def get_vowel_sequence(word: str) -> list[int]:
-    """Get the vowel sequence for a word (list of 1-indexed vowel IDs)."""
-    syllables = word.strip().split()
-    sequence = []
-    for s in syllables:
-        vowel_id = extract_vowel_nucleus(s)
-        if vowel_id is not None:
-            sequence.append(vowel_id)
-    return sequence
-
-
 class DrillService:
-    """Service for drill sampling and orchestration.
+    """Service for tone drill sampling and orchestration.
 
     Uses the ML layer for probability calculations and state updates.
     Main logic layer responsibilities:
@@ -179,71 +90,21 @@ class DrillService:
     - Drill sampling
     """
 
-    def __init__(self, drill_type: Literal["tone", "vowel"] = "tone"):
-        self.drill_type = drill_type
+    def __init__(self):
         self.ml = get_ml_service()
         self._words: list[Word] = []
         self._words_by_sequence: dict[str, list[Word]] = {}
         self._load_words()
 
-    @property
-    def n_classes(self) -> int:
-        """Number of classes: 6 for tones, 12 for vowels."""
-        return 6 if self.drill_type == "tone" else 12
-
-    def _get_current_vowel_group(self, state: ConfusionState) -> int:
-        """Get the current vowel group index (0-based).
-
-        Returns the first group that hasn't been mastered yet.
-        Returns len(VOWEL_GROUPS) if all groups are mastered.
-        """
-        if self.drill_type != "vowel":
-            return 0
-
-        problem_type_id = make_problem_type_id("vowel", 1)
-        pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
-
-        for group_idx, group in enumerate(VOWEL_GROUPS):
-            # Check all pairs within this group
-            group_mastered = True
-            for i, a in enumerate(group):
-                for b in group[i+1:]:
-                    pair_key = (min(a, b), max(a, b))
-                    if pair_key in pair_stats:
-                        if pair_stats[pair_key].mean < PAIR_MASTERY_THRESHOLD:
-                            group_mastered = False
-                            break
-                if not group_mastered:
-                    break
-            if not group_mastered:
-                return group_idx
-
-        # All groups mastered
-        return len(VOWEL_GROUPS)
-
-    def _get_vowel_pairs_for_groups(self, group_indices: list[int]) -> list[tuple[int, int]]:
-        """Get all pairs from the specified vowel groups."""
-        pairs = []
-        for idx in group_indices:
-            if idx < len(VOWEL_GROUPS):
-                group = VOWEL_GROUPS[idx]
-                for i, a in enumerate(group):
-                    for b in group[i+1:]:
-                        pairs.append((min(a, b), max(a, b)))
-        return pairs
-
     def _load_words(self):
-        """Load words from JSON file and index by sequence."""
+        """Load words from JSON file and index by tone sequence."""
         if WORDS_PATH.exists():
             with open(WORDS_PATH) as f:
                 data = json.load(f)
                 self._words = [Word(**w) for w in data]
 
         for word in self._words:
-            if self.drill_type == "tone":
-                sequence = get_tone_sequence(word.vietnamese)
-            else:
-                sequence = get_vowel_sequence(word.vietnamese)
+            sequence = get_tone_sequence(word.vietnamese)
             key = "-".join(str(t) for t in sequence)
             if key not in self._words_by_sequence:
                 self._words_by_sequence[key] = []
@@ -279,9 +140,9 @@ class DrillService:
             all_updates.extend(updates)
 
         # Determine difficulty level for single-syllable
-        state_1 = states.get(make_problem_type_id(self.drill_type, 1))
+        state_1 = states.get(make_problem_type_id("tone", 1))
         if state_1 is None:
-            state_1 = self.ml.get_initial_state(make_problem_type_id(self.drill_type, 1))
+            state_1 = self.ml.get_initial_state(make_problem_type_id("tone", 1))
 
         difficulty = self._get_difficulty_level(state_1)
 
@@ -295,7 +156,7 @@ class DrillService:
 
         Uses ML layer to get probabilities, applies thresholds here.
         """
-        problem_type_id = make_problem_type_id(self.drill_type, 1)
+        problem_type_id = make_problem_type_id("tone", 1)
 
         # Check pair mastery (2-choice)
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
@@ -327,32 +188,28 @@ class DrillService:
         """Get total attempts from confusion matrix."""
         # Sum all counts and subtract prior
         total = sum(sum(row) for row in state.counts)
-        # Subtract initial prior (n_classes * n_classes * pseudocount * 3 for diagonal bias)
-        initial = self.ml.get_initial_state(make_problem_type_id(self.drill_type, 1))
+        # Subtract initial prior
+        initial = self.ml.get_initial_state(make_problem_type_id("tone", 1))
         initial_total = sum(sum(row) for row in initial.counts)
         return int(total - initial_total)
 
     def _get_all_pairs(self) -> list[tuple[int, int]]:
-        """Get all pairs of classes. Returns 1-indexed."""
+        """Get all pairs of tone classes. Returns 1-indexed."""
         pairs = []
-        for a in range(1, self.n_classes + 1):
-            for b in range(a + 1, self.n_classes + 1):
+        for a in range(1, N_TONES + 1):
+            for b in range(a + 1, N_TONES + 1):
                 pairs.append((a, b))
         return pairs
 
     def _get_all_four_choice_sets(self) -> list[list[int]]:
         """Get all possible 4-choice sets. Returns 1-indexed.
 
-        For tones (6 classes): returns all 15 sets (6 choose 4).
-        For vowels (12 classes): returns empty (too many - use sampling instead).
+        Returns all 15 sets (6 choose 4) for 6 tones.
         """
-        if self.n_classes > 6:
-            # Too many sets for vowels, use sampling in _sample_4_choice instead
-            return []
         sets = []
-        for exclude1 in range(1, self.n_classes + 1):
-            for exclude2 in range(exclude1 + 1, self.n_classes + 1):
-                s = [t for t in range(1, self.n_classes + 1) if t != exclude1 and t != exclude2]
+        for exclude1 in range(1, N_TONES + 1):
+            for exclude2 in range(exclude1 + 1, N_TONES + 1):
+                s = [t for t in range(1, N_TONES + 1) if t != exclude1 and t != exclude2]
                 sets.append(s)
         return sets
 
@@ -367,7 +224,7 @@ class DrillService:
         - beta: Beta distribution beta
         - mean: mean success probability
         """
-        problem_type_id = make_problem_type_id(self.drill_type, 1)
+        problem_type_id = make_problem_type_id("tone", 1)
         all_sets = self._get_all_four_choice_sets()
 
         if not all_sets:
@@ -437,35 +294,13 @@ class DrillService:
 
     def _sample_2_choice(self, states: dict[str, ConfusionState]) -> Optional[Problem]:
         """Sample a 2-choice drill weighted by error probability."""
-        problem_type_id = make_problem_type_id(self.drill_type, 1)
+        problem_type_id = make_problem_type_id("tone", 1)
         state = states.get(problem_type_id)
         if state is None:
             state = self.ml.get_initial_state(problem_type_id)
 
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
-
-        # For vowels: use group-based sampling
-        if self.drill_type == "vowel":
-            current_group = self._get_current_vowel_group(state)
-
-            if current_group >= len(VOWEL_GROUPS):
-                # All groups mastered - sample from all pairs
-                pairs = list(pair_stats.keys())
-            else:
-                # Decide: 80% current group, 20% review mastered groups
-                if current_group > 0 and random.random() < REVIEW_PROBABILITY:
-                    # Review: sample from mastered groups
-                    mastered_indices = list(range(current_group))
-                    pairs = self._get_vowel_pairs_for_groups(mastered_indices)
-                else:
-                    # Current group
-                    pairs = self._get_vowel_pairs_for_groups([current_group])
-
-            if not pairs:
-                pairs = list(pair_stats.keys())
-        else:
-            # For tones: sample from all pairs
-            pairs = list(pair_stats.keys())
+        pairs = list(pair_stats.keys())
 
         # Weight by error probability (aggressive: raise to power)
         error_probs = []
@@ -508,7 +343,7 @@ class DrillService:
 
     def _sample_4_choice(self, states: dict[str, ConfusionState]) -> Optional[Problem]:
         """Sample a 4-choice drill."""
-        problem_type_id = make_problem_type_id(self.drill_type, 1)
+        problem_type_id = make_problem_type_id("tone", 1)
         state = states.get(problem_type_id)
         if state is None:
             state = self.ml.get_initial_state(problem_type_id)
@@ -516,52 +351,21 @@ class DrillService:
         pair_stats = self.ml.get_all_pair_stats(problem_type_id, state)
         all_sets = self._get_all_four_choice_sets()
 
-        if all_sets:
-            # For tones: use predefined sets weighted by error probability
-            error_probs = []
-            for s in all_sets:
-                total_error = 0
-                count = 0
-                for i, a in enumerate(s):
-                    for b in s[i+1:]:
-                        pair_key = (min(a, b), max(a, b))
-                        if pair_key in pair_stats:
-                            total_error += 1 - pair_stats[pair_key].mean
-                            count += 1
-                error_probs.append(total_error / max(count, 1))
-            selected_set = all_sets[self._weighted_sample(error_probs)]
-        else:
-            # For vowels: use group-based sampling
-            current_group = self._get_current_vowel_group(state)
+        # Use predefined sets weighted by error probability
+        error_probs = []
+        for s in all_sets:
+            total_error = 0
+            count = 0
+            for i, a in enumerate(s):
+                for b in s[i+1:]:
+                    pair_key = (min(a, b), max(a, b))
+                    if pair_key in pair_stats:
+                        total_error += 1 - pair_stats[pair_key].mean
+                        count += 1
+            error_probs.append(total_error / max(count, 1))
+        selected_set = all_sets[self._weighted_sample(error_probs)]
 
-            if current_group >= len(VOWEL_GROUPS):
-                # All groups mastered - sample from all vowels
-                selected_set = self._sample_confused_set(pair_stats, 4)
-            else:
-                # Get current group vowels
-                group_vowels = VOWEL_GROUPS[current_group].copy()
-
-                # If group has 3 vowels, add 1 from mastered groups for variety
-                # If group has 2 vowels, add 2 from mastered groups
-                needed = 4 - len(group_vowels)
-                if needed > 0 and current_group > 0:
-                    # Get vowels from mastered groups
-                    mastered_vowels = []
-                    for idx in range(current_group):
-                        mastered_vowels.extend(VOWEL_GROUPS[idx])
-                    random.shuffle(mastered_vowels)
-                    group_vowels.extend(mastered_vowels[:needed])
-
-                # If still need more, add random vowels
-                while len(group_vowels) < 4:
-                    for v in range(1, self.n_classes + 1):
-                        if v not in group_vowels:
-                            group_vowels.append(v)
-                            break
-
-                selected_set = group_vowels[:4]
-
-        # Find word with class from this set
+        # Find word with tone class from this set
         random.shuffle(selected_set)
         for cls in selected_set:
             words = self._words_by_sequence.get(str(cls), [])
@@ -579,36 +383,6 @@ class DrillService:
 
         return None
 
-    def _sample_confused_set(self, pair_stats: dict, size: int) -> list[int]:
-        """Sample a set of confused classes based on error probability.
-
-        Used for vowels where there are too many possible sets to enumerate.
-        """
-        # Get pairs sorted by error probability (highest first)
-        pairs_by_error = sorted(
-            pair_stats.items(),
-            key=lambda x: 1 - x[1].mean,
-            reverse=True
-        )
-
-        # Collect classes from most confused pairs
-        selected = set()
-        for (a, b), _ in pairs_by_error:
-            selected.add(a)
-            selected.add(b)
-            if len(selected) >= size:
-                break
-
-        # If we don't have enough, add random classes
-        all_classes = list(range(1, self.n_classes + 1))
-        random.shuffle(all_classes)
-        for c in all_classes:
-            if len(selected) >= size:
-                break
-            selected.add(c)
-
-        return list(selected)[:size]
-
     def _sample_multi_syllable(self, states: dict[str, ConfusionState]) -> Optional[Problem]:
         """Sample a multi-syllable drill."""
         # Get 2-syllable words
@@ -619,7 +393,7 @@ class DrillService:
             return None
 
         # Sample weighted by confusion
-        problem_type_id = make_problem_type_id(self.drill_type, 2)
+        problem_type_id = make_problem_type_id("tone", 2)
         state = states.get(problem_type_id)
         if state is None:
             state = self.ml.get_initial_state(problem_type_id)
@@ -650,7 +424,7 @@ class DrillService:
             if words:
                 word = random.choice(words)
                 correct_sequence = [int(t) for t in key.split('-')]
-                problem_type_id = make_problem_type_id(self.drill_type, len(correct_sequence))
+                problem_type_id = make_problem_type_id("tone", len(correct_sequence))
                 alternatives = self._generate_distractors(correct_sequence)
                 return Problem(
                     problem_type_id=problem_type_id,
@@ -664,7 +438,7 @@ class DrillService:
 
         # Absolute fallback
         return Problem(
-            problem_type_id=make_problem_type_id(self.drill_type, 1),
+            problem_type_id=make_problem_type_id("tone", 1),
             word_id=0,
             vietnamese="xin chào",
             english="hello",
@@ -675,7 +449,7 @@ class DrillService:
 
     def _generate_distractors(self, correct_sequence: list[int]) -> list[list[int]]:
         """Generate distractor sequences."""
-        all_classes = list(range(1, self.n_classes + 1))
+        all_classes = list(range(1, N_TONES + 1))
         distractors = [correct_sequence]
 
         for _ in range(50):
@@ -692,11 +466,11 @@ class DrillService:
                 distractors.append(new_seq)
 
         while len(distractors) < 4:
-            fallback = [(c % self.n_classes) + 1 for c in correct_sequence]
+            fallback = [(c % N_TONES) + 1 for c in correct_sequence]
             if fallback not in distractors:
                 distractors.append(fallback)
             else:
-                distractors.append([(i % self.n_classes) + 1 for i in range(len(correct_sequence))])
+                distractors.append([(i % N_TONES) + 1 for i in range(len(correct_sequence))])
 
         random.shuffle(distractors)
         return distractors
@@ -716,20 +490,14 @@ class DrillService:
         return len(weights) - 1
 
 
-# Singleton instances
+# Singleton instance
 _tone_service: Optional[DrillService] = None
-_vowel_service: Optional[DrillService] = None
 
 
-def get_drill_service(drill_type: Literal["tone", "vowel"] = "tone") -> DrillService:
-    """Get the singleton DrillService for the given drill type."""
-    global _tone_service, _vowel_service
+def get_drill_service(drill_type: str = "tone") -> DrillService:
+    """Get the singleton DrillService."""
+    global _tone_service
 
-    if drill_type == "tone":
-        if _tone_service is None:
-            _tone_service = DrillService("tone")
-        return _tone_service
-    else:
-        if _vowel_service is None:
-            _vowel_service = DrillService("vowel")
-        return _vowel_service
+    if _tone_service is None:
+        _tone_service = DrillService()
+    return _tone_service
