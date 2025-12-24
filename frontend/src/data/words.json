@@ -2532,5 +2532,1445 @@
     "imageUrl": "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=400",
     "sourceId": "wABsPLBbRZE",
     "frequency": 4
+  },
+  {
+    "id": 335,
+    "vietnamese": "vâng",
+    "english": "yes",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 336,
+    "vietnamese": "chúng tôi",
+    "english": "we",
+    "imageUrl": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400"
+  },
+  {
+    "id": 337,
+    "vietnamese": "ông",
+    "english": "grandfather/sir",
+    "imageUrl": "https://images.unsplash.com/photo-1566616213894-2d4e1baee5d8?w=400"
+  },
+  {
+    "id": 338,
+    "vietnamese": "bà",
+    "english": "grandmother/madam",
+    "imageUrl": "https://images.unsplash.com/photo-1581579438747-104c53e81b89?w=400"
+  },
+  {
+    "id": 339,
+    "vietnamese": "một trăm",
+    "english": "one hundred",
+    "imageUrl": "https://images.unsplash.com/photo-1516383740770-fbcc5ccbece0?w=400"
+  },
+  {
+    "id": 340,
+    "vietnamese": "một nghìn",
+    "english": "one thousand",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400"
+  },
+  {
+    "id": 341,
+    "vietnamese": "một triệu",
+    "english": "one million",
+    "imageUrl": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400"
+  },
+  {
+    "id": 342,
+    "vietnamese": "nửa",
+    "english": "half",
+    "imageUrl": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400"
+  },
+  {
+    "id": 343,
+    "vietnamese": "đôi",
+    "english": "pair",
+    "imageUrl": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400"
+  },
+  {
+    "id": 344,
+    "vietnamese": "bún",
+    "english": "rice vermicelli",
+    "imageUrl": "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=400"
+  },
+  {
+    "id": 345,
+    "vietnamese": "gạo",
+    "english": "uncooked rice",
+    "imageUrl": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400"
+  },
+  {
+    "id": 346,
+    "vietnamese": "thịt bò",
+    "english": "beef",
+    "imageUrl": "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=400"
+  },
+  {
+    "id": 347,
+    "vietnamese": "thịt gà",
+    "english": "chicken meat",
+    "imageUrl": "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400"
+  },
+  {
+    "id": 348,
+    "vietnamese": "thịt heo",
+    "english": "pork",
+    "imageUrl": "https://images.unsplash.com/photo-1602470521006-aaea8b2a6a13?w=400"
+  },
+  {
+    "id": 349,
+    "vietnamese": "tôm",
+    "english": "shrimp",
+    "imageUrl": "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400"
+  },
+  {
+    "id": 350,
+    "vietnamese": "cua",
+    "english": "crab",
+    "imageUrl": "https://images.unsplash.com/photo-1510130387422-82bed34b37e9?w=400"
+  },
+  {
+    "id": 351,
+    "vietnamese": "xà lách",
+    "english": "lettuce/salad",
+    "imageUrl": "https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?w=400"
+  },
+  {
+    "id": 352,
+    "vietnamese": "cà chua",
+    "english": "tomato",
+    "imageUrl": "https://images.unsplash.com/photo-1546470427-f5c7193e15c6?w=400"
+  },
+  {
+    "id": 353,
+    "vietnamese": "dưa chuột",
+    "english": "cucumber",
+    "imageUrl": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=400"
+  },
+  {
+    "id": 354,
+    "vietnamese": "hành",
+    "english": "onion",
+    "imageUrl": "https://images.unsplash.com/photo-1518977956812-cd3dbadaaf31?w=400"
+  },
+  {
+    "id": 355,
+    "vietnamese": "tỏi",
+    "english": "garlic",
+    "imageUrl": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2a79?w=400"
+  },
+  {
+    "id": 356,
+    "vietnamese": "ớt",
+    "english": "chili",
+    "imageUrl": "https://images.unsplash.com/photo-1526346698789-22fd84314424?w=400"
+  },
+  {
+    "id": 357,
+    "vietnamese": "nước mắm",
+    "english": "fish sauce",
+    "imageUrl": "https://images.unsplash.com/photo-1590779033100-9f60a05a013d?w=400"
+  },
+  {
+    "id": 358,
+    "vietnamese": "muối",
+    "english": "salt",
+    "imageUrl": "https://images.unsplash.com/photo-1518110925495-5fe2f8355b02?w=400"
+  },
+  {
+    "id": 359,
+    "vietnamese": "tiêu",
+    "english": "pepper",
+    "imageUrl": "https://images.unsplash.com/photo-1599909533681-74a182bfad79?w=400"
+  },
+  {
+    "id": 360,
+    "vietnamese": "bánh",
+    "english": "cake/pastry",
+    "imageUrl": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400"
+  },
+  {
+    "id": 361,
+    "vietnamese": "xôi",
+    "english": "sticky rice",
+    "imageUrl": "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=400"
+  },
+  {
+    "id": 362,
+    "vietnamese": "chả giò",
+    "english": "spring roll",
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947?w=400"
+  },
+  {
+    "id": 363,
+    "vietnamese": "gỏi cuốn",
+    "english": "fresh spring roll",
+    "imageUrl": "https://images.unsplash.com/photo-1562967915-92ae0c320a01?w=400"
+  },
+  {
+    "id": 364,
+    "vietnamese": "cháo",
+    "english": "rice porridge",
+    "imageUrl": "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400"
+  },
+  {
+    "id": 365,
+    "vietnamese": "xoài",
+    "english": "mango",
+    "imageUrl": "https://images.unsplash.com/photo-1553279768-865429fa0078?w=400"
+  },
+  {
+    "id": 366,
+    "vietnamese": "chuối",
+    "english": "banana",
+    "imageUrl": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400"
+  },
+  {
+    "id": 367,
+    "vietnamese": "dừa",
+    "english": "coconut",
+    "imageUrl": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400"
+  },
+  {
+    "id": 368,
+    "vietnamese": "dứa",
+    "english": "pineapple",
+    "imageUrl": "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400"
+  },
+  {
+    "id": 369,
+    "vietnamese": "cam",
+    "english": "orange",
+    "imageUrl": "https://images.unsplash.com/photo-1547514701-42782101795e?w=400"
+  },
+  {
+    "id": 370,
+    "vietnamese": "bưởi",
+    "english": "pomelo",
+    "imageUrl": "https://images.unsplash.com/photo-1577234286642-fc512a5f8f11?w=400"
+  },
+  {
+    "id": 371,
+    "vietnamese": "đu đủ",
+    "english": "papaya",
+    "imageUrl": "https://images.unsplash.com/photo-1517282009859-f000ec3b26fe?w=400"
+  },
+  {
+    "id": 372,
+    "vietnamese": "thanh long",
+    "english": "dragon fruit",
+    "imageUrl": "https://images.unsplash.com/photo-1527325678964-54921661f888?w=400"
+  },
+  {
+    "id": 373,
+    "vietnamese": "măng cụt",
+    "english": "mangosteen",
+    "imageUrl": "https://images.unsplash.com/photo-1596591868264-1fba4a7b46e8?w=400"
+  },
+  {
+    "id": 374,
+    "vietnamese": "sầu riêng",
+    "english": "durian",
+    "imageUrl": "https://images.unsplash.com/photo-1588690214836-af5c4a7cf8c0?w=400"
+  },
+  {
+    "id": 375,
+    "vietnamese": "chôm chôm",
+    "english": "rambutan",
+    "imageUrl": "https://images.unsplash.com/photo-1609246232490-a9e7f5ac62c5?w=400"
+  },
+  {
+    "id": 376,
+    "vietnamese": "dưa hấu",
+    "english": "watermelon",
+    "imageUrl": "https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400"
+  },
+  {
+    "id": 377,
+    "vietnamese": "nho",
+    "english": "grapes",
+    "imageUrl": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=400"
+  },
+  {
+    "id": 378,
+    "vietnamese": "táo",
+    "english": "apple",
+    "imageUrl": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400"
+  },
+  {
+    "id": 379,
+    "vietnamese": "rượu",
+    "english": "wine/alcohol",
+    "imageUrl": "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400"
+  },
+  {
+    "id": 380,
+    "vietnamese": "nước dừa",
+    "english": "coconut water",
+    "imageUrl": "https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=400"
+  },
+  {
+    "id": 381,
+    "vietnamese": "nước mía",
+    "english": "sugarcane juice",
+    "imageUrl": "https://images.unsplash.com/photo-1558857563-b371033873b8?w=400"
+  },
+  {
+    "id": 382,
+    "vietnamese": "sinh tố",
+    "english": "smoothie",
+    "imageUrl": "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=400"
+  },
+  {
+    "id": 383,
+    "vietnamese": "nước đá",
+    "english": "ice",
+    "imageUrl": "https://images.unsplash.com/photo-1459131753325-d145a4e53df6?w=400"
+  },
+  {
+    "id": 384,
+    "vietnamese": "nước chanh",
+    "english": "lemonade",
+    "imageUrl": "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400"
+  },
+  {
+    "id": 385,
+    "vietnamese": "trà đá",
+    "english": "iced tea",
+    "imageUrl": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400"
+  },
+  {
+    "id": 386,
+    "vietnamese": "nhà hàng",
+    "english": "restaurant",
+    "imageUrl": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400"
+  },
+  {
+    "id": 387,
+    "vietnamese": "quán ăn",
+    "english": "eatery",
+    "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400"
+  },
+  {
+    "id": 388,
+    "vietnamese": "thực đơn",
+    "english": "menu",
+    "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400"
+  },
+  {
+    "id": 389,
+    "vietnamese": "đũa",
+    "english": "chopsticks",
+    "imageUrl": "https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=400"
+  },
+  {
+    "id": 390,
+    "vietnamese": "thìa",
+    "english": "spoon",
+    "imageUrl": "https://images.unsplash.com/photo-1591639458011-fe650a22b3e7?w=400"
+  },
+  {
+    "id": 391,
+    "vietnamese": "dĩa",
+    "english": "plate/fork",
+    "imageUrl": "https://images.unsplash.com/photo-1603199506016-5d54ebf01d84?w=400"
+  },
+  {
+    "id": 392,
+    "vietnamese": "ly",
+    "english": "glass",
+    "imageUrl": "https://images.unsplash.com/photo-1481671703460-040cb8a2d909?w=400"
+  },
+  {
+    "id": 393,
+    "vietnamese": "tô",
+    "english": "bowl",
+    "imageUrl": "https://images.unsplash.com/photo-1578913598049-8d9f4cccf998?w=400"
+  },
+  {
+    "id": 394,
+    "vietnamese": "xe máy",
+    "english": "motorbike",
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
+  },
+  {
+    "id": 395,
+    "vietnamese": "xe ô tô",
+    "english": "car",
+    "imageUrl": "https://images.unsplash.com/photo-1494976388531-d1058494ceb8?w=400"
+  },
+  {
+    "id": 396,
+    "vietnamese": "xe buýt",
+    "english": "bus",
+    "imageUrl": "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=400"
+  },
+  {
+    "id": 397,
+    "vietnamese": "xe taxi",
+    "english": "taxi",
+    "imageUrl": "https://images.unsplash.com/photo-1559829604-f4e4f2b85c3c?w=400"
+  },
+  {
+    "id": 398,
+    "vietnamese": "máy bay",
+    "english": "airplane",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400"
+  },
+  {
+    "id": 399,
+    "vietnamese": "thuyền",
+    "english": "boat",
+    "imageUrl": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400"
+  },
+  {
+    "id": 400,
+    "vietnamese": "bến xe",
+    "english": "bus station",
+    "imageUrl": "https://images.unsplash.com/photo-1570125909517-53cb21c89ff2?w=400"
+  },
+  {
+    "id": 401,
+    "vietnamese": "sân bay",
+    "english": "airport",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400"
+  },
+  {
+    "id": 402,
+    "vietnamese": "ga tàu",
+    "english": "train station",
+    "imageUrl": "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=400"
+  },
+  {
+    "id": 403,
+    "vietnamese": "bến cảng",
+    "english": "port",
+    "imageUrl": "https://images.unsplash.com/photo-1532649538693-f3a2ec1bf8bd?w=400"
+  },
+  {
+    "id": 404,
+    "vietnamese": "vé",
+    "english": "ticket",
+    "imageUrl": "https://images.unsplash.com/photo-1559526324-593bc073d938?w=400"
+  },
+  {
+    "id": 405,
+    "vietnamese": "khách sạn",
+    "english": "hotel",
+    "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400"
+  },
+  {
+    "id": 406,
+    "vietnamese": "nhà nghỉ",
+    "english": "guesthouse",
+    "imageUrl": "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400"
+  },
+  {
+    "id": 407,
+    "vietnamese": "phòng",
+    "english": "room",
+    "imageUrl": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400"
+  },
+  {
+    "id": 408,
+    "vietnamese": "nhà vệ sinh",
+    "english": "bathroom/toilet",
+    "imageUrl": "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400"
+  },
+  {
+    "id": 409,
+    "vietnamese": "siêu thị",
+    "english": "supermarket",
+    "imageUrl": "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=400"
+  },
+  {
+    "id": 410,
+    "vietnamese": "cửa hàng",
+    "english": "shop/store",
+    "imageUrl": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400"
+  },
+  {
+    "id": 411,
+    "vietnamese": "ngân hàng",
+    "english": "bank",
+    "imageUrl": "https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?w=400"
+  },
+  {
+    "id": 412,
+    "vietnamese": "bệnh viện",
+    "english": "hospital",
+    "imageUrl": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400"
+  },
+  {
+    "id": 413,
+    "vietnamese": "nhà thuốc",
+    "english": "pharmacy",
+    "imageUrl": "https://images.unsplash.com/photo-1576602976047-174e57a47881?w=400"
+  },
+  {
+    "id": 414,
+    "vietnamese": "bưu điện",
+    "english": "post office",
+    "imageUrl": "https://images.unsplash.com/photo-1529271230144-e8c648ef570d?w=400"
+  },
+  {
+    "id": 415,
+    "vietnamese": "bãi biển",
+    "english": "beach",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400"
+  },
+  {
+    "id": 416,
+    "vietnamese": "chùa",
+    "english": "pagoda/temple",
+    "imageUrl": "https://images.unsplash.com/photo-1528181304800-259b08848526?w=400"
+  },
+  {
+    "id": 417,
+    "vietnamese": "nhà thờ",
+    "english": "church",
+    "imageUrl": "https://images.unsplash.com/photo-1548625149-fc4a29cf7092?w=400"
+  },
+  {
+    "id": 418,
+    "vietnamese": "công viên",
+    "english": "park",
+    "imageUrl": "https://images.unsplash.com/photo-1519331379826-f10be5486c6f?w=400"
+  },
+  {
+    "id": 419,
+    "vietnamese": "bảo tàng",
+    "english": "museum",
+    "imageUrl": "https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=400"
+  },
+  {
+    "id": 420,
+    "vietnamese": "trái",
+    "english": "left",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400"
+  },
+  {
+    "id": 421,
+    "vietnamese": "thẳng",
+    "english": "straight",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400"
+  },
+  {
+    "id": 422,
+    "vietnamese": "gần",
+    "english": "near",
+    "imageUrl": "https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=400"
+  },
+  {
+    "id": 423,
+    "vietnamese": "xa",
+    "english": "far",
+    "imageUrl": "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400"
+  },
+  {
+    "id": 424,
+    "vietnamese": "đây",
+    "english": "here",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 425,
+    "vietnamese": "đó",
+    "english": "there",
+    "imageUrl": "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=400"
+  },
+  {
+    "id": 426,
+    "vietnamese": "bản đồ",
+    "english": "map",
+    "imageUrl": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400"
+  },
+  {
+    "id": 427,
+    "vietnamese": "địa chỉ",
+    "english": "address",
+    "imageUrl": "https://images.unsplash.com/photo-1582738411706-bfc8e691d1c2?w=400"
+  },
+  {
+    "id": 428,
+    "vietnamese": "lối vào",
+    "english": "entrance",
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
+  },
+  {
+    "id": 429,
+    "vietnamese": "đắt",
+    "english": "expensive",
+    "imageUrl": "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=400"
+  },
+  {
+    "id": 430,
+    "vietnamese": "trả giá",
+    "english": "bargain",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400"
+  },
+  {
+    "id": 431,
+    "vietnamese": "hóa đơn",
+    "english": "bill/receipt",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6e?w=400"
+  },
+  {
+    "id": 432,
+    "vietnamese": "thẻ",
+    "english": "card",
+    "imageUrl": "https://images.unsplash.com/photo-1556742111-a301076d9d18?w=400"
+  },
+  {
+    "id": 433,
+    "vietnamese": "đổi tiền",
+    "english": "exchange money",
+    "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400"
+  },
+  {
+    "id": 434,
+    "vietnamese": "quà",
+    "english": "gift",
+    "imageUrl": "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400"
+  },
+  {
+    "id": 435,
+    "vietnamese": "túi",
+    "english": "bag",
+    "imageUrl": "https://images.unsplash.com/photo-1547949003-9792a18a2601?w=400"
+  },
+  {
+    "id": 436,
+    "vietnamese": "áo",
+    "english": "shirt/top",
+    "imageUrl": "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=400"
+  },
+  {
+    "id": 437,
+    "vietnamese": "quần",
+    "english": "pants",
+    "imageUrl": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400"
+  },
+  {
+    "id": 438,
+    "vietnamese": "ngày mai",
+    "english": "tomorrow",
+    "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400"
+  },
+  {
+    "id": 439,
+    "vietnamese": "hôm qua",
+    "english": "yesterday",
+    "imageUrl": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400"
+  },
+  {
+    "id": 440,
+    "vietnamese": "trưa",
+    "english": "noon",
+    "imageUrl": "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=400"
+  },
+  {
+    "id": 441,
+    "vietnamese": "chiều",
+    "english": "afternoon",
+    "imageUrl": "https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?w=400"
+  },
+  {
+    "id": 442,
+    "vietnamese": "tối",
+    "english": "evening",
+    "imageUrl": "https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=400"
+  },
+  {
+    "id": 443,
+    "vietnamese": "đêm",
+    "english": "night",
+    "imageUrl": "https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=400"
+  },
+  {
+    "id": 444,
+    "vietnamese": "phút",
+    "english": "minute",
+    "imageUrl": "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=400"
+  },
+  {
+    "id": 445,
+    "vietnamese": "tuần",
+    "english": "week",
+    "imageUrl": "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400"
+  },
+  {
+    "id": 446,
+    "vietnamese": "tháng",
+    "english": "month",
+    "imageUrl": "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=400"
+  },
+  {
+    "id": 447,
+    "vietnamese": "nóng",
+    "english": "hot",
+    "imageUrl": "https://images.unsplash.com/photo-1504370805625-d32c54b16100?w=400"
+  },
+  {
+    "id": 448,
+    "vietnamese": "lạnh",
+    "english": "cold",
+    "imageUrl": "https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=400"
+  },
+  {
+    "id": 449,
+    "vietnamese": "mưa",
+    "english": "rain",
+    "imageUrl": "https://images.unsplash.com/photo-1519692933481-e162a57d6721?w=400"
+  },
+  {
+    "id": 450,
+    "vietnamese": "nắng",
+    "english": "sunny",
+    "imageUrl": "https://images.unsplash.com/photo-1504370805625-d32c54b16100?w=400"
+  },
+  {
+    "id": 451,
+    "vietnamese": "gió",
+    "english": "wind",
+    "imageUrl": "https://images.unsplash.com/photo-1527482797697-8795b05a13fe?w=400"
+  },
+  {
+    "id": 452,
+    "vietnamese": "mây",
+    "english": "cloud",
+    "imageUrl": "https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=400"
+  },
+  {
+    "id": 453,
+    "vietnamese": "ẩm",
+    "english": "humid",
+    "imageUrl": "https://images.unsplash.com/photo-1501630834273-4b5604d2ee31?w=400"
+  },
+  {
+    "id": 454,
+    "vietnamese": "khô",
+    "english": "dry",
+    "imageUrl": "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=400"
+  },
+  {
+    "id": 455,
+    "vietnamese": "tốt",
+    "english": "good",
+    "imageUrl": "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?w=400"
+  },
+  {
+    "id": 456,
+    "vietnamese": "xấu",
+    "english": "bad",
+    "imageUrl": "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?w=400"
+  },
+  {
+    "id": 457,
+    "vietnamese": "ngon",
+    "english": "delicious",
+    "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400"
+  },
+  {
+    "id": 458,
+    "vietnamese": "lớn",
+    "english": "big",
+    "imageUrl": "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=400"
+  },
+  {
+    "id": 459,
+    "vietnamese": "nhỏ",
+    "english": "small",
+    "imageUrl": "https://images.unsplash.com/photo-1560807707-8cc77767d783?w=400"
+  },
+  {
+    "id": 460,
+    "vietnamese": "cũ",
+    "english": "old (things)",
+    "imageUrl": "https://images.unsplash.com/photo-1518893063132-36e46dbe2428?w=400"
+  },
+  {
+    "id": 461,
+    "vietnamese": "nhanh",
+    "english": "fast",
+    "imageUrl": "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400"
+  },
+  {
+    "id": 462,
+    "vietnamese": "chậm",
+    "english": "slow",
+    "imageUrl": "https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=400"
+  },
+  {
+    "id": 463,
+    "vietnamese": "sạch",
+    "english": "clean",
+    "imageUrl": "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400"
+  },
+  {
+    "id": 464,
+    "vietnamese": "bẩn",
+    "english": "dirty",
+    "imageUrl": "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=400"
+  },
+  {
+    "id": 465,
+    "vietnamese": "cay",
+    "english": "spicy",
+    "imageUrl": "https://images.unsplash.com/photo-1526346698789-22fd84314424?w=400"
+  },
+  {
+    "id": 466,
+    "vietnamese": "ngọt",
+    "english": "sweet",
+    "imageUrl": "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=400"
+  },
+  {
+    "id": 467,
+    "vietnamese": "mặn",
+    "english": "salty",
+    "imageUrl": "https://images.unsplash.com/photo-1518110925495-5fe2f8355b02?w=400"
+  },
+  {
+    "id": 468,
+    "vietnamese": "cấp cứu",
+    "english": "emergency",
+    "imageUrl": "https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=400"
+  },
+  {
+    "id": 469,
+    "vietnamese": "cảnh sát",
+    "english": "police",
+    "imageUrl": "https://images.unsplash.com/photo-1589994160839-163cd867cfe8?w=400"
+  },
+  {
+    "id": 470,
+    "vietnamese": "bác sĩ",
+    "english": "doctor",
+    "imageUrl": "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400"
+  },
+  {
+    "id": 471,
+    "vietnamese": "thuốc",
+    "english": "medicine",
+    "imageUrl": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400"
+  },
+  {
+    "id": 472,
+    "vietnamese": "đau",
+    "english": "pain",
+    "imageUrl": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=400"
+  },
+  {
+    "id": 473,
+    "vietnamese": "ốm",
+    "english": "sick",
+    "imageUrl": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400"
+  },
+  {
+    "id": 474,
+    "vietnamese": "giúp đỡ",
+    "english": "help",
+    "imageUrl": "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=400"
+  },
+  {
+    "id": 475,
+    "vietnamese": "nguy hiểm",
+    "english": "dangerous",
+    "imageUrl": "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=400"
+  },
+  {
+    "id": 476,
+    "vietnamese": "đẹp quá",
+    "english": "so beautiful",
+    "imageUrl": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400"
+  },
+  {
+    "id": 477,
+    "vietnamese": "cảm ơn nhiều",
+    "english": "thank you very much",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 478,
+    "vietnamese": "tôi",
+    "english": "I/me",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
+  },
+  {
+    "id": 479,
+    "vietnamese": "wifi",
+    "english": "wifi",
+    "imageUrl": "https://images.unsplash.com/photo-1516044734145-07ca8eef8731?w=400"
+  },
+  {
+    "id": 480,
+    "vietnamese": "internet",
+    "english": "internet",
+    "imageUrl": "https://images.unsplash.com/photo-1516044734145-07ca8eef8731?w=400"
+  },
+  {
+    "id": 481,
+    "vietnamese": "điện",
+    "english": "electricity",
+    "imageUrl": "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400"
+  },
+  {
+    "id": 482,
+    "vietnamese": "nóng quá",
+    "english": "too hot",
+    "imageUrl": "https://images.unsplash.com/photo-1504370805625-d32c54b16100?w=400"
+  },
+  {
+    "id": 483,
+    "vietnamese": "mệt",
+    "english": "tired",
+    "imageUrl": "https://images.unsplash.com/photo-1494253109108-2e30c049369b?w=400"
+  },
+  {
+    "id": 484,
+    "vietnamese": "đói",
+    "english": "hungry",
+    "imageUrl": "https://images.unsplash.com/photo-1571748982800-fa51082c2224?w=400"
+  },
+  {
+    "id": 485,
+    "vietnamese": "khát",
+    "english": "thirsty",
+    "imageUrl": "https://images.unsplash.com/photo-1523362628745-0c100150b504?w=400"
+  },
+  {
+    "id": 486,
+    "vietnamese": "no",
+    "english": "full (stomach)",
+    "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400"
+  },
+  {
+    "id": 487,
+    "vietnamese": "vui vẻ",
+    "english": "happy",
+    "imageUrl": "https://images.unsplash.com/photo-1489710437720-ebb67ec84dd2?w=400"
+  },
+  {
+    "id": 488,
+    "vietnamese": "buồn",
+    "english": "sad",
+    "imageUrl": "https://images.unsplash.com/photo-1516585427167-9f4af9627e6c?w=400"
+  },
+  {
+    "id": 489,
+    "vietnamese": "sợ",
+    "english": "scared",
+    "imageUrl": "https://images.unsplash.com/photo-1508243529287-e21d7f08a6d0?w=400"
+  },
+  {
+    "id": 490,
+    "vietnamese": "yêu",
+    "english": "love",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400"
+  },
+  {
+    "id": 491,
+    "vietnamese": "thương",
+    "english": "love/care",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400"
+  },
+  {
+    "id": 492,
+    "vietnamese": "ăn",
+    "english": "eat",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"
+  },
+  {
+    "id": 493,
+    "vietnamese": "uống",
+    "english": "drink",
+    "imageUrl": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400"
+  },
+  {
+    "id": 494,
+    "vietnamese": "ngủ",
+    "english": "sleep",
+    "imageUrl": "https://images.unsplash.com/photo-1531353826977-0941b4779a1c?w=400"
+  },
+  {
+    "id": 495,
+    "vietnamese": "làm ơn",
+    "english": "please (polite)",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 496,
+    "vietnamese": "cho tôi",
+    "english": "give me",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 497,
+    "vietnamese": "ở đâu",
+    "english": "where",
+    "imageUrl": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400"
+  },
+  {
+    "id": 498,
+    "vietnamese": "khi nào",
+    "english": "when",
+    "imageUrl": "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=400"
+  },
+  {
+    "id": 499,
+    "vietnamese": "tại sao",
+    "english": "why",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 500,
+    "vietnamese": "như thế nào",
+    "english": "how",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 501,
+    "vietnamese": "cái gì",
+    "english": "what",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 502,
+    "vietnamese": "ai",
+    "english": "who",
+    "imageUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
+  },
+  {
+    "id": 503,
+    "vietnamese": "đắt quá",
+    "english": "too expensive",
+    "imageUrl": "https://images.unsplash.com/photo-1515955656352-a1fa3ffcd111?w=400"
+  },
+  {
+    "id": 504,
+    "vietnamese": "rẻ hơn",
+    "english": "cheaper",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400"
+  },
+  {
+    "id": 505,
+    "vietnamese": "bớt đi",
+    "english": "discount please",
+    "imageUrl": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400"
+  },
+  {
+    "id": 506,
+    "vietnamese": "tính tiền",
+    "english": "check please",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6e?w=400"
+  },
+  {
+    "id": 507,
+    "vietnamese": "trả tiền",
+    "english": "pay",
+    "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400"
+  },
+  {
+    "id": 508,
+    "vietnamese": "tiền mặt",
+    "english": "cash",
+    "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400"
+  },
+  {
+    "id": 509,
+    "vietnamese": "đồng",
+    "english": "Vietnamese dong",
+    "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400"
+  },
+  {
+    "id": 510,
+    "vietnamese": "đô la",
+    "english": "dollar",
+    "imageUrl": "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400"
+  },
+  {
+    "id": 511,
+    "vietnamese": "xe ôm",
+    "english": "motorbike taxi",
+    "imageUrl": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
+  },
+  {
+    "id": 512,
+    "vietnamese": "grab",
+    "english": "Grab (ride app)",
+    "imageUrl": "https://images.unsplash.com/photo-1559829604-f4e4f2b85c3c?w=400"
+  },
+  {
+    "id": 513,
+    "vietnamese": "đi đâu",
+    "english": "where to go",
+    "imageUrl": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400"
+  },
+  {
+    "id": 514,
+    "vietnamese": "dừng lại",
+    "english": "stop",
+    "imageUrl": "https://images.unsplash.com/photo-1559829604-f4e4f2b85c3c?w=400"
+  },
+  {
+    "id": 515,
+    "vietnamese": "quẹo trái",
+    "english": "turn left",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400"
+  },
+  {
+    "id": 516,
+    "vietnamese": "quẹo phải",
+    "english": "turn right",
+    "imageUrl": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=400"
+  },
+  {
+    "id": 517,
+    "vietnamese": "chạy thẳng",
+    "english": "go straight",
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400"
+  },
+  {
+    "id": 518,
+    "vietnamese": "gần đây",
+    "english": "nearby",
+    "imageUrl": "https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=400"
+  },
+  {
+    "id": 519,
+    "vietnamese": "khởi hành",
+    "english": "depart",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400"
+  },
+  {
+    "id": 520,
+    "vietnamese": "đặt phòng",
+    "english": "book room",
+    "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400"
+  },
+  {
+    "id": 521,
+    "vietnamese": "phòng đôi",
+    "english": "double room",
+    "imageUrl": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400"
+  },
+  {
+    "id": 522,
+    "vietnamese": "phòng đơn",
+    "english": "single room",
+    "imageUrl": "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=400"
+  },
+  {
+    "id": 523,
+    "vietnamese": "điều hòa",
+    "english": "air conditioning",
+    "imageUrl": "https://images.unsplash.com/photo-1527015175922-36a306cf0e20?w=400"
+  },
+  {
+    "id": 524,
+    "vietnamese": "nước nóng",
+    "english": "hot water",
+    "imageUrl": "https://images.unsplash.com/photo-1525385133512-2f3bdd039054?w=400"
+  },
+  {
+    "id": 525,
+    "vietnamese": "khăn tắm",
+    "english": "towel",
+    "imageUrl": "https://images.unsplash.com/photo-1576426863848-c21f53c60b19?w=400"
+  },
+  {
+    "id": 526,
+    "vietnamese": "xà phòng",
+    "english": "soap",
+    "imageUrl": "https://images.unsplash.com/photo-1584305574647-0cc949a2bb9f?w=400"
+  },
+  {
+    "id": 527,
+    "vietnamese": "giấy vệ sinh",
+    "english": "toilet paper",
+    "imageUrl": "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400"
+  },
+  {
+    "id": 528,
+    "vietnamese": "thang máy",
+    "english": "elevator",
+    "imageUrl": "https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=400"
+  },
+  {
+    "id": 529,
+    "vietnamese": "cầu thang",
+    "english": "stairs",
+    "imageUrl": "https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=400"
+  },
+  {
+    "id": 530,
+    "vietnamese": "tầng",
+    "english": "floor/level",
+    "imageUrl": "https://images.unsplash.com/photo-1567359781514-3b964e2b04d6?w=400"
+  },
+  {
+    "id": 531,
+    "vietnamese": "lễ tân",
+    "english": "reception",
+    "imageUrl": "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400"
+  },
+  {
+    "id": 532,
+    "vietnamese": "hành lý",
+    "english": "luggage",
+    "imageUrl": "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=400"
+  },
+  {
+    "id": 533,
+    "vietnamese": "va li",
+    "english": "suitcase",
+    "imageUrl": "https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=400"
+  },
+  {
+    "id": 534,
+    "vietnamese": "ba lô",
+    "english": "backpack",
+    "imageUrl": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400"
+  },
+  {
+    "id": 535,
+    "vietnamese": "hộ chiếu",
+    "english": "passport",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400"
+  },
+  {
+    "id": 536,
+    "vietnamese": "visa",
+    "english": "visa",
+    "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400"
+  },
+  {
+    "id": 537,
+    "vietnamese": "nhập cảnh",
+    "english": "immigration",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400"
+  },
+  {
+    "id": 538,
+    "vietnamese": "hải quan",
+    "english": "customs",
+    "imageUrl": "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400"
+  },
+  {
+    "id": 539,
+    "vietnamese": "lịch sử",
+    "english": "history",
+    "imageUrl": "https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=400"
+  },
+  {
+    "id": 540,
+    "vietnamese": "di tích",
+    "english": "heritage site",
+    "imageUrl": "https://images.unsplash.com/photo-1528181304800-259b08848526?w=400"
+  },
+  {
+    "id": 541,
+    "vietnamese": "cổ",
+    "english": "ancient/old",
+    "imageUrl": "https://images.unsplash.com/photo-1528181304800-259b08848526?w=400"
+  },
+  {
+    "id": 542,
+    "vietnamese": "truyền thống",
+    "english": "traditional",
+    "imageUrl": "https://images.unsplash.com/photo-1528181304800-259b08848526?w=400"
+  },
+  {
+    "id": 543,
+    "vietnamese": "hiện đại",
+    "english": "modern",
+    "imageUrl": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400"
+  },
+  {
+    "id": 544,
+    "vietnamese": "nông thôn",
+    "english": "countryside",
+    "imageUrl": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+  },
+  {
+    "id": 545,
+    "vietnamese": "thành thị",
+    "english": "urban",
+    "imageUrl": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400"
+  },
+  {
+    "id": 546,
+    "vietnamese": "ruộng lúa",
+    "english": "rice field",
+    "imageUrl": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400"
+  },
+  {
+    "id": 547,
+    "vietnamese": "ao sen",
+    "english": "lotus pond",
+    "imageUrl": "https://images.unsplash.com/photo-1536240478700-b869070f9279?w=400"
+  },
+  {
+    "id": 548,
+    "vietnamese": "tre",
+    "english": "bamboo",
+    "imageUrl": "https://images.unsplash.com/photo-1545378104-ce7b5e0c0f48?w=400"
+  },
+  {
+    "id": 549,
+    "vietnamese": "nón lá",
+    "english": "conical hat",
+    "imageUrl": "https://images.unsplash.com/photo-1557750255-c76072a7aee1?w=400"
+  },
+  {
+    "id": 550,
+    "vietnamese": "áo dài",
+    "english": "traditional dress",
+    "imageUrl": "https://images.unsplash.com/photo-1557750255-c76072a7aee1?w=400"
+  },
+  {
+    "id": 551,
+    "vietnamese": "ẩm thực",
+    "english": "cuisine",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"
+  },
+  {
+    "id": 552,
+    "vietnamese": "đặc sản",
+    "english": "specialty",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"
+  },
+  {
+    "id": 553,
+    "vietnamese": "ngon lắm",
+    "english": "very delicious",
+    "imageUrl": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400"
+  },
+  {
+    "id": 554,
+    "vietnamese": "không cay",
+    "english": "not spicy",
+    "imageUrl": "https://images.unsplash.com/photo-1526346698789-22fd84314424?w=400"
+  },
+  {
+    "id": 555,
+    "vietnamese": "ít cay",
+    "english": "less spicy",
+    "imageUrl": "https://images.unsplash.com/photo-1526346698789-22fd84314424?w=400"
+  },
+  {
+    "id": 556,
+    "vietnamese": "chay",
+    "english": "vegetarian",
+    "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400"
+  },
+  {
+    "id": 557,
+    "vietnamese": "hải sản",
+    "english": "seafood",
+    "imageUrl": "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400"
+  },
+  {
+    "id": 558,
+    "vietnamese": "đồ ăn",
+    "english": "food",
+    "imageUrl": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400"
+  },
+  {
+    "id": 559,
+    "vietnamese": "đồ uống",
+    "english": "drinks",
+    "imageUrl": "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400"
+  },
+  {
+    "id": 560,
+    "vietnamese": "thêm",
+    "english": "more/add",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 561,
+    "vietnamese": "bớt",
+    "english": "less/reduce",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 562,
+    "vietnamese": "đủ rồi",
+    "english": "enough",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 563,
+    "vietnamese": "chờ",
+    "english": "wait",
+    "imageUrl": "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=400"
+  },
+  {
+    "id": 564,
+    "vietnamese": "nhanh lên",
+    "english": "hurry up",
+    "imageUrl": "https://images.unsplash.com/photo-1494905998402-395d579af36f?w=400"
+  },
+  {
+    "id": 565,
+    "vietnamese": "từ từ",
+    "english": "slowly",
+    "imageUrl": "https://images.unsplash.com/photo-1517483000871-1dbf64a6e1c6?w=400"
+  },
+  {
+    "id": 566,
+    "vietnamese": "cẩn thận",
+    "english": "careful",
+    "imageUrl": "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=400"
+  },
+  {
+    "id": 567,
+    "vietnamese": "an toàn",
+    "english": "safe",
+    "imageUrl": "https://images.unsplash.com/photo-1589994160839-163cd867cfe8?w=400"
+  },
+  {
+    "id": 568,
+    "vietnamese": "cấm",
+    "english": "prohibited",
+    "imageUrl": "https://images.unsplash.com/photo-1551269901-5c5e14c25df7?w=400"
+  },
+  {
+    "id": 569,
+    "vietnamese": "cho phép",
+    "english": "allowed",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 570,
+    "vietnamese": "miễn phí",
+    "english": "free (no cost)",
+    "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400"
+  },
+  {
+    "id": 571,
+    "vietnamese": "có phí",
+    "english": "has fee",
+    "imageUrl": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6e?w=400"
+  },
+  {
+    "id": 572,
+    "vietnamese": "mở cửa",
+    "english": "open",
+    "imageUrl": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400"
+  },
+  {
+    "id": 573,
+    "vietnamese": "đóng cửa",
+    "english": "closed",
+    "imageUrl": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400"
+  },
+  {
+    "id": 574,
+    "vietnamese": "giờ mở cửa",
+    "english": "opening hours",
+    "imageUrl": "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?w=400"
   }
 ]

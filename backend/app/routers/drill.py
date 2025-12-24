@@ -212,7 +212,7 @@ async def get_drill_stats(
     drill_type: Literal["tone", "vowel"] = "tone",
     current_user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(get_session),
-):
+) -> dict:
     """Get current stats for a drill type."""
     primary_type_id = make_problem_type_id(drill_type, 1)
     state = await load_state(session, current_user.id, primary_type_id)

@@ -140,14 +140,22 @@ class ToneDrillService:
         return sets
 
     @staticmethod
-    def weighted_sample(weights: list[float]) -> int:
-        """Sample an index from an array of weights proportional to their values."""
-        total = sum(weights)
+    def weighted_sample(weights: list[float], aggressiveness: float = 2.0) -> int:
+        """Sample an index from an array of weights.
+
+        Args:
+            weights: Raw weights (e.g., error probabilities)
+            aggressiveness: Exponent for weights. Higher values focus more on
+                           high-weight items. 1.0 = proportional, 2.0 = squared.
+        """
+        # Apply aggressiveness: weight^aggressiveness
+        adjusted = [w ** aggressiveness for w in weights]
+        total = sum(adjusted)
         if total == 0:
             return random.randint(0, len(weights) - 1)
 
         r = random.random() * total
-        for i, w in enumerate(weights):
+        for i, w in enumerate(adjusted):
             r -= w
             if r <= 0:
                 return i
@@ -383,7 +391,7 @@ class ToneDrillService:
                 selected_tone = tone
                 break
 
-        if not word:
+        if not word or selected_tone is None:
             # Fallback
             fallback = self.get_any_mono_syllabic_word()
             if fallback:

@@ -321,6 +321,7 @@ function VowelStatsPanel({
   pairProbabilities,
 }: VowelStatsPanelProps) {
   const totalAttempts = pairProbabilities.reduce((sum, p) => sum + p.total, 0);
+  const totalSuccess = pairProbabilities.reduce((sum, p) => sum + p.correct, 0);
 
   // Only show top 20 pairs by total attempts, plus any with probability < 80%
   const sortedPairs = [...pairProbabilities].sort((a, b) => {
@@ -335,7 +336,7 @@ function VowelStatsPanel({
       <div className="flex justify-between items-center mb-2">
         <p className="text-xs font-semibold text-gray-700">Vowel Pair Success Probabilities</p>
         <p className="text-xs text-gray-500">
-          Total: {totalAttempts}/200
+          Total: {totalAttempts}/200 | Success: {totalSuccess.toFixed(1)}
           {totalAttempts >= 200 ? ' ✓' : ''}
         </p>
       </div>

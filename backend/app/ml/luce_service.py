@@ -313,15 +313,15 @@ class BradleyTerryState(ConfusionState):
         counts = [[0.0] * n_classes for _ in range(n_classes)]
         return cls(n_classes=n_classes, counts=counts, prior=prior, model_version=3)
 
-    def copy_with_increment(self, correct: int, selected: int) -> "BradleyTerryState":
+    def copy_with_increment(self, played: int, selected: int) -> "BradleyTerryState":
         """Return new state with incremented count. 1-indexed inputs.
 
         Args:
-            correct: The correct class (1-indexed)
+            played: The correct/played class (1-indexed)
             selected: The class user selected (1-indexed)
         """
         new_counts = [row.copy() for row in self.counts]
-        new_counts[correct - 1][selected - 1] += 1.0
+        new_counts[played - 1][selected - 1] += 1.0
         return BradleyTerryState(
             n_classes=self.n_classes,
             counts=new_counts,

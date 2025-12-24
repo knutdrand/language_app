@@ -20,7 +20,7 @@ async def get_audio(
     language: str,
     slug: str,
     provider: Literal["piper", "fpt"] = Query(default=DEFAULT_PROVIDER),
-):
+) -> FileResponse:
     """
     Get audio file for a word.
 
@@ -62,7 +62,7 @@ async def get_audio(
 
 
 @router.post("/audio/generate")
-async def generate_audio_endpoint(text: str, language: str = "vi"):
+async def generate_audio_endpoint(text: str, language: str = "vi") -> dict:
     """
     Generate audio for a word on-demand.
 
@@ -85,7 +85,7 @@ async def generate_audio_endpoint(text: str, language: str = "vi"):
 
 
 @router.get("/audio/list/{language}")
-async def list_audio(language: str):
+async def list_audio(language: str) -> dict:
     """List all available audio files for a language."""
     lang_dir = AUDIO_DIR / language
 

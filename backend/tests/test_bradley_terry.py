@@ -212,8 +212,8 @@ class TestBTIntegration:
 class TestBradleyTerryMLService:
     """Tests for the BradleyTerryMLService integration."""
 
-    def test_update_records_pairwise_wins(self):
-        """update_state should record wins against all alternatives."""
+    def test_update_records_confusion_matrix(self):
+        """update_state should record in confusion matrix: counts[correct][selected]."""
         from app.ml.luce_service import BradleyTerryMLService
         from app.ml.types import Problem, Answer
 
@@ -233,17 +233,17 @@ class TestBradleyTerryMLService:
 
         new_state, updates = service.update_state(state, problem, answer)
 
-        # Should have 3 updates: 1 beat 2, 1 beat 3, 1 beat 4
-        assert len(updates) == 3
+        # Should have 1 update: counts[correct=1][selected=1]
+        assert len(updates) == 1
+        assert updates[0].tracker_id == "counts[1][1]"
 
-        # Check wins matrix was updated correctly
-        # wins[0][1], wins[0][2], wins[0][3] should all be 1 (0-indexed)
-        assert new_state.counts[0][1] == 1.0  # 1 beat 2
-        assert new_state.counts[0][2] == 1.0  # 1 beat 3
-        assert new_state.counts[0][3] == 1.0  # 1 beat 4
+        # Check confusion matrix was updated correctly
+        assert new_state.counts[0][0] == 1.0  # counts[1][1] = 1 (0-indexed)
+        assert new_state.counts[0][1] == 0.0  # No confusion with 2
+        assert new_state.counts[0][2] == 0.0  # No confusion with 3
 
-    def test_update_records_wrong_answer_wins(self):
-        """When user selects wrong answer, that answer beats all others."""
+    def test_update_records_wrong_answer(self):
+        """When user selects wrong answer, records confusion: counts[correct][wrong_selected]."""
         from app.ml.luce_service import BradleyTerryMLService
         from app.ml.types import Problem, Answer
 
@@ -264,30 +264,30 @@ class TestBradleyTerryMLService:
 
         new_state, updates = service.update_state(state, problem, answer)
 
-        # Should have 3 updates: 2 beat 1, 2 beat 3, 2 beat 4
-        assert len(updates) == 3
+        # Should have 1 update: counts[correct=1][selected=2]
+        assert len(updates) == 1
+        assert updates[0].tracker_id == "counts[1][2]"
 
-        # wins[1][0], wins[1][2], wins[1][3] should be 1 (0-indexed)
-        assert new_state.counts[1][0] == 1.0  # 2 beat 1
-        assert new_state.counts[1][2] == 1.0  # 2 beat 3
-        assert new_state.counts[1][3] == 1.0  # 2 beat 4
+        # counts[0][1] should be 1 (0-indexed): when 1 was correct, user selected 2
+        assert new_state.counts[0][1] == 1.0
+        assert new_state.counts[0][0] == 0.0  # User didn't select correct
 
-    def test_success_probability_uses_bt_strengths(self):
-        """Success probability should be based on BT strengths."""
+    def test_success_probability_uses_confusion_matrix(self):
+        """Success probability should be based on confusion matrix counts."""
         from app.ml.luce_service import BradleyTerryMLService, BradleyTerryState
         from app.ml.types import Problem
 
         service = BradleyTerryMLService(prior=1.0)
 
-        # Create state where class 1 dominates
+        # Create state with confusion matrix data
+        # When class 1 is correct, user mostly selects 1 (correct)
         n = 6
         counts = [[0.0] * n for _ in range(n)]
-        counts[0][1] = 10.0  # 1 beats 2 ten times
-        counts[0][2] = 10.0  # 1 beats 3 ten times
-        counts[1][0] = 2.0   # 2 beats 1 twice
-        counts[2][0] = 2.0   # 3 beats 1 twice
+        counts[0][0] = 10.0  # When 1 correct, selected 1 (correct) 10 times
+        counts[0][1] = 2.0   # When 1 correct, selected 2 (wrong) 2 times
+        counts[0][2] = 1.0   # When 1 correct, selected 3 (wrong) 1 time
 
-        state = BradleyTerryState(n_classes=n, counts=counts, prior=1.0, model_version=2)
+        state = BradleyTerryState(n_classes=n, counts=counts, prior=1.0, model_version=3)
 
         problem = Problem(
             problem_type_id="tone_1",
@@ -301,9 +301,11 @@ class TestBradleyTerryMLService:
 
         beta_params = service.get_success_distribution(problem, state)
 
-        # Class 1 should have higher than chance probability (>1/3 for 3 choices)
+        # P(correct) = (10+1) / (10+2+1+3) = 11/16 ≈ 0.69
+        # (counts[0][0] + prior) / (counts[0][0] + counts[0][1] + counts[0][2] + 3*prior)
         mean_prob = beta_params.mean
         assert mean_prob > 0.5, f"Expected above-chance success prob, got {mean_prob}"
+        assert mean_prob < 0.8, f"Expected below 0.8, got {mean_prob}"
 
     def test_get_all_pair_stats(self):
         """get_all_pair_stats should return Beta params for all pairs."""
@@ -322,6 +324,40 @@ class TestBradleyTerryMLService:
             assert 1 <= i < j <= 6
             assert beta.alpha > 0
             assert beta.beta > 0
+
+    def test_pair_stats_is_mean_of_both_directions(self):
+        """Pair success should be mean(P(a|correct=a), P(b|correct=b))."""
+        from app.ml.luce_service import BradleyTerryMLService, BradleyTerryState
+
+        service = BradleyTerryMLService(prior=1.0)
+
+        # Create asymmetric confusion: user good at 1, bad at 2
+        n = 6
+        counts = [[0.0] * n for _ in range(n)]
+        counts[0][0] = 8.0   # When 1 correct, selected 1 (correct) 8 times
+        counts[0][1] = 2.0   # When 1 correct, selected 2 (wrong) 2 times
+        counts[1][1] = 3.0   # When 2 correct, selected 2 (correct) 3 times
+        counts[1][0] = 7.0   # When 2 correct, selected 1 (wrong) 7 times
+
+        state = BradleyTerryState(n_classes=n, counts=counts, prior=1.0, model_version=3)
+
+        pair_stats = service.get_all_pair_stats("tone_1", state)
+        beta_12 = pair_stats[(1, 2)]
+
+        # Manual calculation:
+        prior = 1.0
+        # P(1|correct=1, choices={1,2}) = (8+1)/(8+2+2) = 9/12 = 0.75
+        p_1_given_1 = (8 + prior) / (8 + 2 + 2 * prior)
+        # P(2|correct=2, choices={2,1}) = (3+1)/(3+7+2) = 4/12 = 0.333
+        p_2_given_2 = (3 + prior) / (3 + 7 + 2 * prior)
+        # Average = (0.75 + 0.333) / 2 = 0.542
+        expected_mean = (p_1_given_1 + p_2_given_2) / 2
+
+        actual_mean = beta_12.mean
+
+        # Should be close to the average (Beta mixture approximation may differ slightly)
+        assert abs(actual_mean - expected_mean) < 0.05, \
+            f"Expected mean ~{expected_mean:.3f}, got {actual_mean:.3f}"
 
 
 if __name__ == "__main__":

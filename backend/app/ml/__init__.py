@@ -31,6 +31,9 @@ from .luce_service import (
     LuceMLService,
     LuceState,
     get_luce_service,
+    BradleyTerryMLService,
+    BradleyTerryState,
+    get_bradley_terry_service,
 )
 
 __all__ = [
@@ -57,4 +60,8 @@ __all__ = [
     "LuceMLService",
     "LuceState",
     "get_luce_service",
+    # Service - Bradley-Terry Model
+    "BradleyTerryMLService",
+    "BradleyTerryState",
+    "get_bradley_terry_service",
 ]
