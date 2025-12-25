@@ -112,6 +112,7 @@ export function ToneDrill() {
       const answer: PreviousAnswer = {
         problem_type_id: drill.problem_type_id,
         word_id: drill.word_id,
+        vietnamese: drill.vietnamese,
         correct_sequence: drill.correct_sequence,
         selected_sequence: selectedSequence as number[],
         alternatives: drill.alternatives,

@@ -7,11 +7,12 @@ Delegates all logic to services and ML layer.
 from __future__ import annotations
 
 import random
-from typing import Annotated, Optional, Literal
+from typing import Annotated, Optional, Literal, List
 from datetime import datetime
 from pydantic import BaseModel, computed_field
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from app.database import get_session
 from app.models.user import User
@@ -50,6 +51,7 @@ class PreviousAnswer(BaseModel):
     """Answer to the previous drill."""
     problem_type_id: str
     word_id: int
+    vietnamese: str = ""  # Vietnamese text for logging
     correct_sequence: list[int]  # 1-indexed
     selected_sequence: list[int]  # 1-indexed
     alternatives: list[list[int]]  # 1-indexed
@@ -186,7 +188,7 @@ async def get_next_drill(
             user_id=current_user.id,
             problem_type_id=pa.problem_type_id,
             word_id=pa.word_id,
-            vietnamese="",  # Could be added to PreviousAnswer if needed
+            vietnamese=pa.vietnamese,
             correct_sequence=pa.correct_sequence,
             alternatives=pa.alternatives,
             selected_sequence=pa.selected_sequence,
@@ -317,3 +319,58 @@ async def get_drill_stats(
             for s in four_choice_stats_raw
         ],
     }
+
+
+class AttemptExport(BaseModel):
+    """Export format for a drill attempt."""
+    id: str
+    user_id: str
+    created_at: datetime
+    problem_type_id: str
+    word_id: int
+    vietnamese: str
+    correct_sequence: List[int]
+    alternatives: List[List[int]]
+    selected_sequence: List[int]
+    is_correct: bool
+    response_time_ms: Optional[int]
+    voice: str
+    speed: int
+
+
+@router.get("/drill/attempts", response_model=List[AttemptExport])
+async def export_attempts(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    limit: int = 10000,
+) -> List[AttemptExport]:
+    """
+    Export all drill attempts for ML training.
+
+    No authentication required - data is anonymized by user_id UUIDs.
+    Returns attempts ordered by created_at ascending (oldest first).
+    """
+    result = await session.execute(
+        select(DrillAttempt)
+        .order_by(DrillAttempt.created_at.asc())
+        .limit(limit)
+    )
+    attempts = result.scalars().all()
+
+    return [
+        AttemptExport(
+            id=a.id,
+            user_id=a.user_id,
+            created_at=a.created_at,
+            problem_type_id=a.problem_type_id,
+            word_id=a.word_id,
+            vietnamese=a.vietnamese,
+            correct_sequence=a.correct_sequence,
+            alternatives=a.alternatives,
+            selected_sequence=a.selected_sequence,
+            is_correct=a.is_correct,
+            response_time_ms=a.response_time_ms,
+            voice=a.voice,
+            speed=a.speed,
+        )
+        for a in attempts
+    ]

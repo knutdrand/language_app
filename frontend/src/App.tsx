@@ -1,20 +1,17 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ToneDrill } from './components/ToneDrill';
 import { SpeakDrill } from './components/SpeakDrill';
-import { SourceSelector } from './components/SourceSelector';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { API_BASE_URL } from './config';
 import words from './data/words.json';
-import sources from './data/sources.json';
-import type { Word, Source, DrillMode } from './types';
+import type { Word, DrillMode } from './types';
 
 type AuthView = 'login' | 'register';
 
 function App() {
   const { isAuthenticated, isLoading, user, logout } = useAuth();
-  const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
   const [drillMode, setDrillMode] = useState<DrillMode>('tone');
   const [authView, setAuthView] = useState<AuthView>('login');
   const [backendError, setBackendError] = useState<string | null>(null);
@@ -38,14 +35,6 @@ function App() {
     }
     checkHealth();
   }, []);
-
-  // Filter words by selected source
-  const filteredWords = useMemo(() => {
-    if (selectedSourceId === null) {
-      return words as Word[];
-    }
-    return (words as Word[]).filter(w => w.sourceId === selectedSourceId);
-  }, [selectedSourceId]);
 
   const footerText = drillMode === 'tone'
     ? 'Listen to the word and select the correct tone sequence'
@@ -95,22 +84,17 @@ function App() {
             <h1 className="text-xl font-bold text-indigo-900">
               Vietnamese Vocab
             </h1>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-500">
-                {filteredWords.length} words
-              </span>
-              <button
-                onClick={logout}
-                className="text-sm text-gray-500 hover:text-indigo-600 transition"
-                title={user?.email}
-              >
-                Sign out
-              </button>
-            </div>
+            <button
+              onClick={logout}
+              className="text-sm text-gray-500 hover:text-indigo-600 transition"
+              title={user?.email}
+            >
+              Sign out
+            </button>
           </div>
 
           {/* Mode toggle */}
-          <div className="flex gap-2 mb-3">
+          <div className="flex gap-2">
             <button
               onClick={() => setDrillMode('tone')}
               className={`
@@ -136,26 +120,15 @@ function App() {
               Speak
             </button>
           </div>
-
-          <SourceSelector
-            sources={sources as Source[]}
-            selectedSourceId={selectedSourceId}
-            onSelectSource={setSelectedSourceId}
-          />
         </div>
       </header>
 
       {/* Main content */}
       <main className="py-6">
         {drillMode === 'tone' ? (
-          <ToneDrill
-            key={`tone-${selectedSourceId || 'all'}`}
-          />
+          <ToneDrill />
         ) : (
-          <SpeakDrill
-            key={`speak-${selectedSourceId || 'all'}`}
-            words={filteredWords}
-          />
+          <SpeakDrill words={words as Word[]} />
         )}
       </main>
 

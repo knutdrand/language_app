@@ -43,6 +43,7 @@ export interface StateUpdate {
 export interface PreviousAnswer {
   problem_type_id: string;
   word_id: number;
+  vietnamese: string;          // Vietnamese text for logging
   correct_sequence: number[];  // 1-indexed
   selected_sequence: number[];  // 1-indexed
   alternatives: number[][];    // 1-indexed
