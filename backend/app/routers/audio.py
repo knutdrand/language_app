@@ -47,18 +47,10 @@ async def get_audio(
     audio_path = get_audio_path(slug, voice, speed)
 
     if not audio_path.exists():
-        # Fallback to default if parameterized version not available
-        if voice != DEFAULT_VOICE or speed != DEFAULT_SPEED:
-            default_path = AUDIO_DIR / f"{slug}.mp3"
-            if default_path.exists():
-                audio_path = default_path
-            else:
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"Audio not found: {slug} (voice={voice}, speed={speed})"
-                )
-        else:
-            raise HTTPException(status_code=404, detail=f"Audio not found: {slug}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"FPT audio not found: {slug} (voice={voice}, speed={speed}). No fallbacks available."
+        )
 
     return FileResponse(
         audio_path,

@@ -13,7 +13,7 @@ interface UseAudioOptions {
 /**
  * Cross-platform audio playback hook.
  * Supports embedded audio (bundled in app) and remote audio (from backend).
- * Falls back to speech synthesis on web if audio fails.
+ * No fallbacks - throws error if FPT audio is not available.
  */
 export function useAudio(wordId: number | null, text: string, options: UseAudioOptions = {}) {
   const { autoPlay = false, voice, speed } = options;
@@ -113,17 +113,6 @@ export function useAudio(wordId: number | null, text: string, options: UseAudioO
     }
   }, []);
 
-  // Fallback to speech synthesis (web only)
-  const playSpeechSynthesis = useCallback((textToSpeak: string) => {
-    if (Platform.OS === 'web' && 'speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
-      utterance.lang = 'vi-VN';
-      utterance.rate = 0.8;
-      utterance.onstart = () => setIsPlaying(true);
-      utterance.onend = () => setIsPlaying(false);
-      window.speechSynthesis.speak(utterance);
-    }
-  }, []);
 
   // Main play function
   const play = useCallback(async () => {
@@ -148,18 +137,15 @@ export function useAudio(wordId: number | null, text: string, options: UseAudioO
       success = await playRemote(audioUrl);
     }
 
-    // Final fallback to speech synthesis on web
+    // No fallbacks - error if audio not available
     if (!success) {
       setIsLoading(false);
-      playSpeechSynthesis(text);
+      console.error(`FPT audio not found for word ${wordId}: "${text}". No fallbacks available.`);
     }
-  }, [wordId, text, voice, speed, isPlaying, cleanup, playEmbedded, playRemote, playSpeechSynthesis]);
+  }, [wordId, text, voice, speed, isPlaying, cleanup, playEmbedded, playRemote]);
 
   // Stop playback
   const stop = useCallback(async () => {
-    if (Platform.OS === 'web') {
-      window.speechSynthesis?.cancel();
-    }
     await cleanup();
     setIsPlaying(false);
   }, [cleanup]);
@@ -179,9 +165,6 @@ export function useAudio(wordId: number | null, text: string, options: UseAudioO
   useEffect(() => {
     return () => {
       cleanup();
-      if (Platform.OS === 'web') {
-        window.speechSynthesis?.cancel();
-      }
     };
   }, [cleanup]);
 

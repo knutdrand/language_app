@@ -129,6 +129,7 @@ async def log_attempt(
     response_time_ms: Optional[int],
     voice: str,
     speed: int,
+    lesson_id: Optional[int] = None,
 ) -> None:
     """Log a drill attempt to the database."""
     attempt = DrillAttempt(
@@ -143,6 +144,7 @@ async def log_attempt(
         response_time_ms=response_time_ms,
         voice=voice,
         speed=speed,
+        lesson_id=lesson_id,
     )
     session.add(attempt)
     await session.commit()

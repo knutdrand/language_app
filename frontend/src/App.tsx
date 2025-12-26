@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ToneDrill } from './components/ToneDrill';
 import { SpeakDrill } from './components/SpeakDrill';
+import { LessonDrill } from './components/LessonDrill';
 import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
@@ -38,6 +39,8 @@ function App() {
 
   const footerText = drillMode === 'tone'
     ? 'Listen to the word and select the correct tone sequence'
+    : drillMode === 'lesson'
+    ? 'Structured lessons focused on specific tone pairs'
     : 'Practice speaking Vietnamese with tone feedback';
 
   // Show loading spinner while checking auth
@@ -96,6 +99,18 @@ function App() {
           {/* Mode toggle */}
           <div className="flex gap-2">
             <button
+              onClick={() => setDrillMode('lesson')}
+              className={`
+                flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                ${drillMode === 'lesson'
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }
+              `}
+            >
+              Lessons
+            </button>
+            <button
               onClick={() => setDrillMode('tone')}
               className={`
                 flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors
@@ -105,7 +120,7 @@ function App() {
                 }
               `}
             >
-              Tone
+              Free Practice
             </button>
             <button
               onClick={() => setDrillMode('speak')}
@@ -125,7 +140,9 @@ function App() {
 
       {/* Main content */}
       <main className="py-6">
-        {drillMode === 'tone' ? (
+        {drillMode === 'lesson' ? (
+          <LessonDrill />
+        ) : drillMode === 'tone' ? (
           <ToneDrill />
         ) : (
           <SpeakDrill words={words as Word[]} />

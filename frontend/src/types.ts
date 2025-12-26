@@ -36,4 +36,4 @@ export interface SessionStats {
   lastReviewDate: string;
 }
 
-export type DrillMode = 'tone' | 'speak';
+export type DrillMode = 'tone' | 'speak' | 'lesson';

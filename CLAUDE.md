@@ -20,12 +20,12 @@ npm run test:run     # Run tests once
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001  # Start server at http://localhost:8001
+uvicorn app.main:app --reload --port 8023  # Start server at http://localhost:8023
 
 # Mobile development
 cd mobile
 npm install
-EXPO_PUBLIC_API_URL=http://localhost:8001 npx expo start
+npx expo start  # Backend URL defaults to http://localhost:8023
 ```
 
 ## Technology Stack
@@ -77,6 +77,7 @@ language_app/
 - Pre-generated MP3 files via FPT.AI TTS (Vietnamese "banmai" voice)
 - Files stored in `backend/audio/vi_fpt/`
 - Naming: `{word_id}_{slug}.mp3`
+- **No fallbacks**: If FPT audio file is missing, an error is raised. Never use browser speech synthesis or other TTS as fallback.
 
 ### ML Layer Architecture
 The backend handles all business logic:

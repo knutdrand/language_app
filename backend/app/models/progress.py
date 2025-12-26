@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field, JSON, Column
+from sqlmodel import SQLModel, Field, JSON, Column, UniqueConstraint
 from datetime import datetime
 from typing import Optional
 import uuid
@@ -76,6 +76,10 @@ class UserState(SQLModel, table=True):
     Problem types are defined by drill_type + syllable_count.
     Unique constraint on (user_id, problem_type_id) enforced at DB level.
     """
+    __table_args__ = (
+        UniqueConstraint("user_id", "problem_type_id", name="uix_userstate_user_problem"),
+    )
+
     id: str = Field(default_factory=lambda: str(uuid.uuid4()), primary_key=True)
     user_id: str = Field(foreign_key="users.id", index=True)
     problem_type_id: str = Field(index=True)  # e.g., "tone_1", "tone_2", "vowel_1"
@@ -144,6 +148,9 @@ class DrillAttempt(SQLModel, table=True):
     # Audio parameters (for voice preference learning)
     voice: str = Field(default="banmai", index=True)
     speed: int = Field(default=0)
+
+    # Lesson tracking (for lesson-based drills)
+    lesson_id: Optional[int] = Field(default=None, index=True)
 
     class Config:
         arbitrary_types_allowed = True

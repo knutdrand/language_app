@@ -4,49 +4,29 @@ import { getAudioUrl } from '../config';
 interface AudioButtonProps {
   wordId: number;
   text: string;
-  language?: string;
   autoPlay?: boolean;
   voice?: string;   // Voice for audio (e.g., "banmai", "leminh")
   speed?: number;   // Speed for audio (-3 to +3)
 }
 
-export function AudioButton({ wordId, text, language = 'vi', autoPlay = false, voice, speed }: AudioButtonProps) {
+export function AudioButton({ wordId, text, autoPlay = false, voice, speed }: AudioButtonProps) {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const lastPlayedWordId = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Fallback to browser speech synthesis
-  const speakWithBrowser = useCallback(() => {
-    if ('speechSynthesis' in window) {
-      speechSynthesis.cancel();
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language === 'vi' ? 'vi-VN' : language;
-      utterance.rate = 0.8;
-
-      utterance.onstart = () => setIsPlaying(true);
-      utterance.onend = () => setIsPlaying(false);
-      utterance.onerror = () => setIsPlaying(false);
-
-      speechSynthesis.speak(utterance);
-    } else {
-      console.warn('Speech synthesis not supported');
-      setIsPlaying(false);
-    }
-  }, [text, language]);
-
-  // Play audio from backend, fallback to browser TTS
+  // Play audio from backend - no fallbacks
   const speak = useCallback(async () => {
     if (isPlaying) return;
 
     setIsPlaying(true);
+    setError(null);
 
     // Stop any current audio
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
-    speechSynthesis.cancel();
 
     try {
       const audioUrl = getAudioUrl(wordId, text, voice, speed);
@@ -59,17 +39,21 @@ export function AudioButton({ wordId, text, language = 'vi', autoPlay = false, v
       };
 
       audio.onerror = () => {
-        console.log('Backend audio not available, falling back to browser TTS');
-        speakWithBrowser();
+        const msg = `FPT audio not found for word ${wordId}: "${text}"`;
+        console.error(msg);
+        setError(msg);
+        setIsPlaying(false);
         audioRef.current = null;
       };
 
       await audio.play();
-    } catch (error) {
-      console.log('Failed to play backend audio, falling back to browser TTS');
-      speakWithBrowser();
+    } catch (err) {
+      const msg = `Failed to play FPT audio for word ${wordId}: "${text}"`;
+      console.error(msg, err);
+      setError(msg);
+      setIsPlaying(false);
     }
-  }, [wordId, text, voice, speed, isPlaying, speakWithBrowser]);
+  }, [wordId, text, voice, speed, isPlaying]);
 
   // Auto-play when wordId changes (new word loaded)
   useEffect(() => {
@@ -89,28 +73,34 @@ export function AudioButton({ wordId, text, language = 'vi', autoPlay = false, v
       if (audioRef.current) {
         audioRef.current.pause();
       }
-      speechSynthesis.cancel();
     };
   }, []);
 
   return (
-    <button
-      onClick={speak}
-      disabled={isPlaying}
-      className={`
-        flex items-center justify-center gap-3
-        px-8 py-4 rounded-2xl
-        text-xl font-semibold
-        transition-all duration-200
-        ${isPlaying
-          ? 'bg-indigo-400 cursor-not-allowed'
-          : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-105 active:scale-95'
-        }
-        text-white shadow-lg
-      `}
-    >
-      <span className="text-3xl">{isPlaying ? '🔊' : '🔈'}</span>
-      <span>Play Word</span>
-    </button>
+    <div className="flex flex-col items-center gap-2">
+      <button
+        onClick={speak}
+        disabled={isPlaying}
+        className={`
+          flex items-center justify-center gap-3
+          px-8 py-4 rounded-2xl
+          text-xl font-semibold
+          transition-all duration-200
+          ${isPlaying
+            ? 'bg-indigo-400 cursor-not-allowed'
+            : error
+              ? 'bg-red-600 hover:bg-red-700'
+              : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-105 active:scale-95'
+          }
+          text-white shadow-lg
+        `}
+      >
+        <span className="text-3xl">{error ? '❌' : isPlaying ? '🔊' : '🔈'}</span>
+        <span>{error ? 'Audio Missing' : 'Play Word'}</span>
+      </button>
+      {error && (
+        <p className="text-red-500 text-sm max-w-xs text-center">{error}</p>
+      )}
+    </div>
   );
 }
