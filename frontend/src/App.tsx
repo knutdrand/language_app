@@ -6,6 +6,7 @@ import { useAuth } from './contexts/AuthContext';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { API_BASE_URL } from './config';
+import { fetchWords } from './services/wordsApi';
 import words from './data/words.json';
 import type { Word, DrillMode } from './types';
 
@@ -16,6 +17,7 @@ function App() {
   const [drillMode, setDrillMode] = useState<DrillMode>('tone');
   const [authView, setAuthView] = useState<AuthView>('login');
   const [backendError, setBackendError] = useState<string | null>(null);
+  const [wordsData, setWordsData] = useState<Word[]>(words as Word[]);
 
   // Check backend health on startup
   useEffect(() => {
@@ -35,6 +37,27 @@ function App() {
       }
     }
     checkHealth();
+  }, []);
+
+  // Load words from API (fallback to bundled list if needed)
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadWords() {
+      try {
+        const data = await fetchWords();
+        if (mounted) {
+          setWordsData(data);
+        }
+      } catch (e) {
+        // Keep bundled words as fallback when API is unavailable.
+      }
+    }
+
+    loadWords();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const footerText = drillMode === 'tone'
@@ -145,7 +168,7 @@ function App() {
         ) : drillMode === 'tone' ? (
           <ToneDrill />
         ) : (
-          <SpeakDrill words={words as Word[]} />
+          <SpeakDrill words={wordsData} />
         )}
       </main>
 

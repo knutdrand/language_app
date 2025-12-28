@@ -166,6 +166,7 @@ async def get_next_drill(
     Returns the next drill with randomly selected voice/speed.
     """
     service = get_drill_service("tone")
+    user_id = current_user.id
 
     # Load all states for this drill type
     problem_types = get_problem_types_for_drill("tone")
@@ -173,7 +174,7 @@ async def get_next_drill(
 
     for pt in problem_types:
         states[pt.problem_type_id] = await load_state(
-            session, current_user.id, pt.problem_type_id
+            session, user_id, pt.problem_type_id
         )
 
     # Convert request to Problem/Answer if previous answer provided
@@ -187,7 +188,7 @@ async def get_next_drill(
         is_correct = pa.selected_sequence == pa.correct_sequence
         await log_attempt(
             session=session,
-            user_id=current_user.id,
+            user_id=user_id,
             problem_type_id=pa.problem_type_id,
             word_id=pa.word_id,
             vietnamese=pa.vietnamese,
@@ -223,13 +224,13 @@ async def get_next_drill(
     # Save updated states
     for problem_type_id, state in updated_states.items():
         if problem_type_id in [pt.problem_type_id for pt in problem_types]:
-            await save_state(session, current_user.id, problem_type_id, state)
+            await save_state(session, user_id, problem_type_id, state)
 
     # Get pair stats for the primary problem type (single syllable)
     primary_type_id = make_problem_type_id("tone", 1)
     primary_state = updated_states.get(primary_type_id)
     if primary_state is None:
-        primary_state = await load_state(session, current_user.id, primary_type_id)
+        primary_state = await load_state(session, user_id, primary_type_id)
 
     from app.ml import get_ml_service
     ml = get_ml_service()

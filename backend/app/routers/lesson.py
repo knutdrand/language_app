@@ -109,21 +109,22 @@ async def start_lesson(
 ):
     """Start a new lesson session."""
     service = get_lesson_service()
+    user_id = current_user.id
 
     # Load ML states for adaptive selection
     problem_types = get_problem_types_for_drill("tone")
     states: dict[str, ConfusionState] = {}
     for pt in problem_types:
         states[pt.problem_type_id] = await load_state(
-            session, current_user.id, pt.problem_type_id
+            session, user_id, pt.problem_type_id
         )
 
     # Generate unique session ID
-    session_id = f"{current_user.id}_{uuid.uuid4().hex[:8]}"
+    session_id = f"{user_id}_{uuid.uuid4().hex[:8]}"
 
     lesson_state = await service.start_lesson(
         session_id=session_id,
-        user_id=current_user.id,
+        user_id=user_id,
         db_session=session,
         theme_id=request.theme_id,
         states=states,
@@ -146,13 +147,14 @@ async def get_first_drill(
 ):
     """Get the first drill for a lesson (no previous answer)."""
     service = get_lesson_service()
+    user_id = current_user.id
 
     # Load ML states
     problem_types = get_problem_types_for_drill("tone")
     states: dict[str, ConfusionState] = {}
     for pt in problem_types:
         states[pt.problem_type_id] = await load_state(
-            session, current_user.id, pt.problem_type_id
+            session, user_id, pt.problem_type_id
         )
 
     result = service.get_next_drill(session_id, states)
@@ -188,6 +190,7 @@ async def get_lesson_next(
 ):
     """Submit answer and get next lesson drill."""
     service = get_lesson_service()
+    user_id = current_user.id
 
     # Get lesson state for lesson_id
     lesson_state = service.get_lesson_state(request.session_id)
@@ -198,7 +201,7 @@ async def get_lesson_next(
     states: dict[str, ConfusionState] = {}
     for pt in problem_types:
         states[pt.problem_type_id] = await load_state(
-            session, current_user.id, pt.problem_type_id
+            session, user_id, pt.problem_type_id
         )
 
     # Determine problem_type_id from correct_sequence length
@@ -209,7 +212,7 @@ async def get_lesson_next(
     is_correct = request.selected_sequence == request.correct_sequence
     await log_attempt(
         session=session,
-        user_id=current_user.id,
+        user_id=user_id,
         problem_type_id=problem_type_id,
         word_id=request.word_id,
         vietnamese=request.vietnamese,
@@ -245,7 +248,7 @@ async def get_lesson_next(
         )
         new_state, _ = ml.update_state(state, problem, answer)
         states[problem_type_id] = new_state
-        await save_state(session, current_user.id, problem_type_id, new_state)
+        await save_state(session, user_id, problem_type_id, new_state)
 
     # Record answer in lesson state
     problem = Problem(

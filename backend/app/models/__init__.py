@@ -10,6 +10,8 @@ from app.models.progress import (
     SyncResponse,
     DrillAttempt,
 )
+from app.models.word import Word, WordRead
+from app.models.review import Review, ReviewCreate, ReviewResponse, ProgressResponse
 
 __all__ = [
     "User",
@@ -23,4 +25,10 @@ __all__ = [
     "SyncRequest",
     "SyncResponse",
     "DrillAttempt",
+    "Word",
+    "WordRead",
+    "Review",
+    "ReviewCreate",
+    "ReviewResponse",
+    "ProgressResponse",
 ]
