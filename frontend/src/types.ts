@@ -36,4 +36,12 @@ export interface SessionStats {
   lastReviewDate: string;
 }
 
+export interface ProgressStats {
+  reviewsToday: number;
+  correctToday: number;
+  lastReviewDate: string;
+  totalReviews: number;
+  totalCorrect: number;
+}
+
 export type DrillMode = 'tone' | 'speak' | 'lesson';

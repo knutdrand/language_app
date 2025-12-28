@@ -111,6 +111,14 @@ backend/
 | POST | `/api/auth/login` | Get access token |
 | GET | `/api/auth/me` | Get current user info |
 
+### Vocabulary
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/words` | List available words |
+| POST | `/api/reviews` | Record a word review |
+| GET | `/api/progress` | Get review progress stats |
+
 ### Health
 
 | Method | Endpoint | Description |
