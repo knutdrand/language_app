@@ -2,6 +2,9 @@
 // Use EXPO_PUBLIC_API_URL to override (e.g., for production server)
 export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8023';
 
+// Audio source: 'remote' (from backend) or 'embedded' (bundled in app)
+export const AUDIO_SOURCE: 'remote' | 'embedded' = 'remote';
+
 // Audio URL helper - requires word ID for unique filenames
 // Optional voice/speed params for parameterized audio
 export function getAudioUrl(

@@ -1,14 +1,15 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AudioButton } from '../../components/AudioButton';
 import { ToneGrid } from '../../components/ToneGrid';
 import {
-  useDrillApi,
-  type PreviousAnswer,
-  type DifficultyLevel,
-} from '../../hooks/useDrillApi';
+  useLessonApi,
+  fetchLessonThemes,
+  type ThemeInfo,
+  type LessonSummary,
+} from '../../hooks/useLessonApi';
 import {
   type ToneId,
   formatToneSequence,
@@ -16,16 +17,38 @@ import {
   sequencesEqual,
 } from '../../utils/tones';
 
-export default function ToneDrillScreen() {
+// Tone names for display
+const TONE_NAMES = ['Level', 'Falling', 'Rising', 'Dipping', 'Creaky', 'Heavy'];
+
+// Theme descriptions
+const THEME_DESCRIPTIONS: { [key: number]: string } = {
+  0: 'Level vs Falling/Rising',
+  1: 'Falling vs Rising/Dipping',
+  2: 'Rising/Dipping/Creaky',
+  3: 'Creaky/Heavy',
+  4: 'Level vs Dipping/Creaky',
+  5: 'Falling vs Creaky/Heavy',
+  6: 'Mixed pairs',
+  7: 'Mixed advanced',
+};
+
+type ViewMode = 'select' | 'drill' | 'summary';
+
+export default function LessonDrillScreen() {
   const {
+    session,
     drill,
-    difficultyLevel,
+    isComplete,
+    summary,
     isLoading,
     error,
+    startLesson,
     submitAnswer,
-    reload,
-  } = useDrillApi('tone');
+    resetLesson,
+  } = useLessonApi();
 
+  const [themes, setThemes] = useState<ThemeInfo[]>([]);
+  const [themesLoading, setThemesLoading] = useState(true);
   const [showingFeedback, setShowingFeedback] = useState(false);
   const [lastResult, setLastResult] = useState<{
     correct: boolean;
@@ -36,11 +59,15 @@ export default function ToneDrillScreen() {
   const attemptStartTime = useRef<number | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Session stats (local only)
-  const [sessionReviews, setSessionReviews] = useState(0);
-  const [sessionCorrect, setSessionCorrect] = useState(0);
+  // Load themes on mount
+  useEffect(() => {
+    fetchLessonThemes()
+      .then(setThemes)
+      .catch(console.error)
+      .finally(() => setThemesLoading(false));
+  }, []);
 
-  // Reset attempt timer when drill changes
+  // Reset state when drill changes
   useEffect(() => {
     if (drill) {
       attemptStartTime.current = Date.now();
@@ -59,6 +86,13 @@ export default function ToneDrillScreen() {
     };
   }, []);
 
+  const handleStartLesson = useCallback(
+    async (themeId?: number) => {
+      await startLesson(themeId);
+    },
+    [startLesson]
+  );
+
   const handleSelect = useCallback(
     async (selectedSequence: ToneId[], isCorrect: boolean) => {
       if (!drill) return;
@@ -68,12 +102,6 @@ export default function ToneDrillScreen() {
         ? Date.now() - attemptStartTime.current
         : undefined;
 
-      // Update session stats
-      setSessionReviews((r) => r + 1);
-      if (isCorrect) {
-        setSessionCorrect((c) => c + 1);
-      }
-
       setLastResult({
         correct: isCorrect,
         vietnamese: drill.vietnamese,
@@ -81,29 +109,14 @@ export default function ToneDrillScreen() {
       });
       setShowingFeedback(true);
 
-      // Clear any existing timer
       if (advanceTimerRef.current) {
         clearTimeout(advanceTimerRef.current);
       }
 
-      // Submit answer and get next drill after delay
       advanceTimerRef.current = setTimeout(async () => {
         advanceTimerRef.current = null;
-
-        const answer: PreviousAnswer = {
-          problem_type_id: drill.problem_type_id,
-          word_id: drill.word_id,
-          vietnamese: drill.vietnamese,
-          correct_sequence: drill.correct_sequence,
-          selected_sequence: selectedSequence as number[],
-          alternatives: drill.alternatives,
-          response_time_ms: responseTimeMs,
-          voice: drill.voice,
-          speed: drill.speed,
-        };
-
         try {
-          await submitAnswer(answer);
+          await submitAnswer(selectedSequence as number[], responseTimeMs);
         } catch (e) {
           console.error('Failed to submit answer:', e);
         }
@@ -112,7 +125,6 @@ export default function ToneDrillScreen() {
     [drill, showingFeedback, submitAnswer]
   );
 
-  // Extract distractors from alternatives
   const getDistractorSequences = (): ToneId[][] => {
     if (!drill) return [];
     const correct = drill.correct_sequence;
@@ -121,29 +133,16 @@ export default function ToneDrillScreen() {
       .map((alt) => alt as ToneId[]);
   };
 
-  const accuracy = sessionReviews > 0
-    ? Math.round((sessionCorrect / sessionReviews) * 100)
-    : 0;
-
-  const formatDifficultyLevel = (level: DifficultyLevel): string => {
-    switch (level) {
-      case '2-choice': return '2-choice (1-syl)';
-      case 'mixed': return 'Mixed';
-      case '4-choice-multi': return '4-choice (2-syl)';
-      default: return level;
-    }
+  // Determine current view
+  const getViewMode = (): ViewMode => {
+    if (isComplete && summary) return 'summary';
+    if (session && drill) return 'drill';
+    return 'select';
   };
 
-  if (isLoading) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.centered}>
-          <Text style={styles.loadingText}>Loading...</Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  const viewMode = getViewMode();
 
+  // Error state
   if (error) {
     return (
       <SafeAreaView style={styles.container}>
@@ -151,35 +150,92 @@ export default function ToneDrillScreen() {
           <Text style={styles.errorEmoji}>❌</Text>
           <Text style={styles.errorTitle}>Error</Text>
           <Text style={styles.errorSubtitle}>{error.message}</Text>
-          <Text style={styles.errorHint}>Please make sure you are logged in.</Text>
-          <TouchableOpacity style={styles.retryButton} onPress={reload}>
-            <Text style={styles.retryButtonText}>Retry</Text>
+          <TouchableOpacity style={styles.primaryButton} onPress={resetLesson}>
+            <Text style={styles.primaryButtonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
   }
 
-  if (!drill) {
+  // Lesson selector view
+  if (viewMode === 'select') {
+    return (
+      <SafeAreaView style={styles.container} edges={['bottom']}>
+        <ScrollView contentContainerStyle={styles.selectContent}>
+          <Text style={styles.title}>Choose a Lesson</Text>
+          <Text style={styles.subtitle}>
+            Each lesson contains 10 drills focused on specific tone pairs.
+          </Text>
+
+          {themesLoading ? (
+            <ActivityIndicator size="large" color="#6366F1" />
+          ) : (
+            <View style={styles.themeList}>
+              {/* Adaptive lesson */}
+              <TouchableOpacity
+                onPress={() => handleStartLesson()}
+                disabled={isLoading}
+                style={[styles.adaptiveButton, isLoading && styles.buttonDisabled]}
+              >
+                <Text style={styles.adaptiveButtonTitle}>Adaptive Lesson</Text>
+                <Text style={styles.adaptiveButtonSubtitle}>
+                  Focus on your weakest tone pairs
+                </Text>
+              </TouchableOpacity>
+
+              {/* Themed lessons */}
+              <View style={styles.themeGrid}>
+                {themes.map((theme) => (
+                  <TouchableOpacity
+                    key={theme.id}
+                    onPress={() => handleStartLesson(theme.id)}
+                    disabled={isLoading}
+                    style={[styles.themeButton, isLoading && styles.buttonDisabled]}
+                  >
+                    <Text style={styles.themeButtonTitle}>
+                      Lesson {theme.id + 1}
+                    </Text>
+                    <Text style={styles.themeButtonDesc}>
+                      {THEME_DESCRIPTIONS[theme.id] || `Theme ${theme.id}`}
+                    </Text>
+                    <Text style={styles.themeButtonPairs}>
+                      {theme.pairs
+                        .map((p) => `${TONE_NAMES[p[0] - 1]}/${TONE_NAMES[p[1] - 1]}`)
+                        .join(', ')}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
+
+          {isLoading && (
+            <Text style={styles.loadingText}>Starting lesson...</Text>
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  // Summary view
+  if (viewMode === 'summary' && summary) {
+    return (
+      <LessonSummaryView
+        summary={summary}
+        onChooseLesson={resetLesson}
+        onNextAdaptive={() => startLesson()}
+        isLoading={isLoading}
+      />
+    );
+  }
+
+  // Drill view
+  if (!drill || !session) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.centered}>
-          <Text style={styles.doneEmoji}>🎉</Text>
-          <Text style={styles.doneTitle}>All done for now!</Text>
-          <Text style={styles.doneSubtitle}>
-            You've reviewed all due tones. Come back later for more practice.
-          </Text>
-          {sessionReviews > 0 && (
-            <View style={styles.statsBox}>
-              <Text style={styles.statsLabel}>Session stats</Text>
-              <Text style={styles.statsValue}>
-                {sessionReviews} reviews • {accuracy}% accuracy
-              </Text>
-            </View>
-          )}
-          <TouchableOpacity style={styles.checkMoreButton} onPress={reload}>
-            <Text style={styles.checkMoreButtonText}>Check for more</Text>
-          </TouchableOpacity>
+          <ActivityIndicator size="large" color="#6366F1" />
         </View>
       </SafeAreaView>
     );
@@ -187,38 +243,63 @@ export default function ToneDrillScreen() {
 
   const correctSequence = drill.correct_sequence as ToneId[];
   const distractorSequences = getDistractorSequences();
+  const progress = drill.progress;
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.drillContent}>
         {/* Progress bar */}
-        <View style={styles.progressRow}>
-          <Text style={styles.progressText}>
-            Mode: {formatDifficultyLevel(difficultyLevel)}
-          </Text>
-          <Text style={styles.progressText}>
-            {sessionReviews} reviewed • {accuracy}%
+        <View style={styles.progressContainer}>
+          <View style={styles.progressRow}>
+            <Text style={styles.progressText}>
+              {progress.phase === 'learning' ? 'Learning' : 'Review'}
+            </Text>
+            <Text style={styles.progressText}>
+              {progress.current + 1} / {progress.total}
+            </Text>
+          </View>
+          <View style={styles.progressBar}>
+            <View
+              style={[
+                styles.progressFill,
+                {
+                  width: `${((progress.current + 1) / progress.total) * 100}%`,
+                  backgroundColor: progress.phase === 'review' ? '#F59E0B' : '#6366F1',
+                },
+              ]}
+            />
+          </View>
+          <Text style={styles.lessonLabel}>
+            {session.theme_id >= 0
+              ? `Lesson ${session.theme_id + 1}: ${THEME_DESCRIPTIONS[session.theme_id]}`
+              : 'Adaptive Lesson'}
           </Text>
         </View>
 
         {/* Feedback banner */}
         {lastResult && (
-          <View style={[
-            styles.feedbackBanner,
-            lastResult.correct ? styles.feedbackCorrect : styles.feedbackIncorrect,
-          ]}>
-            <Text style={[
-              styles.feedbackTitle,
-              lastResult.correct ? styles.feedbackTextCorrect : styles.feedbackTextIncorrect,
-            ]}>
+          <View
+            style={[
+              styles.feedbackBanner,
+              lastResult.correct ? styles.feedbackCorrect : styles.feedbackIncorrect,
+            ]}
+          >
+            <Text
+              style={[
+                styles.feedbackTitle,
+                lastResult.correct ? styles.feedbackTextCorrect : styles.feedbackTextIncorrect,
+              ]}
+            >
               {lastResult.correct
                 ? '✓ Correct!'
                 : `✗ The tones were: ${formatToneSequence(lastResult.correctSeq)}`}
             </Text>
-            <Text style={[
-              styles.feedbackSubtitle,
-              lastResult.correct ? styles.feedbackTextCorrect : styles.feedbackTextIncorrect,
-            ]}>
+            <Text
+              style={[
+                styles.feedbackSubtitle,
+                lastResult.correct ? styles.feedbackTextCorrect : styles.feedbackTextIncorrect,
+              ]}
+            >
               {lastResult.vietnamese} ({formatToneSequenceDiacritics(lastResult.correctSeq)})
             </Text>
           </View>
@@ -236,12 +317,14 @@ export default function ToneDrillScreen() {
         </View>
 
         {/* English meaning */}
-        {drill.english && (
-          <Text style={styles.englishText}>{drill.english}</Text>
-        )}
+        <Text style={styles.englishText}>{drill.english}</Text>
 
-        {/* Instruction */}
-        <Text style={styles.instruction}>Select the correct tone sequence:</Text>
+        {/* Mode indicator */}
+        <Text style={styles.instruction}>
+          {drill.mode === '2-choice-1syl' && 'Select the correct tone:'}
+          {drill.mode === '4-choice-1syl' && 'Select the correct tone (4 choices):'}
+          {drill.mode === '2-choice-2syl' && 'Select the correct tone sequence:'}
+        </Text>
 
         {/* Tone grid */}
         <ToneGrid
@@ -251,7 +334,94 @@ export default function ToneDrillScreen() {
           onSelect={handleSelect}
           disabled={showingFeedback}
         />
+
+        {/* Exit button */}
+        <TouchableOpacity onPress={resetLesson} style={styles.exitButton}>
+          <Text style={styles.exitButtonText}>Exit Lesson</Text>
+        </TouchableOpacity>
       </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// Summary component
+interface LessonSummaryViewProps {
+  summary: LessonSummary;
+  onChooseLesson: () => void;
+  onNextAdaptive: () => void;
+  isLoading: boolean;
+}
+
+function LessonSummaryView({
+  summary,
+  onChooseLesson,
+  onNextAdaptive,
+  isLoading,
+}: LessonSummaryViewProps) {
+  const accuracyColor =
+    summary.accuracy >= 90
+      ? '#16A34A'
+      : summary.accuracy >= 70
+      ? '#CA8A04'
+      : '#DC2626';
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.summaryContent}>
+        <Text style={styles.summaryEmoji}>
+          {summary.accuracy >= 90 ? '🎉' : summary.accuracy >= 70 ? '👍' : '💪'}
+        </Text>
+
+        <Text style={styles.summaryTitle}>Lesson Complete!</Text>
+
+        <View style={styles.summaryCard}>
+          <Text style={styles.summaryLabel}>
+            {summary.theme_id >= 0
+              ? `Lesson ${summary.theme_id + 1}: ${THEME_DESCRIPTIONS[summary.theme_id]}`
+              : 'Adaptive Lesson'}
+          </Text>
+
+          <Text style={[styles.summaryAccuracy, { color: accuracyColor }]}>
+            {Math.round(summary.accuracy)}%
+          </Text>
+
+          <View style={styles.statsRow}>
+            <View style={styles.statBox}>
+              <Text style={styles.statLabel}>Total Drills</Text>
+              <Text style={styles.statValue}>{summary.total_drills}</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.statLabel}>Mistakes</Text>
+              <Text style={styles.statValue}>{summary.mistakes_count}</Text>
+            </View>
+          </View>
+
+          <Text style={styles.pairsText}>
+            Focus pairs:{' '}
+            {summary.theme_pairs
+              .map((p) => `${TONE_NAMES[p[0] - 1]}/${TONE_NAMES[p[1] - 1]}`)
+              .join(', ')}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          onPress={onNextAdaptive}
+          disabled={isLoading}
+          style={[styles.primaryButton, isLoading && styles.buttonDisabled]}
+        >
+          <Text style={styles.primaryButtonText}>
+            {isLoading ? 'Starting...' : 'Next Adaptive Lesson'}
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={onChooseLesson}
+          disabled={isLoading}
+          style={styles.secondaryButton}
+        >
+          <Text style={styles.secondaryButtonText}>Choose Different Lesson</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -261,11 +431,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9FAFB',
   },
-  scrollContent: {
-    padding: 16,
-    alignItems: 'center',
-    gap: 16,
-  },
   centered: {
     flex: 1,
     justifyContent: 'center',
@@ -273,50 +438,111 @@ const styles = StyleSheet.create({
     padding: 32,
     gap: 16,
   },
-  loadingText: {
-    fontSize: 24,
-    color: '#6B7280',
+  selectContent: {
+    padding: 16,
+    alignItems: 'center',
+    gap: 16,
   },
-  errorEmoji: {
-    fontSize: 64,
-    marginBottom: 8,
+  drillContent: {
+    padding: 16,
+    alignItems: 'center',
+    gap: 16,
   },
-  errorTitle: {
+  title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#991B1B',
+    color: '#1F2937',
+    marginTop: 16,
   },
-  errorSubtitle: {
+  subtitle: {
     fontSize: 16,
     color: '#6B7280',
     textAlign: 'center',
+    marginBottom: 8,
   },
-  errorHint: {
-    fontSize: 14,
-    color: '#9CA3AF',
-    textAlign: 'center',
+  themeList: {
+    width: '100%',
+    gap: 12,
   },
-  retryButton: {
-    marginTop: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+  adaptiveButton: {
+    width: '100%',
+    padding: 16,
     backgroundColor: '#6366F1',
-    borderRadius: 12,
+    borderRadius: 16,
+    alignItems: 'center',
   },
-  retryButtonText: {
+  adaptiveButtonTitle: {
+    fontSize: 18,
+    fontWeight: '600',
     color: '#FFFFFF',
+  },
+  adaptiveButtonSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.8)',
+    marginTop: 4,
+  },
+  themeGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  themeButton: {
+    width: '47%',
+    padding: 12,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+  },
+  themeButtonTitle: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#1F2937',
+  },
+  themeButtonDesc: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 2,
+  },
+  themeButtonPairs: {
+    fontSize: 11,
+    color: '#6366F1',
+    marginTop: 4,
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#6366F1',
+  },
+  progressContainer: {
+    width: '100%',
   },
   progressRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 8,
+    marginBottom: 8,
   },
   progressText: {
     fontSize: 14,
     color: '#6B7280',
+  },
+  progressBar: {
+    height: 8,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  progressFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  lessonLabel: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    marginTop: 4,
   },
   feedbackBanner: {
     width: '100%',
@@ -356,51 +582,109 @@ const styles = StyleSheet.create({
   instruction: {
     fontSize: 14,
     color: '#9CA3AF',
-    marginBottom: 8,
   },
-  doneEmoji: {
+  exitButton: {
+    marginTop: 16,
+  },
+  exitButtonText: {
+    fontSize: 14,
+    color: '#9CA3AF',
+    textDecorationLine: 'underline',
+  },
+  errorEmoji: {
     fontSize: 64,
-    marginBottom: 8,
   },
-  doneTitle: {
+  errorTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#1F2937',
-    textAlign: 'center',
+    color: '#991B1B',
   },
-  doneSubtitle: {
+  errorSubtitle: {
     fontSize: 16,
     color: '#6B7280',
     textAlign: 'center',
-    paddingHorizontal: 16,
   },
-  statsBox: {
-    marginTop: 16,
-    padding: 16,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 12,
+  primaryButton: {
+    width: '100%',
+    paddingVertical: 16,
+    backgroundColor: '#6366F1',
+    borderRadius: 16,
     alignItems: 'center',
   },
-  statsLabel: {
-    fontSize: 12,
-    color: '#9CA3AF',
-  },
-  statsValue: {
+  primaryButtonText: {
     fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  secondaryButton: {
+    marginTop: 8,
+  },
+  secondaryButtonText: {
+    fontSize: 14,
+    color: '#6B7280',
+    textDecorationLine: 'underline',
+  },
+  summaryContent: {
+    flex: 1,
+    padding: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  summaryEmoji: {
+    fontSize: 64,
+  },
+  summaryTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1F2937',
+  },
+  summaryCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  summaryAccuracy: {
+    fontSize: 48,
+    fontWeight: '700',
+    marginVertical: 16,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    gap: 16,
+    marginBottom: 16,
+  },
+  statBox: {
+    flex: 1,
+    backgroundColor: '#F3F4F6',
+    borderRadius: 12,
+    padding: 12,
+    alignItems: 'center',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  statValue: {
+    fontSize: 20,
     fontWeight: '600',
     color: '#1F2937',
     marginTop: 4,
   },
-  checkMoreButton: {
-    marginTop: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    backgroundColor: '#6366F1',
-    borderRadius: 12,
-  },
-  checkMoreButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  pairsText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
   },
 });
