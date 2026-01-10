@@ -12,6 +12,7 @@ import {
   formatToneSequenceDiacritics,
   sequencesEqual,
 } from '../utils/tones';
+import { useProgress } from '../hooks/useProgress';
 
 // Tone names for display
 const TONE_NAMES = ['Level', 'Falling', 'Rising', 'Dipping', 'Creaky', 'Heavy'];
@@ -51,6 +52,7 @@ export function ToneDrill() {
   const [showTooltip, setShowTooltip] = useState(false);
   const attemptStartTime = useRef<number | null>(null);
   const advanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { progress, recordReview } = useProgress();
 
   // Track pair probability before answer for 2-choice mode
   const [currentPairProbBefore, setCurrentPairProbBefore] = useState<number | null>(null);
@@ -107,6 +109,7 @@ export function ToneDrill() {
       const responseTimeMs = attemptStartTime.current
         ? Date.now() - attemptStartTime.current
         : undefined;
+      const reviewTimestamp = Date.now();
 
       // Prepare answer for submission (new format with problem_type_id)
       const answer: PreviousAnswer = {
@@ -156,6 +159,7 @@ export function ToneDrill() {
         advanceTimerRef.current = null;
         try {
           const response = await submitAnswer(answer);
+          void recordReview(drill.word_id, isCorrect, reviewTimestamp);
 
           // Update the probability after for feedback (1-indexed pairs now)
           if (pair && response.pair_stats) {
@@ -173,7 +177,7 @@ export function ToneDrill() {
         }
       }, 1500);
     },
-    [drill, showingFeedback, difficultyLevel, currentPairProbBefore, submitAnswer]
+    [drill, showingFeedback, difficultyLevel, currentPairProbBefore, submitAnswer, recordReview]
   );
 
   // Compute distractors from alternatives
@@ -189,6 +193,16 @@ export function ToneDrill() {
     sessionReviews > 0
       ? Math.round((sessionCorrect / sessionReviews) * 100)
       : 0;
+  const progressAccuracy =
+    progress && progress.reviewsToday > 0
+      ? Math.round((progress.correctToday / progress.reviewsToday) * 100)
+      : 0;
+  const summaryReviews = progress ? progress.reviewsToday : sessionReviews;
+  const summaryAccuracy = progress ? progressAccuracy : accuracy;
+  const summaryLabel = progress
+    ? `${progress.reviewsToday} today • ${progressAccuracy}%`
+    : `${sessionReviews} reviewed • ${accuracy}%`;
+  const summaryTitle = progress ? 'Today' : 'Session stats (Tone Mode)';
 
   if (isLoading) {
     return (
@@ -217,11 +231,11 @@ export function ToneDrill() {
         <p className="text-gray-600">
           You've reviewed all due tones. Come back later for more practice.
         </p>
-        {sessionReviews > 0 && (
+        {summaryReviews > 0 && (
           <div className="mt-4 p-4 bg-gray-100 rounded-xl">
-            <p className="text-sm text-gray-500">Session stats (Tone Mode)</p>
+            <p className="text-sm text-gray-500">{summaryTitle}</p>
             <p className="text-xl font-semibold">
-              {sessionReviews} reviews • {accuracy}% accuracy
+              {summaryReviews} reviews • {summaryAccuracy}% accuracy
             </p>
           </div>
         )}
@@ -236,16 +250,17 @@ export function ToneDrill() {
     <div className="flex flex-col items-center gap-6 p-4 w-full max-w-lg mx-auto">
       {/* Progress bar */}
       <div className="w-full flex items-center justify-between text-sm text-gray-500">
-        <span>Mode: {
-          difficultyLevel === '2-choice' ? '2-choice (1-syl)' :
-          difficultyLevel === 'mixed' ? 'Mixed (4-choice 1-syl / 2-choice 2-syl)' :
-          difficultyLevel === '4-choice-multi' ? '4-choice (2-syl)' :
-          difficultyLevel
-        }</span>
+        <span>
+          Mode: {difficultyLevel === '2-choice'
+            ? '2-choice (1-syl)'
+            : difficultyLevel === 'mixed'
+            ? 'Mixed (4-choice 1-syl / 2-choice 2-syl)'
+            : difficultyLevel === '4-choice-multi'
+            ? '4-choice (2-syl)'
+            : difficultyLevel}
+        </span>
         <div className="flex items-center gap-2">
-          <span>
-            {sessionReviews} reviewed • {accuracy}%
-          </span>
+          <span>{summaryLabel}</span>
           <button
             onClick={() => setShowTooltip(!showTooltip)}
             className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors"

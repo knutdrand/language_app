@@ -99,7 +99,7 @@ class DrillService:
     def _load_words(self):
         """Load words from JSON file and index by tone sequence."""
         if WORDS_PATH.exists():
-            with open(WORDS_PATH) as f:
+            with open(WORDS_PATH, encoding="utf-8") as f:
                 data = json.load(f)
                 self._words = [Word(**w) for w in data]
 

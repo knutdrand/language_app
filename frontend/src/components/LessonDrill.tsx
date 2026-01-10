@@ -13,6 +13,7 @@ import {
   formatToneSequenceDiacritics,
   sequencesEqual,
 } from '../utils/tones';
+import { useProgress } from '../hooks/useProgress';
 
 // Tone names for display (0-indexed for display purposes)
 const TONE_NAMES = ['Level', 'Falling', 'Rising', 'Dipping', 'Creaky', 'Heavy'];
@@ -43,6 +44,7 @@ export function LessonDrill() {
     submitAnswer,
     resetLesson,
   } = useLessonApi();
+  const { recordReview } = useProgress();
 
   const [themes, setThemes] = useState<ThemeInfo[]>([]);
   const [themesLoading, setThemesLoading] = useState(true);
@@ -98,6 +100,7 @@ export function LessonDrill() {
       const responseTimeMs = attemptStartTime.current
         ? Date.now() - attemptStartTime.current
         : undefined;
+      const reviewTimestamp = Date.now();
 
       setLastResult({
         correct: isCorrect,
@@ -114,12 +117,13 @@ export function LessonDrill() {
         advanceTimerRef.current = null;
         try {
           await submitAnswer(selectedSequence as number[], responseTimeMs);
+          void recordReview(drill.word_id, isCorrect, reviewTimestamp);
         } catch (e) {
           console.error('Failed to submit answer:', e);
         }
       }, 1500);
     },
-    [drill, showingFeedback, submitAnswer]
+    [drill, showingFeedback, submitAnswer, recordReview]
   );
 
   const getDistractorSequences = (): ToneId[][] => {
